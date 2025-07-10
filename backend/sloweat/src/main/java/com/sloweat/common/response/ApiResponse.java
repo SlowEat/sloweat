@@ -1,10 +1,15 @@
 package com.sloweat.common.response;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * 공통으로 사용할 응답 클래스 예시
  * 
  * */
+@Getter
+@Setter
 public class ApiResponse <T>{
     private boolean success;
     private String message;

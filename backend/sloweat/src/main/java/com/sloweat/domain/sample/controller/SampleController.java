@@ -5,6 +5,7 @@ import com.sloweat.domain.sample.dto.SampleRequest;
 import com.sloweat.domain.sample.entity.Sample;
 import com.sloweat.domain.sample.service.SampleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +16,9 @@ public class SampleController {
     private final SampleService sampleService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Sample>> create(@RequestBody SampleRequest dto) {
-        return ResponseEntity.ok(ApiResponse.success(sampleService.createSample(dto)));
+    public ResponseEntity<Sample> create(@RequestBody SampleRequest dto) {
+        Sample sample = sampleService.createSample(dto);
+        return ResponseEntity.ok(sample);
     }
 
     @GetMapping("/{id}")
