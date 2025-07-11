@@ -1,7 +1,7 @@
 import React from "react";
 import { Sidebar } from "../../../components/admin/Sidebar/Sidebar";
 import { CommentManagement } from "../CommentManagement/CommentManagement"; // 경로는 실제 위치에 맞게 수정
-import "./AdminCommentPage.css";
+import "../../../styles/admin/AdminLayout.css"; // 공통 레이아웃 스타일
 
 const AdminCommentPage = () => {
   return (
