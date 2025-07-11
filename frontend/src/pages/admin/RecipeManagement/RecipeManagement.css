@@ -1,0 +1,130 @@
+.recipe-wrapper {
+  margin-left: 220px;
+  background-color: #f9fafb;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.recipe-content-box {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0f2f1;
+}
+
+/* 상단 제목 + 검색 */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.recipe-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #fff;
+  border: 1px solid #e0f2f1;
+  border-radius: 8px;
+  padding: 6px 12px;
+}
+
+.search-input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  background-color: transparent;
+}
+
+.search-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* 테이블 제목 */
+.section-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 16px;
+}
+
+/* 게시물 테이블 */
+.recipe-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.table-header,
+.table-row {
+  display: grid;
+  grid-template-columns: 50px 3fr 1.5fr 1.5fr 0.6fr 0.8fr 0.8fr;
+  align-items: center;
+  padding: 12px 12px;
+  column-gap: 8px;
+  word-break: keep-all;
+}
+
+.table-header {
+  background-color: #f9fafb;
+  font-weight: 600;
+  color: #6b7280;
+  border-bottom: 1px solid #e0f2f1;
+}
+
+.table-row {
+  border-bottom: 1px solid #e0f2f1;
+  color: #1a1a1a;
+}
+
+.table-row p {
+  margin: 0;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 뱃지 스타일 */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 13px;
+  border-radius: 9999px;
+  text-align: center;
+}
+
+.badge.normal,
+.badge.status-normal {
+  background-color: #f0fdf4;
+  color: #059669;
+}
+
+.badge.reported,
+.badge.status-reported {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+/* 삭제 버튼 */
+.delete-btn {
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.delete-btn:hover {
+  background-color: #b91c1c;
+}

@@ -1,0 +1,12 @@
+.admin-page-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: #ffffff;
+}
+
+.admin-content {
+  flex: 1;
+  margin-left: 0; /* Sidebar 너비에 맞춤 */
+  padding: 16px 24px;
+  background-color: #f9fafb;
+}

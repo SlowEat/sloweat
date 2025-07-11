@@ -1,11 +1,14 @@
 // src/routes/AppRouter.jsx
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import SamplePage from '../pages/SamplePage';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import AdminRecipePage from '../pages/admin/AdminRecipePage/AdminRecipePage';
 
 const AppRouter = () => (
     <BrowserRouter>
         <Routes>
-            <Route path="/" element={<SamplePage />} />
+            {/* admin 기본 페이지는 게시물 관리 페이지 */}
+            <Route path="/admin" element={<Navigate to="/admin/recipes" replace />} />
+            <Route path="/admin/recipes" element={<AdminRecipePage />} />
+            {/* 다른 admin routes도 여기에 추가 */}
         </Routes>
     </BrowserRouter>
 );
