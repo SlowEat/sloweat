@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AdminRecipePage from '../pages/admin/AdminRecipePage/AdminRecipePage';
 import AdminCommentPage from '../pages/admin/AdminCommentPage/AdminCommentPage';
 import AdminUserPage from '../pages/admin/AdminUserPage/AdminUserPage';
+import AdminPaymentPage from '../pages/admin/AdminPaymentPage/AdminPaymentPage';
 
 const AppRouter = () => (
     <BrowserRouter>
@@ -12,7 +13,7 @@ const AppRouter = () => (
             <Route path="/admin/recipes" element={<AdminRecipePage />} />
             <Route path="/admin/comments" element={<AdminCommentPage />} />
             <Route path="/admin/users" element={<AdminUserPage />} />
-
+            <Route path="/admin/payments" element={<AdminPaymentPage />} />
             {/* 다른 admin routes도 여기에 추가 */}
         </Routes>
     </BrowserRouter>
