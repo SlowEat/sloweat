@@ -4,9 +4,7 @@ import "./RecipeManagement.css";
 export const RecipeManagement = () => {
   const [posts, setPosts] = useState([]);
 
-  // 추후 fetch 또는 axios를 사용해 서버에서 데이터를 불러올 수 있도록 구조화
   useEffect(() => {
-    // 예시 데이터 (나중에 DB에서 불러온 데이터로 교체)
     const dummyData = [
       {
         id: 1,
@@ -40,25 +38,26 @@ export const RecipeManagement = () => {
   return (
     <div className="recipe-wrapper">
       <div className="recipe-content-box">
-        {/* 상단 제목 + 검색 */}
-        <div className="page-header">
-          <h1 className="page-title">게시물 관리</h1>
+        <div className="recipe-page-header">
+          <h1 className="recipe-page-title">게시물 관리</h1>
           <div className="recipe-search">
-            <input type="text" placeholder="검색..." className="search-input" />
+            <input
+              type="text"
+              placeholder="검색..."
+              className="recipe-search-input"
+            />
             <img
               src="https://c.animaapp.com/rgpZJ8Rs/img/frame-4.svg"
               alt="검색"
-              className="search-icon"
+              className="recipe-search-icon"
             />
           </div>
         </div>
 
-        {/* 섹션 제목 */}
-        <div className="section-title">게시물 목록</div>
+        <div className="recipe-section-title">게시물 목록</div>
 
-        {/* 게시물 테이블 */}
         <section className="recipe-table">
-          <div className="table-header">
+          <div className="recipe-grid recipe-table-header">
             <span>ID</span>
             <span>제목</span>
             <span>작성자</span>
@@ -69,26 +68,38 @@ export const RecipeManagement = () => {
           </div>
 
           {posts.map((post) => (
-            <div className="table-row" key={post.id}>
+            <div className="recipe-grid recipe-table-row" key={post.id}>
               <span>{post.id}</span>
               <p>{post.title}</p>
               <span>{post.author}</span>
               <span>{post.createdAt}</span>
-              <span className={`badge ${post.reportCount > 0 ? "reported" : "normal"}`}>
-                {post.reportCount}
+              <span>
+                <span
+                  className={`recipe-badge ${
+                    post.reportCount > 0 ? "reported" : "normal"
+                  }`}
+                >
+                  {post.reportCount}
+                </span>
               </span>
-              <span
-                className={`badge ${
-                  post.status === "정상" ? "status-normal" : "status-reported"
-                }`}
-              >
-                {post.status}
+              <span>
+                <span
+                  className={`recipe-badge ${
+                    post.status === "정상" ? "status-normal" : "status-reported"
+                  }`}
+                >
+                  {post.status}
+                </span>
               </span>
-              {post.status === "신고됨" ? (
-                <button className="delete-btn">삭제</button>
-              ) : (
-                <span>-</span>
-              )}
+              <span>
+                <div className="recipe-action-wrapper">
+                  {post.status === "신고됨" ? (
+                    <button className="recipe-delete-btn">삭제</button>
+                  ) : (
+                    <span className="recipe-action-placeholder">-</span>
+                  )}
+                </div>
+              </span>
             </div>
           ))}
         </section>

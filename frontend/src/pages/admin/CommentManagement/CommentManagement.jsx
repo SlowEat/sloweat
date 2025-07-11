@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import "./CommentManagement.css"; // 스타일은 필요에 따라 따로 분리
+import "./CommentManagement.css";
 
 export const CommentManagement = () => {
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    // 더미 데이터 (추후 API 연동)
     const dummyComments = [
       {
         id: 1,
@@ -40,27 +39,28 @@ export const CommentManagement = () => {
   }, []);
 
   return (
-    <div className="recipe-wrapper">
-      <div className="recipe-content-box">
-        {/* 상단 제목 + 검색 */}
-        <div className="page-header">
-          <h1 className="page-title">댓글 관리</h1>
-          <div className="recipe-search">
-            <input type="text" placeholder="검색..." className="search-input" />
+    <div className="comment-wrapper">
+      <div className="comment-content-box">
+        <div className="comment-page-header">
+          <h1 className="comment-page-title">댓글 관리</h1>
+          <div className="comment-search">
+            <input
+              type="text"
+              placeholder="검색..."
+              className="comment-search-input"
+            />
             <img
               src="https://c.animaapp.com/rgpZJ8Rs/img/frame-4.svg"
               alt="검색"
-              className="search-icon"
+              className="comment-search-icon"
             />
           </div>
         </div>
 
-        {/* 섹션 제목 */}
-        <div className="section-title">댓글 목록</div>
+        <div className="comment-section-title">댓글 목록</div>
 
-        {/* 댓글 테이블 */}
-        <section className="recipe-table">
-          <div className="table-header">
+        <section className="comment-table">
+          <div className="comment-grid comment-table-header">
             <span>ID</span>
             <span>내용</span>
             <span>작성자</span>
@@ -72,27 +72,37 @@ export const CommentManagement = () => {
           </div>
 
           {comments.map((comment) => (
-            <div className="table-row" key={comment.id}>
+            <div className="comment-grid comment-table-row" key={comment.id}>
               <span>{comment.id}</span>
               <p>{comment.content}</p>
               <span>{comment.author}</span>
               <span>{comment.postId}</span>
               <span>{comment.createdAt}</span>
-              <span className={`badge ${comment.reportCount > 0 ? "reported" : "normal"}`}>
-                {comment.reportCount}
+              <span>
+                <span
+                  className={`comment-badge ${
+                    comment.reportCount > 0 ? "reported" : "normal"
+                  }`}
+                >
+                  {comment.reportCount}
+                </span>
               </span>
-              <span
-                className={`badge ${
-                  comment.status === "정상" ? "status-normal" : "status-reported"
-                }`}
-              >
-                {comment.status}
+              <span>
+                <span
+                  className={`comment-badge ${
+                    comment.status === "정상" ? "status-normal" : "status-reported"
+                  }`}
+                >
+                  {comment.status}
+                </span>
               </span>
-              {comment.status === "신고됨" ? (
-                <button className="delete-btn">삭제</button>
-              ) : (
-                <span>-</span>
-              )}
+              <span className="comment-action-wrapper">
+                {comment.status === "신고됨" ? (
+                  <button className="comment-delete-btn">삭제</button>
+                ) : (
+                  <span className="comment-action-placeholder">-</span>
+                )}
+              </span>
             </div>
           ))}
         </section>
