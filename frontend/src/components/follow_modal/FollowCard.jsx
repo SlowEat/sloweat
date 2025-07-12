@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import "./FollowerCard.css";
+import "./FollowCard.css";
 
-export const FollowerCard = ({
+export const FollowCard = ({
   username,
   userId,
   followerCount,

@@ -1,4 +1,4 @@
-.follower-header {
+.follow-header {
   position: relative;
   top: 0;
   left: 0;
@@ -38,17 +38,23 @@
   left: 24px;
   width: 449px;
   height: 37px;
+  display: flex;
+  justify-content: space-between;   /* 양 옆으로 정렬 */
+  align-items: center;
   border-bottom: 1.33px solid #e0f2f1;
+  position: relative;
 }
 
 .tab {
-  position: absolute;
-  top: -1px;
   font-size: 16px;
   font-weight: 500;
   font-family: "Inter", Helvetica;
   line-height: 24px;
   white-space: nowrap;
+  text-align: center;
+  color: #6b7280;
+  cursor: pointer;
+  flex: 1;
   text-align: center;
 }
 

@@ -1,4 +1,4 @@
-.follower-modal-overlay {
+.follow-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -12,7 +12,7 @@
   padding: 20px; /* 작은 화면 대응 */
 }
 
-.follower-modal {
+.follow-modal {
   background-color: white;
   width: 503px;
   max-height: 80vh;
@@ -23,11 +23,11 @@
   padding-bottom: 16px;
 }
 
-.follower-modal::-webkit-scrollbar {
+.follow-modal::-webkit-scrollbar {
   display: none;                /* Chrome에서 스크롤 안 보이게 하기 */
 }
 
-.follower-list {
+.follow-list {
   display: flex;
   flex-direction: column;
 }
