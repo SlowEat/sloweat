@@ -5,6 +5,7 @@ import AdminCommentPage from '../pages/admin/AdminCommentPage/AdminCommentPage';
 import AdminUserPage from '../pages/admin/AdminUserPage/AdminUserPage';
 import AdminPaymentPage from '../pages/admin/AdminPaymentPage/AdminPaymentPage';
 import AdminStatPage from '../pages/admin/AdminStatPage/AdminStatPage';
+import MyPage from '../pages/temp_mypage/MyPage';
 
 const AppRouter = () => (
     <BrowserRouter>
@@ -16,7 +17,9 @@ const AppRouter = () => (
             <Route path="/admin/users" element={<AdminUserPage />} />
             <Route path="/admin/payments" element={<AdminPaymentPage />} />
             <Route path="/admin/statistics" element={<AdminStatPage />} />
-            {/* 다른 admin routes도 여기에 추가 */}
+            
+            {/* 사용자 마이페이지(임시) */}
+            <Route path="/temp_mypage" element={<MyPage/>}/>
         </Routes>
     </BrowserRouter>
 );
