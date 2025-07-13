@@ -52,5 +52,5 @@ const AppRouter = () => (
       <Route path="/temp_mypage" element={<TempMyPage/>}/>
     </Routes>
   </BrowserRouter>
-
+);
 export default AppRouter;
