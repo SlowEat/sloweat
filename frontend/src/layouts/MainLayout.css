@@ -1,0 +1,95 @@
+/* 전체 배경 - 양옆 회색 영역 */
+html, body {
+  background: linear-gradient(
+    to right,
+    #f5f5f5 0%,
+    #f5f5f5 calc((100% - 1296px) / 2),
+    #ffffff calc((100% - 1296px) / 2),
+    #ffffff calc((100% - 1296px) / 2 + 1296px),
+    #f5f5f5 calc((100% - 1296px) / 2 + 1296px),
+    #f5f5f5 100%
+  );
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-y: scroll; /* 스크롤 없앰 */
+  scrollbar-width: none; /* 스크롤 없앰 */
+  min-width: 1296px;
+
+}
+
+/* 중앙 컨테이너 */
+.main-container {
+  width: 1296px;
+  margin: 0 auto;
+  position: relative;
+  min-height: 100vh;
+  background-color: #ffffff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.main-layout {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+}
+
+
+/* 왼쪽 탭 */
+.main-layout-tab {
+  position: fixed;
+  top: 0;
+  left: calc((100% - 1296px) / 2); /* 중앙 정렬 기준점 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 275px;
+  height: 100vh;         
+  border-right: 1px solid #e0f2f1;
+  background-color: #ffffff;
+  z-index: 1001;
+  padding : 15px;
+}
+
+/* 우측 배너 */
+.main-layout-banner {
+  position: fixed;
+  top: 0;
+  right: calc((100% - 1296px) / 2); /* 중앙 정렬 기준점 */
+  width: 300px;
+  height:100%;
+  border-left: 1px solid #e0f2f1;
+  padding: 15px;
+  background-color: #ffffff;
+  z-index: 1000;
+}
+
+/* 가운데 컨텐츠 */
+.main-layout-content {
+  margin-left: 345px;   /* 좌측 탭 너비만큼 띄우기 */
+  margin-right: 370px;  /* 우측 배너 너비만큼 띄우기 */
+  padding: 40px 20px;   /* 내부 패딩 */
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* 가로 중앙 정렬 */
+  min-height: 100vh;
+  
+}
+
+.tap-title {
+  font-family: 'Inter';
+  font-weight: 700;
+  font-size: 22px;
+  margin-bottom : 20px;
+}
+
+.tab-logo {
+  margin-left : -140px;
+  margin-top: 15px;
+}
+
+.tab-logo img {
+  cursor: pointer;
+}

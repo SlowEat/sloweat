@@ -1,0 +1,218 @@
+@import url("https://fonts.googleapis.com/css?family=Inter:400,500,600,700");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-color:#1a1a1a;
+}
+
+
+.signup-wrapper{
+    display:flex;
+    justify-content: center;
+    width:100%;
+    height:100vb;
+    background-color: #F8FFFE;
+}
+
+.signup-view {
+  position: relative;
+  width: 100%;
+}
+
+.signup-overlap {
+  position: relative;
+  height : 93vh;
+  background-size: cover;
+  background-position: center;
+  width : 100%;
+  background-color:#F8FFFE;
+}
+
+/* 헤더 - 로고 영역 */
+.signup-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top : 10px;
+}
+
+.SLOWEAT-LOGO {
+  width: 150px;
+  height: 150px;
+  background-image: url(https://c.animaapp.com/CgKu8nvQ/img/sloweat-logo-1@2x.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.tagline {
+  position : relative;
+  z-index : 10;
+  bottom : 27px;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* 회원가입 폼 */
+.signup-form {
+  position:relative;
+  bottom : 20px;
+  z-index : 100;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+}
+
+.signup-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-weight: 500;
+  color: #374151;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.form-input {
+  width: 100%;
+  height: 44px;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #374151;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.form-input::placeholder {
+  color: #9ca3af;
+}
+
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.password-toggle:hover {
+  opacity: 1;
+}
+
+.form-hint {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 6px;
+}
+
+.submit-button {
+  width: 100%;
+  height: 48px;
+  background-color: #10b981;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+.submit-button:hover {
+  background-color: #0d9668;
+  box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+}
+
+
+.divider {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 25px 0;
+  position: relative;
+}
+
+.divider::before {
+  content: "또는";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  padding: 0 15px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.social-login {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.social-login-options {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.login-link {
+  text-align: center;
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: 20px;
+}
+
+.login-link a {
+  color: #10b981;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.login-link a:hover {
+  color: #0d9668;
+}
+

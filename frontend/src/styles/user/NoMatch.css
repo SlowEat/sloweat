@@ -1,0 +1,38 @@
+.nomatch-box {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 60px;
+}
+
+.nomatch-view {
+  width: 346px;
+  text-align: center;
+  position: relative;
+}
+
+.nomatch-frame {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto;
+}
+
+.nomatch-text-wrapper {
+  margin-top: 16px;
+  font-family: "Inter", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 27px;
+  color: #1a1a1a;
+  white-space: nowrap;
+}
+
+.nomatch-desc {
+  margin-top: 8px;
+  font-family: "Inter", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 21px;
+  color: #6b7280;
+  white-space: nowrap;
+}
