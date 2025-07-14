@@ -9,10 +9,6 @@
   transition: background-color 0.3s ease; 
 }
 
-.recipe-card-box:hover {
-  background-color: #f3f3f3;
-}
-
 .recipe-card-view {
   width: 676px;
   border-bottom: 1px solid #e0f2f1;
@@ -39,6 +35,11 @@
   height: 48px;
   border-radius: 50%;
   object-fit: cover;
+  transition: transform 0.2s ease; 
+}
+
+.recipe-card-profile-image:hover {
+  transform: scale(0.95);
 }
 
 .recipe-card-profile-info {
@@ -78,6 +79,7 @@
 }
 
 .recipe-card-report {
+  position: relative;
   color: #6b7280;
   cursor: pointer;
   margin-left: auto;
@@ -150,7 +152,7 @@
 }
 
 .recipe-card-likes:hover {
-  background-color: #ecfdf5;
+  background-color: #ceffe9;
 }
 
 .recipe-card-likes.active {
@@ -192,4 +194,42 @@
 .recipe-card-bookmark-button.active svg path {
   fill: #10b981;
   stroke: #10b981;
+}
+
+/* 더보기 */
+.comment-card-more-icon:hover{
+  background-color: #e6e6e6;
+  border-radius : 500px;
+}
+
+/* 드롭박스 */
+.recipe-card-dropdown {
+  display: none;
+  position: absolute;
+  width : 80px;
+  right: 0;
+  margin-bottom: 4px;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+.recipe-card-dropdown-button {
+  padding: 8px 12px;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: center;
+}
+
+.recipe-card-dropdown-button:hover{
+  background-color: #e5e7eb;
+}
+
+.recipe-card-report:hover .recipe-card-dropdown {
+  display: block;
 }

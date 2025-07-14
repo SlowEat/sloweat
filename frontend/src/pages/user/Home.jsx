@@ -39,12 +39,12 @@ function FollowingTab() {
 function PopularTab() {
   return (
     <div>
-        <Recipe></Recipe>
-        <Recipe></Recipe>
-        <Recipe></Recipe>
-        <Recipe></Recipe>
-        <Recipe></Recipe>
-        <Recipe></Recipe>
+        <Recipe isMyPost={true}></Recipe>
+        <Recipe isMyPost={true}> </Recipe>
+        <Recipe isMyPost={true}></Recipe>
+        <Recipe isMyPost={true}></Recipe>
+        <Recipe isMyPost={true}></Recipe>
+        <Recipe isMyPost={true}></Recipe>
     </div>
   ) 
 }
