@@ -50,8 +50,8 @@ public class Payment {
 
     public enum Status {
         PAID("결제완료"),
-        APPROVE("결제취소"),
-        REJECT("환불");
+        CANCEL("결제취소"),
+        REFUND("환불");
 
         private final String label;
 
@@ -63,8 +63,8 @@ public class Payment {
     }
 
     public enum Method {
-        CARD("결제완료"),
-        CASH("결제취소");
+        CARD("카드"),
+        CASH("계좌이체");
 
         private final String label;
 

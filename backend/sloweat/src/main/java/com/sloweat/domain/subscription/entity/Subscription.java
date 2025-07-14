@@ -37,8 +37,8 @@ public class Subscription {
 
     public enum Status {
         ACTIVE("구독"),
-        APPROVE("구독 취소"),
-        REJECT("구독 만료");
+        CANCEL("구독 취소"),
+        EXPIRE("구독 만료");
 
         private final String label;
 
