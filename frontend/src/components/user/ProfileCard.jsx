@@ -44,13 +44,13 @@ export default function ProfileCard() {
               <img
                 className="profilecard-frame"
                 src="https://c.animaapp.com/0RwLred6/img/frame.svg"
-                alt="옵션"
+                alt="로그아웃 버튼"
               />
             </button>
 
             {showLogout && (
-              <div className="logout-dropdown">
-                <button className="logout-button" onClick={handleLogout}>
+              <div className="profilecard-logout-dropdown">
+                <button className="profilecard-logout-button" onClick={handleLogout}>
                   로그아웃
                 </button>
               </div>
