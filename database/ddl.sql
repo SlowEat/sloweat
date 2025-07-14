@@ -53,6 +53,7 @@ CREATE TABLE `user` (
   `profile_img_path` varchar(255) DEFAULT NULL,
   `introduce` varchar(30) DEFAULT NULL,
   `role` enum('USER','ADMIN') NOT NULL DEFAULT 'USER',
+  `status` enum('ACTIVE', 'BANNED', 'WITHDRAWN') NOT NULL DEFAULT 'ACTIVE',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `nickname` (`nickname`)
