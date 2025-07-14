@@ -56,9 +56,10 @@
   cursor: pointer;
 }
 
-.logout-dropdown {
+.profilecard-logout-dropdown {
   position: absolute;
-  top: 100%;
+  width : 78px;
+  bottom : 100%;
   right: 0;
   margin-top: 4px;
   background-color: white;
@@ -68,7 +69,7 @@
   z-index: 10;
 }
 
-.logout-button {
+.profilecard-logout-button {
   padding: 8px 12px;
   width: 100%;
   background: none;
@@ -77,4 +78,8 @@
   font-size: 14px;
   color: #ef4444;
   text-align: left;
+}
+
+.profilecard-frame{
+  transform: scaleY(-1);
 }

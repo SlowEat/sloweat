@@ -90,6 +90,13 @@
 .mypage-profile-stat-item {
   display: flex;
   align-items: center;
+  cursor: pointer;
+  padding : 2px 4px;
+}
+
+.mypage-profile-stat-item:hover {
+  background-color: #f5f5f5;
+  border-radius: 100px;
 }
 
 .mypage-profile-stat-value {

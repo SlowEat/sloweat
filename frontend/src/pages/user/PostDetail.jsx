@@ -13,7 +13,7 @@ export default function PostDetail() {
 
       {/* 게시글 상세 */}
       <div>
-        <Recipe isDetail={true} />
+        <Recipe isDetail={true}/>
       </div>
 
       {/* 댓글 섹션 */}

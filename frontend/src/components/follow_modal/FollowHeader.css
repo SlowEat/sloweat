@@ -3,14 +3,13 @@
   top: 0;
   left: 0;
   width: 503px;
-  height: 133px;
+  height: 110px;
 }
 
 .header-container {
   position: relative;
   width: 497px;
-  height: 133px;
-  border-bottom: 1.33px solid #e0f2f1;
+  height: 100px;
 }
 
 .title {

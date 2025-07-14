@@ -3,23 +3,28 @@ import { FollowHeader } from "./FollowHeader";
 import { FollowCard } from "./FollowCard";
 import "./FollowModal.css";
 
-export const FollowModal = ({ isOpen, onClose }) => {
-  const [activeTab, setActiveTab] = useState("followers"); // followers | followings
+export const FollowModal = ({ isOpen, onClose, initialTab = "followers" }) => {
+  const [activeTab, setActiveTab] = useState(initialTab);
+
+  
+  React.useEffect(() => {
+    if (isOpen) setActiveTab(initialTab);
+  }, [isOpen, initialTab]);
 
   if (!isOpen) return null;
 
   const followers = [
-    { username: "베이킹퀸", id: "@baking_queen", count: "12.5K", following: true, img: "https://c.animaapp.com/sj13U7Z6/img/image-4@2x.png" },
-    { username: "파스타마스터", id: "@pasta_master", count: "8.3K", following: true, img: "https://via.placeholder.com/40" },
-    { username: "홈쿡킹", id: "@home_cooking", count: "15.2K", following: false, img: "https://via.placeholder.com/40" },
-    { username: "건강요리사", id: "@healthy_chef", count: "6.7K", following: true, img: "https://via.placeholder.com/40" },
-    { username: "디저트퀸", id: "@dessert_queen", count: "9.1K", following: false, img: "https://via.placeholder.com/40" },
+    { username: "베이킹퀸", id: "@baking_queen", count: "12.5K", following: true, img: "https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800" },
+    { username: "파스타마스터", id: "@pasta_master", count: "8.3K", following: true, img: "https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800" },
+    { username: "홈쿡킹", id: "@home_cooking", count: "15.2K", following: false, img: "https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800" },
+    { username: "건강요리사", id: "@healthy_chef", count: "6.7K", following: true, img: "https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800" },
+    { username: "디저트퀸", id: "@dessert_queen", count: "9.1K", following: false, img: "https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800" },
   ];
 
   const followings = [
-    { username: "홈쿡킹", id: "@home_cooking", count: "15.2K", following: false, img: "https://via.placeholder.com/40" },
-    { username: "건강요리사", id: "@healthy_chef", count: "6.7K", following: true, img: "https://via.placeholder.com/40" },
-    { username: "디저트퀸", id: "@dessert_queen", count: "9.1K", following: false, img: "https://via.placeholder.com/40" },
+    { username: "홈쿡킹", id: "@home_cooking", count: "15.2K", following: false, img: "https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800" },
+    { username: "건강요리사", id: "@healthy_chef", count: "6.7K", following: true, img: "https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800" },
+    { username: "디저트퀸", id: "@dessert_queen", count: "9.1K", following: false, img: "https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800" },
   ];
 
   // 현재 탭에 따라 보여줄 목록 선택

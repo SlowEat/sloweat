@@ -20,6 +20,7 @@
   left: 0;
   width: 475px;
   height: 96px;
+  cursor : pointer;
 }
 
 .profile-img {
@@ -31,6 +32,7 @@
   margin-right: 12px;
   flex-shrink: 0;
 }
+
 
 .username {
   position: absolute;
