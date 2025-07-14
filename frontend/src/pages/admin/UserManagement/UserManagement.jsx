@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./UserManagement.css";
 
-export const UserManagement = () => {
+const UserManagement = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -84,3 +84,4 @@ export const UserManagement = () => {
     </div>
   );
 };
+export default UserManagement;

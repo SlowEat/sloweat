@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./PaymentManagement.css";
 
-export const PaymentManagement = () => {
+const PaymentManagement = () => {
   const [payments, setPayments] = useState([]);
 
   useEffect(() => {
@@ -92,3 +92,4 @@ export const PaymentManagement = () => {
     </div>
   );
 };
+export default PaymentManagement;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./CommentManagement.css";
 
-export const CommentManagement = () => {
+const CommentManagement = () => {
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
@@ -110,3 +110,5 @@ export const CommentManagement = () => {
     </div>
   );
 };
+
+export default CommentManagement;

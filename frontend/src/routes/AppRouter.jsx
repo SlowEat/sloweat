@@ -12,11 +12,12 @@ import UserPage from '../pages/user/UserPage';
 import PostForm from '../pages/user/PostForm';
 import Bookmark from '../pages/user/Bookmark';
 import Settings from '../pages/user/Settings';
-import AdminRecipePage from '../pages/admin/AdminRecipePage/AdminRecipePage';
-import AdminCommentPage from '../pages/admin/AdminCommentPage/AdminCommentPage';
-import AdminUserPage from '../pages/admin/AdminUserPage/AdminUserPage';
-import AdminPaymentPage from '../pages/admin/AdminPaymentPage/AdminPaymentPage';
-import AdminStatPage from '../pages/admin/AdminStatPage/AdminStatPage';
+import AdminLayout from '../layouts/admin/AdminLayout'
+import RecipeManagement from '../pages/admin/RecipeManagement/RecipeManagement';
+import CommentManagement from '../pages/admin/CommentManagement/CommentManagement';
+import UserManagement from '../pages/admin/UserManagement/UserManagement';
+import PaymentManagement from '../pages/admin/PaymentManagement/PaymentManagement';
+import StatReport from '../pages/admin/StatReport/StatReport';
 import TempMyPage from '../pages/temp_mypage/MyPage';
 
 const AppRouter = () => (
@@ -41,12 +42,14 @@ const AppRouter = () => (
       </Route>
 
       {/* admin 기본 페이지는 게시물 관리 페이지 */}
-      <Route path="/admin" element={<Navigate to="/admin/recipes" replace />} />
-      <Route path="/admin/recipes" element={<AdminRecipePage />} />
-      <Route path="/admin/comments" element={<AdminCommentPage />} />
-      <Route path="/admin/users" element={<AdminUserPage />} />
-      <Route path="/admin/payments" element={<AdminPaymentPage />} />
-      <Route path="/admin/statistics" element={<AdminStatPage />} />
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<Navigate to="recipes" replace />} />
+        <Route path="recipes" element={<RecipeManagement />} />
+        <Route path="comments" element={<CommentManagement />} />
+        <Route path="users" element={<UserManagement />} />
+        <Route path="payments" element={<PaymentManagement />} />
+        <Route path="statistics" element={<StatReport />} />
+      </Route>
             
       {/* 사용자 마이페이지(임시) */}
       <Route path="/temp_mypage" element={<TempMyPage/>}/>

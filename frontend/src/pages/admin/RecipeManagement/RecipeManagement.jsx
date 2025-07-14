@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./RecipeManagement.css";
 
-export const RecipeManagement = () => {
+const RecipeManagement = () => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -107,3 +107,5 @@ export const RecipeManagement = () => {
     </div>
   );
 };
+
+export default RecipeManagement;

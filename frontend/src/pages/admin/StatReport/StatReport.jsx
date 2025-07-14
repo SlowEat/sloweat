@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./StatReport.css";
 
-export const StatReport = () => {
+const StatReport = () => {
   const [totalSales, setTotalSales] = useState(2970000);
   const [paidUsers, setPaidUsers] = useState(1234);
   const [monthlyData, setMonthlyData] = useState([]);
@@ -49,3 +49,4 @@ export const StatReport = () => {
     </div>
   );
 };
+export default StatReport;

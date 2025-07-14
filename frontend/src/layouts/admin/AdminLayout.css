@@ -1,12 +1,22 @@
 .admin-layout {
+  width: 1296px;
+  margin: 0 auto;
   display: flex;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  background-color: #ffffff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
+/* Sidebar는 MainLayout에서 Tab이 차지하는 폭과 동일하게 */
+.sidebar {
+  width: 275px; /* Tab과 동일한 크기 */
+  border-right: 1px solid #e0f2f1;
+  background-color: #ffffff;
+  padding: 15px;
+}
+
+/* Admin 메인 영역은 나머지 폭을 차지하도록 */
 .admin-main {
-  flex-grow: 1;
-  padding: 24px;
-  overflow-y: auto;
-  background-color: #f9f9f9;
+  flex: 1;
+  padding: 40px 20px;
 }
