@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
 import '../../styles/user/Profile.css';
+import { FollowModal } from '../follow_modal/FollowModal';
 
 function Profile({ isMine = true, isPremium = false, initialFollowing = false }) {
-  const [isFollowing, setIsFollowing] = useState(initialFollowing);
+  const [isFollowing, setIsFollowing] = useState(initialFollowing); //팔로우 여부
+  const [isModalOpen, setIsModalOpen] = useState(false);     // 모달 열기
+  const [activeTab, setActiveTab] = useState('followers');   // 탭 선택
 
   const handleFollowToggle = () => {
     setIsFollowing((prev) => !prev);
+  };
+
+  const handleOpenModal = (tabName) => {
+    setActiveTab(tabName);
+    setIsModalOpen(true);
   };
 
   return (
@@ -49,11 +57,14 @@ function Profile({ isMine = true, isPremium = false, initialFollowing = false })
             </p>
 
             <ul className="mypage-profile-stats">
-              <li className="mypage-profile-stat-item">
+              <li 
+                className="mypage-profile-stat-item"
+                onClick={() => handleOpenModal('followers')}>
                 <span className="mypage-profile-stat-value">1,234</span>
                 <span className="mypage-profile-stat-label">팔로워</span>
               </li>
-              <li className="mypage-profile-stat-item">
+              <li className="mypage-profile-stat-item"
+                  onClick={() => handleOpenModal('followings')}>
                 <span className="mypage-profile-stat-value">567</span>
                 <span className="mypage-profile-stat-label">팔로잉</span>
               </li>
@@ -65,6 +76,13 @@ function Profile({ isMine = true, isPremium = false, initialFollowing = false })
           </div>
         </div>
       </div>
+
+      {/* //팔로우 모달 */}
+      <FollowModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        initialTab={activeTab} 
+      />
     </div>
   );
 }
