@@ -112,3 +112,22 @@
   align-items: center;
   gap: 8px;
 }
+
+.payment-filter-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.payment-status-filter {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.payment-requested {
+  background-color: #fff3cd;
+  color: #856404;
+}

@@ -3,6 +3,7 @@ import "./CommentManagement.css";
 
 const CommentManagement = () => {
   const [comments, setComments] = useState([]);
+  const [filterStatus, setFilterStatus] = useState("전체");
 
   useEffect(() => {
     const dummyComments = [
@@ -38,76 +39,96 @@ const CommentManagement = () => {
     setComments(dummyComments);
   }, []);
 
+  const handleFilterChange = (e) => {
+    setFilterStatus(e.target.value);
+  };
+
+  const filteredComments =
+      filterStatus === "전체"
+          ? comments
+          : comments.filter((comment) => comment.status === filterStatus);
+
   return (
-    <div className="comment-wrapper">
-      <div className="comment-content-box">
-        <div className="comment-page-header">
-          <h1 className="comment-page-title">댓글 관리</h1>
-          <div className="comment-search">
-            <input
-              type="text"
-              placeholder="검색..."
-              className="comment-search-input"
-            />
-            <img
-              src="https://c.animaapp.com/rgpZJ8Rs/img/frame-4.svg"
-              alt="검색"
-              className="comment-search-icon"
-            />
-          </div>
-        </div>
-
-        <div className="comment-section-title">댓글 목록</div>
-
-        <section className="comment-table">
-          <div className="comment-grid comment-table-header">
-            <span>ID</span>
-            <span>내용</span>
-            <span>작성자</span>
-            <span>게시물 ID</span>
-            <span>작성일</span>
-            <span>신고수</span>
-            <span>상태</span>
-            <span>작업</span>
+      <div className="comment-wrapper">
+        <div className="comment-content-box">
+          <div className="comment-page-header">
+            <h1 className="comment-page-title">댓글 관리</h1>
+            <div className="comment-search">
+              <input
+                  type="text"
+                  placeholder="검색..."
+                  className="comment-search-input"
+              />
+              <img
+                  src="https://c.animaapp.com/rgpZJ8Rs/img/frame-4.svg"
+                  alt="검색"
+                  className="comment-search-icon"
+              />
+            </div>
           </div>
 
-          {comments.map((comment) => (
-            <div className="comment-grid comment-table-row" key={comment.id}>
-              <span>{comment.id}</span>
-              <p>{comment.content}</p>
-              <span>{comment.author}</span>
-              <span>{comment.postId}</span>
-              <span>{comment.createdAt}</span>
-              <span>
+          <div className="comment-filter-bar">
+            <div className="comment-section-title">댓글 목록</div>
+            <select
+                className="comment-status-filter"
+                value={filterStatus}
+                onChange={handleFilterChange}
+            >
+              <option value="전체">전체</option>
+              <option value="정상">정상</option>
+              <option value="신고됨">신고됨</option>
+            </select>
+          </div>
+
+          <section className="comment-table">
+            <div className="comment-grid comment-table-header">
+              <span>ID</span>
+              <span>내용</span>
+              <span>작성자</span>
+              <span>게시물 ID</span>
+              <span>작성일</span>
+              <span>신고수</span>
+              <span>상태</span>
+              <span>작업</span>
+            </div>
+
+            {filteredComments.map((comment) => (
+                <div className="comment-grid comment-table-row" key={comment.id}>
+                  <span>{comment.id}</span>
+                  <p>{comment.content}</p>
+                  <span>{comment.author}</span>
+                  <span>{comment.postId}</span>
+                  <span>{comment.createdAt}</span>
+                  <span>
                 <span
-                  className={`comment-badge ${
-                    comment.reportCount > 0 ? "reported" : "normal"
-                  }`}
+                    className={`comment-badge ${
+                        comment.reportCount > 0 ? "reported" : "normal"
+                    }`}
                 >
                   {comment.reportCount}
                 </span>
               </span>
-              <span>
+                  <span>
                 <span
-                  className={`comment-badge ${
-                    comment.status === "정상" ? "status-normal" : "status-reported"
-                  }`}
+                    className={`comment-badge ${
+                        comment.status === "정상" ? "status-normal" : "status-reported"
+                    }`}
                 >
                   {comment.status}
                 </span>
               </span>
-              <span className="comment-action-wrapper">
+                  <span className="comment-action-wrapper">
                 {comment.status === "신고됨" ? (
-                  <button className="comment-delete-btn">삭제</button>
+                    <button className="comment-delete-btn">삭제</button>
                 ) : (
-                  <span className="comment-action-placeholder">-</span>
+                    <span className="comment-action-placeholder">-</span>
                 )}
               </span>
-            </div>
-          ))}
-        </section>
+                </div>
+            ))}
+          </section>
+        </div>
       </div>
-    </div>
   );
 };
 

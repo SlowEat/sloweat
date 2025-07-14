@@ -3,6 +3,7 @@ import "./PaymentManagement.css";
 
 const PaymentManagement = () => {
   const [payments, setPayments] = useState([]);
+  const [filterStatus, setFilterStatus] = useState("전체");
 
   useEffect(() => {
     const dummyPayments = [
@@ -24,72 +25,118 @@ const PaymentManagement = () => {
       },
       {
         id: 3,
-        userId: 1,
+        userId: 3,
         date: "2023-12-01",
         amount: "9,900원",
         period: "1개월",
         status: "환불완료",
       },
+      {
+        id: 4,
+        userId: 4,
+        date: "2024-01-10",
+        amount: "9,900원",
+        period: "1개월",
+        status: "환불요청",
+      },
     ];
     setPayments(dummyPayments);
   }, []);
 
+  const handleFilterChange = (e) => {
+    setFilterStatus(e.target.value);
+  };
+
+  const handleRefundComplete = (paymentId) => {
+    const updatedPayments = payments.map((payment) =>
+        payment.id === paymentId ? { ...payment, status: "환불완료" } : payment
+    );
+    setPayments(updatedPayments);
+  };
+
+  const filteredPayments =
+      filterStatus === "전체"
+          ? payments
+          : payments.filter((payment) => payment.status === filterStatus);
+
   return (
-    <div className="payment-wrapper">
-      <div className="payment-content-box">
-        <div className="payment-page-header">
-          <h1 className="payment-page-title">결제 관리</h1>
-          <div className="payment-search">
-            <input type="text" placeholder="검색..." className="payment-search-input" />
-            <img
-              src="https://c.animaapp.com/rgpZJ8Rs/img/frame-4.svg"
-              alt="검색"
-              className="payment-search-icon"
-            />
-          </div>
-        </div>
-
-        <div className="payment-section-title">결제 내역</div>
-
-        <section className="payment-table">
-          <div className="payment-table-header payment-grid">
-            <span>결제 ID</span>
-            <span>회원 ID</span>
-            <span>결제일</span>
-            <span>금액</span>
-            <span>기간</span>
-            <span>상태</span>
-            <span>작업</span>
+      <div className="payment-wrapper">
+        <div className="payment-content-box">
+          <div className="payment-page-header">
+            <h1 className="payment-page-title">결제 관리</h1>
+            <div className="payment-search">
+              <input type="text" placeholder="검색..." className="payment-search-input" />
+              <img
+                  src="https://c.animaapp.com/rgpZJ8Rs/img/frame-4.svg"
+                  alt="검색"
+                  className="payment-search-icon"
+              />
+            </div>
           </div>
 
-          {payments.map((payment) => (
-            <div className="payment-table-row payment-grid" key={payment.id}>
-              <span>{payment.id}</span>
-              <span>{payment.userId}</span>
-              <span>{payment.date}</span>
-              <span>{payment.amount}</span>
-              <span>{payment.period}</span>
-              <span>
+          <div className="payment-filter-bar">
+            <div className="payment-section-title">결제 내역</div>
+            <select
+                className="payment-status-filter"
+                value={filterStatus}
+                onChange={handleFilterChange}
+            >
+              <option value="전체">전체</option>
+              <option value="결제완료">결제완료</option>
+              <option value="환불요청">환불요청</option>
+              <option value="환불완료">환불완료</option>
+            </select>
+          </div>
+
+          <section className="payment-table">
+            <div className="payment-table-header payment-grid">
+              <span>결제 ID</span>
+              <span>회원 ID</span>
+              <span>결제일</span>
+              <span>금액</span>
+              <span>기간</span>
+              <span>상태</span>
+              <span>작업</span>
+            </div>
+
+            {filteredPayments.map((payment) => (
+                <div className="payment-table-row payment-grid" key={payment.id}>
+                  <span>{payment.id}</span>
+                  <span>{payment.userId}</span>
+                  <span>{payment.date}</span>
+                  <span>{payment.amount}</span>
+                  <span>{payment.period}</span>
+                  <span>
                 <span
-                  className={`payment-badge ${
-                    payment.status === "결제완료" ? "payment-complete" : "payment-refunded"
-                  }`}
+                    className={`payment-badge ${
+                        payment.status === "결제완료"
+                            ? "payment-complete"
+                            : payment.status === "환불요청"
+                                ? "payment-requested"
+                                : "payment-refunded"
+                    }`}
                 >
                   {payment.status}
                 </span>
               </span>
-              <span>
-                {payment.status === "결제완료" ? (
-                  <button className="refund-btn">환불</button>
+                  <span>
+                {payment.status === "환불요청" ? (
+                    <button
+                        className="refund-btn"
+                        onClick={() => handleRefundComplete(payment.id)}
+                    >
+                      환불
+                    </button>
                 ) : (
-                  <span>-</span>
+                    <span>-</span>
                 )}
               </span>
-            </div>
-          ))}
-        </section>
+                </div>
+            ))}
+          </section>
+        </div>
       </div>
-    </div>
   );
 };
+
 export default PaymentManagement;
