@@ -1,0 +1,45 @@
+/* 댓글 섹션 전체 */
+.comment-section {
+  width: 100%;
+  max-width: 688px;
+  margin: 0 auto;
+}
+
+/* 헤더 */
+.comment-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 36px;
+  margin-bottom: 10px;
+}
+
+.comment-section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.comment-create-button {
+  height: 36px;
+  padding: 0 16px;
+  background-color: #10b981;
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.comment-create-button:hover {
+  background-color: #059669;
+}
+
+
+
+
+
+

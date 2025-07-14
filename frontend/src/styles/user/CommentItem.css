@@ -1,0 +1,117 @@
+.comment-item {
+  position: relative;
+  padding: 15px;
+  background-color: #f8fffe;
+  border-radius: 8px;
+  border: 1px solid #e0f2f1;
+  display: block;
+  margin-top: 10px;
+}
+
+.comment-item-body {
+  display: flex;
+}
+
+.comment-item-profile {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  margin-right: 18px;
+  object-fit: cover;
+}
+
+.comment-item-content {
+  flex: 1;
+}
+
+.comment-item-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.comment-item-username {
+  font-weight: 700;
+  color: #1a1a1a;
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.comment-item-handle,
+.comment-item-separator,
+.comment-item-time {
+  font-weight: 400;
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.comment-item-text {
+  margin-top: 4px;
+  font-weight: 400;
+  color: #1a1a1a;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* 옵션 메뉴 */
+.comment-dropdown-menu {
+  position: absolute;
+  top: 38px;
+  right: 15px;
+  background-color: #ffffff;
+  border: 1px solid #e0f2f1;
+  border-radius: 12px;
+  min-width: 140px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  z-index: 10;
+  padding: 8px 0;
+}
+
+/* 공통 버튼 스타일 */
+.comment-dropdown-item {
+  width: 100%;
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 600;
+  color: #374151; /* 짙은 회색 */
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease;
+  border-radius: 8px;
+  display: block;
+}
+
+/* 버튼 호버 효과 */
+.comment-dropdown-item:hover {
+  background-color: #e6f4ea; /* 연한 초록 배경 */
+  color: #256d3d; /* 짙은 초록 텍스트 */
+}
+
+/* 삭제 버튼만 빨간색 강조 */
+.comment-dropdown-item.comment-dropdown-delete {
+  color: #dc2626; /* 레드-600 */
+  font-weight: 700;
+}
+
+.comment-dropdown-item.comment-dropdown-delete:hover {
+  background-color: #fef2f2; /* 연한 빨강 배경 */
+  color: #b91c1c; /* 레드-700 */
+}
+
+
+.comment-edited-label {
+  font-size: 0.8rem;
+  color: #888888;
+  font-style: italic;
+  margin-left: 6px;
+  user-select: none;
+}
+
+
+
+
+
