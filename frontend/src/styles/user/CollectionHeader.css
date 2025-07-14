@@ -1,0 +1,53 @@
+.collection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 52px;
+  padding: 10px 0;
+}
+
+.collection-stats {
+  display: flex;
+  align-items: center;
+}
+
+.bookmark-icon,
+.add-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.bookmark-count {
+  margin-left: 4px;
+  font-family: "Inter", Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 21px;
+  color: #6b7280;
+}
+
+.count {
+  margin-right: 4px;
+}
+
+.add-collection-btn {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #10b981;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.add-collection-btn:hover {
+  background-color: #0d9668;
+}
+
+.btn-text {
+  margin-left: 6px;
+  font-family: "Inter", Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  color: #ffffff;
+}

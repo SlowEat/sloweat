@@ -1,0 +1,69 @@
+.free-subscribe-box {
+  position: relative;
+  max-width: 252px;
+  min-height: 174px;
+  margin: 7px 0 30px;
+}
+
+.free-subscribe-banner-view {
+  position: relative;
+  width: 269px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #138f84, #34d399);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.free-subscribe-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.free-subscribe-logo {
+  width: 20px;
+  height: 20px;
+}
+
+.free-subscribe-title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 21px;
+  color: #ffffff;
+}
+
+.free-subscribe-description {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  color: #ffffff;
+  max-width: 201px;
+}
+
+
+.free-subscribe-cta-container {
+  margin-top: 15px;
+}
+
+.free-subscribe-cta-button {
+  width: 100%;
+  height: 37px;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.free-subscribe-cta-button:hover {
+  background-color: #f0f0f0;
+}
+
+.free-subscribe-cta-text {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 21px;
+  color: #10b981;
+}

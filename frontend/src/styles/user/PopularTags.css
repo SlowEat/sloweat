@@ -1,0 +1,62 @@
+.popular-tag-box {
+  max-width: 268px;
+  height: 100px;
+  margin-top : 25px;
+}
+
+.popular-tag-view {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.popular-tag-overlap {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e0f2f1;
+}
+
+.popular-tag-title {
+  font-family: "Inter", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  color: #1a1a1a;
+}
+
+.popular-tag-list {
+  display: flex;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.popular-tag-item {
+  flex-shrink: 0;
+}
+
+.popular-tag-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  padding: 0 12px;
+  background-color: #f0fdf4;
+  border-radius: 13px;
+}
+
+.popular-tag-text {
+  font-family: "Inter", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #10b981;
+  white-space: nowrap;
+}

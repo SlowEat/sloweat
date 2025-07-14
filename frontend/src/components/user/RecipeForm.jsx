@@ -1,0 +1,174 @@
+import React, { useState } from 'react';
+import '../../styles/user/RecipeForm.css';
+import '../../styles/user/Filter.css';
+
+const RecipeForm = () => {
+  const [formData, setFormData] = useState({
+    title: '크림 파스타 레시피',
+    content: '1. 마늘과 양파를 볶는다.\n2. 생크림과 우유를 넣고 끓인다.\n3. 삶은 파스타를 넣고 섞는다.',
+    photo: null,
+    duration: '20',
+    isPremium: true,
+    tags: {
+      situation: '야식',
+      type: '양식',
+      material: '파스타',
+      method: '끓이기'
+    }
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    if (type === 'checkbox') {
+      setFormData({ ...formData, [name]: checked });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const handleFileChange = (e) => {
+    if (e.target.files.length > 0) {
+      setFormData({ ...formData, photo: e.target.files });
+    }
+  };
+
+  const handleTagChange = (e, tagCategory) => {
+    const value = e.target.value;
+    setFormData((prev) => ({
+      ...prev,
+      tags: {
+        ...prev.tags,
+        [tagCategory]: value
+      }
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('제출된 폼:', formData);
+  };
+
+  return (
+    <main className="recipe-form-container">
+      <form onSubmit={handleSubmit} className="recipe-form">
+        <div className="recipe-form-group">
+          <label>제목 *</label>
+          <input
+            type="text"
+            name="title"
+            required
+            value={formData.title}
+            onChange={handleInputChange}
+          />
+        </div>
+
+        <div className="recipe-form-group">
+          <label>내용 *</label>
+          <textarea
+            name="content"
+            required
+            rows={8}
+            value={formData.content}
+            onChange={handleInputChange}
+            className="recipe-textarea"
+          ></textarea>
+        </div>
+
+        <div className="recipe-form-group">
+          <label htmlFor="photo-upload">사진 업로드</label>
+          <label htmlFor="photo-upload" className="recipe-file-upload">
+            사진 선택하기
+            <input
+              id="photo-upload"
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleFileChange}
+            />
+          </label>
+          <ul className="file-name-list">
+            {formData.photo &&
+              Array.from(formData.photo).map((file, idx) => (
+                <li key={idx}>{file.name}</li>
+              ))}
+          </ul>
+        </div>
+
+        <div className="recipe-form-group">
+          <label>태그</label>
+          <div className="filter-group">
+            <select
+              className="select-box filter-select"
+              value={formData.tags.situation}
+              onChange={(e) => handleTagChange(e, 'situation')}
+            >
+              <option value="">상황</option>
+              <option value="혼밥">혼밥</option>
+              <option value="파티">파티</option>
+              <option value="야식">야식</option>
+            </select>
+
+            <select
+              className="select-box filter-select"
+              value={formData.tags.type}
+              onChange={(e) => handleTagChange(e, 'type')}
+            >
+              <option value="">종류</option>
+              <option value="한식">한식</option>
+              <option value="양식">양식</option>
+              <option value="중식">중식</option>
+            </select>
+
+            <select
+              className="select-box filter-select"
+              value={formData.tags.material}
+              onChange={(e) => handleTagChange(e, 'material')}
+            >
+              <option value="">재료</option>
+              <option value="파스타">파스타</option>
+              <option value="닭고기">닭고기</option>
+              <option value="계란">계란</option>
+            </select>
+
+            <select
+              className="select-box filter-select"
+              value={formData.tags.method}
+              onChange={(e) => handleTagChange(e, 'method')}
+            >
+              <option value="">방법</option>
+              <option value="굽기">굽기</option>
+              <option value="끓이기">끓이기</option>
+              <option value="볶기">볶기</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="recipe-form-group">
+          <label>소요 시간 (분)</label>
+          <input
+            type="number"
+            name="duration"
+            placeholder="예: 15"
+            value={formData.duration}
+            onChange={handleInputChange}
+          />
+        </div>
+
+        <div className="recipe-checkbox-row">
+          <input
+            type="checkbox"
+            name="isPremium"
+            id="isPremium"
+            checked={formData.isPremium}
+            onChange={handleInputChange}
+          />
+          <label htmlFor="isPremium">프리미엄 전용</label>
+        </div>
+
+        <button type="submit" className="recipe-submit-btn">게시하기</button>
+      </form>
+    </main>
+  );
+};
+
+export default RecipeForm;
