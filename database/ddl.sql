@@ -7,6 +7,7 @@ USE sloweat;
 -- 제약조건 무시를 위해 외래 키 검사 끄기
 SET FOREIGN_KEY_CHECKS = 0;
 
+-- drop database 가 실행되는 경우에는 drop table 부분 주석 처리하세요!
 DROP TABLE sample;
 DROP TABLE recipe_tag;
 DROP TABLE tag;
@@ -23,6 +24,8 @@ DROP TABLE comment;
 DROP TABLE bookmark;
 DROP TABLE bookmark_collection;
 DROP TABLE user;
+-- drop database 가 실행되는 경우에는 drop table 부분 주석 처리하세요!
+
 
 -- 외래 키 검사 다시 켜기
 SET FOREIGN_KEY_CHECKS = 1;
@@ -41,7 +44,7 @@ CREATE TABLE `sample` (
 
 CREATE TABLE `user` (
   `user_id` int NOT NULL AUTO_INCREMENT,
-  `join_type` enum('로컬','카카오') NOT NULL COMMENT '카카오/로컬',
+  `join_type` enum('LOCAL','KAKAO') NOT NULL COMMENT '카카오/로컬',
   `local_email` varchar(100) DEFAULT NULL COMMENT '로그인 이메일',
   `local_password` varchar(255) DEFAULT NULL COMMENT '해시된 로컬 비밀번호',
   `kakao_id` varchar(255) DEFAULT NULL COMMENT '카카오 식별 고유 ID',
@@ -49,7 +52,7 @@ CREATE TABLE `user` (
   `nickname` varchar(20) NOT NULL,
   `profile_img_path` varchar(255) DEFAULT NULL,
   `introduce` varchar(30) DEFAULT NULL,
-  `role` enum('사용자','관리자') NOT NULL DEFAULT '사용자',
+  `role` enum('USER','ADMIN') NOT NULL DEFAULT 'USER',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `nickname` (`nickname`)
@@ -113,7 +116,7 @@ CREATE TABLE `recipe_report` (
   `recipe_id` int NOT NULL COMMENT '신고 대상 게시글',
   `reason` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `status` enum('대기','처리','반려') NOT NULL DEFAULT '대기' COMMENT '처리 상태',
+  `status` enum('REQUEST','APPROVE','REJECT') NOT NULL DEFAULT 'REQUEST' COMMENT '처리 상태',
   PRIMARY KEY (`report_id`),
   UNIQUE KEY `user_id` (`user_id`,`recipe_id`),
   KEY `recipe_id` (`recipe_id`),
@@ -168,7 +171,7 @@ CREATE TABLE `comment_report` (
   `user_id` int DEFAULT NULL COMMENT '신고자',
   `reason` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `status` enum('대기','처리','반려') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `status` enum('REQUEST','APPROVE','REJECT') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'REQUEST',
   PRIMARY KEY (`report_id`),
   UNIQUE KEY `user_id` (`user_id`,`comment_id`),
   KEY `comment_id` (`comment_id`),
@@ -182,7 +185,7 @@ CREATE TABLE `comment_report` (
 CREATE TABLE `subscription` (
   `subscription_id` int NOT NULL AUTO_INCREMENT,
   `user_id` int DEFAULT NULL COMMENT '구독자',
-  `status` enum('ACTIVE','CANCLED','EXPIRED') NOT NULL DEFAULT 'ACTIVE',
+  `status` enum('ACTIVE','CANCEL','EXPIRE') NOT NULL DEFAULT 'ACTIVE',
   `start_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `end_date` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -239,7 +242,7 @@ CREATE TABLE `payment` (
   `payment_id` int NOT NULL AUTO_INCREMENT,
   `subscription_id` int DEFAULT NULL COMMENT '구독 정보',
   `amount` int NOT NULL COMMENT '결제금액',
-  `status` enum('PAID','CANCELED','REFUNDED') NOT NULL,
+  `status` enum('PAID','CANCEL','REFUND') NOT NULL,
   `method` enum('CARD','CASH') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `pay_date` timestamp NOT NULL,
   `refund_status` enum('REQUEST','APPROVE','REJECT') DEFAULT NULL,
@@ -257,7 +260,7 @@ CREATE TABLE `payment` (
 CREATE TABLE `tag` (
   `tag_id` int NOT NULL AUTO_INCREMENT,
   `tag_name` varchar(50) NOT NULL,
-  `tag_type` enum('종류','상황','재료','방법') NOT NULL,
+  `tag_type` enum('TYPE','SITUATION','INGREDIENT','METHOD') NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`tag_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='태그';
