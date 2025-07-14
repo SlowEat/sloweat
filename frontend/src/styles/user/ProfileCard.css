@@ -1,0 +1,85 @@
+.profilecard-link {
+  width: 100%;
+  text-decoration: none;
+  display: block;
+}
+
+.profilecard-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 16px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.profilecard-link:hover .profilecard-view {
+  background-color: #f3f4f6;
+  border-radius : 9999px;
+  cursor: pointer;
+}
+
+.profilecard-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 12px;
+  position: relative;
+}
+
+.profilecard-image {
+  width: 48px;
+  height: 48px;
+  border-radius: 9999px;
+}
+
+.profilecard-info {
+  flex-grow: 1;
+}
+
+.profilecard-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #000;
+  margin-bottom : 5px;
+}
+
+.profilecard-username {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.profilecard-action {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.profilecard-logout-dropdown {
+  position: absolute;
+  width : 78px;
+  bottom : 100%;
+  right: 0;
+  margin-top: 4px;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+.profilecard-logout-button {
+  padding: 8px 12px;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #ef4444;
+  text-align: left;
+}
+
+.profilecard-frame{
+  transform: scaleY(-1);
+}
