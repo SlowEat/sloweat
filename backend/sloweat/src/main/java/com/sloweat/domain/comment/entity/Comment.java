@@ -40,4 +40,24 @@ public class Comment {
     private LocalDateTime updatedAt;
 
     private Boolean isDeleted = false;
+
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Status status = Status.NONE;
+
+    public enum Status {
+        NONE("신고 없음"),
+        REQUEST("대기"),
+        APPROVE("처리"),
+        REJECT("반려");
+
+        private final String label;
+
+        Status(String label) {this.label = label;}
+
+        public String getLabel() {
+            return label;
+        }
+    }
 }
