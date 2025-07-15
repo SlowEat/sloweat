@@ -301,6 +301,8 @@ psd
 thumb
 sketch
 
+**/.env
+
 # End of https://www.toptal.com/developers/gitignore/api/react
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,intellij,eclipse,maven,java
