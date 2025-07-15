@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 // TODO: 관리자 권한 체크 (PreAuthorize 적용 예정)
 @RestController
-@RequestMapping("/api/admin/")
+@RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminRecipeController {
 
     private final AdminRecipeService adminRecipeService;
 
     @GetMapping("/recipes")
-    public Page<AdminRecipeResponse> searchRecipes(
+    public Page<AdminRecipeResponse> getRecipes(
         @RequestParam(required = false) String title,
         @RequestParam(required = false) String author,
         @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable  // 클라이언트가 아무런 페이징 정보를 요청하지 않았을 때의 기본 페이징 조건
