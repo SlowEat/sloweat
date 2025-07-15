@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import '../../styles/user/RecipeForm.css';
 import '../../styles/user/Filter.css';
 
 const RecipeForm = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     title: '크림 파스타 레시피',
     content: '1. 마늘과 양파를 볶는다.\n2. 생크림과 우유를 넣고 끓인다.\n3. 삶은 파스타를 넣고 섞는다.',
@@ -19,11 +23,7 @@ const RecipeForm = () => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    if (type === 'checkbox') {
-      setFormData({ ...formData, [name]: checked });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value });
   };
 
   const handleFileChange = (e) => {
@@ -43,9 +43,35 @@ const RecipeForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('제출된 폼:', formData);
+
+    const requestData = {
+      userId: 1,
+      title: formData.title,
+      content: formData.content,
+      cookingTime: parseInt(formData.duration),
+      isSubscribed: formData.isPremium
+    };
+
+    try {
+      const response = await axios.post('http://localhost:8080/api/recipes', requestData, {
+        headers: {
+          'Cache-Control': 'no-cache'
+        }
+      });
+      console.log('작성 성공 응답:', response.data);
+
+      console.log('작성 성공:', response.data);
+      alert('글이 성공적으로 등록되었습니다!');
+
+      // ✅ 작성된 게시글 ID 기반으로 상세 페이지 이동
+      const newRecipeId = response.data.id;
+      navigate(`/postdetail/${newRecipeId}`);
+    } catch (error) {
+      console.error('작성 실패:', error);
+      alert('작성 중 오류가 발생했습니다.');
+    }
   };
 
   return (
