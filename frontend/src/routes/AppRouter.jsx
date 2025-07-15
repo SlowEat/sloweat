@@ -10,7 +10,7 @@ import PostDetail from '../pages/user/PostDetail';
 import MyPage from '../pages/user/MyPage';
 import UserPage from '../pages/user/UserPage';
 import PostForm from '../pages/user/PostForm';
-import Bookmark from '../pages/user/Bookmark';
+import Bookmark from '../pages/bookmark/Bookmark';
 import Settings from '../pages/user/Settings';
 import AdminLayout from '../layouts/admin/AdminLayout'
 import RecipeManagement from '../pages/admin/RecipeManagement/RecipeManagement';
