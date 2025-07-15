@@ -33,7 +33,7 @@ const AppRouter = () => (
         <Route path="/" element={<Home />} />
         <Route path="/search" element={<Search />} />
         <Route path="/membership" element={<Membership />} />
-        <Route path="/postdetail" element={<PostDetail />} />
+        <Route path="/postdetail/:id" element={<PostDetail />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/userpage" element={<UserPage />} />
         <Route path="/postform" element={<PostForm />} />
