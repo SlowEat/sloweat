@@ -41,7 +41,8 @@ public class BookmarkCollectionService {
                 .map(collection -> BookmarkCollectionResponseDto.builder()
                         .collectionId(collection.getCollectionId())
                         .collectionName(collection.getCollectionName())
-                        .userId(collection.getUser().getUserId())  // 만약 user가 객체로 연결되어 있다면
+                        .userId(collection.getUser().getUserId())
+                        .createdAt(collection.getCreatedAt())
                         .build()
                 )
                 .collect(Collectors.toList());
