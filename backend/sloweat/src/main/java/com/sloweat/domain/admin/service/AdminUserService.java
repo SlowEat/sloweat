@@ -1,8 +1,8 @@
 package com.sloweat.domain.admin.service;
 
-import com.sloweat.domain.admin.dto.AdminUserRequest;
-import com.sloweat.domain.admin.dto.AdminUserResponse;
-import com.sloweat.domain.admin.repository.AdminUserRepository;
+import com.sloweat.domain.admin.dto.user.AdminUserRequest;
+import com.sloweat.domain.admin.dto.user.AdminUserResponse;
+import com.sloweat.domain.admin.repository.user.AdminUserRepository;
 import com.sloweat.domain.user.entity.User;
 import com.sloweat.domain.user.entity.User.JoinType;
 import com.sloweat.domain.user.entity.User.Status;

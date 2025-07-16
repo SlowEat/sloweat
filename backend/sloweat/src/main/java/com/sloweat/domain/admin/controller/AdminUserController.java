@@ -1,9 +1,7 @@
 package com.sloweat.domain.admin.controller;
 
-import com.sloweat.domain.admin.dto.AdminCommentRequest;
-import com.sloweat.domain.admin.dto.AdminCommentResponse;
-import com.sloweat.domain.admin.dto.AdminUserRequest;
-import com.sloweat.domain.admin.dto.AdminUserResponse;
+import com.sloweat.domain.admin.dto.user.AdminUserRequest;
+import com.sloweat.domain.admin.dto.user.AdminUserResponse;
 import com.sloweat.domain.admin.service.AdminUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

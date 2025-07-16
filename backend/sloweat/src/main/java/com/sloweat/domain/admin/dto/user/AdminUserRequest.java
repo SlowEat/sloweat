@@ -1,4 +1,4 @@
-package com.sloweat.domain.admin.dto;
+package com.sloweat.domain.admin.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
