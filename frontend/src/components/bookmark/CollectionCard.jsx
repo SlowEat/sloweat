@@ -1,6 +1,6 @@
 import '../../styles/user/CollectionCard.css';
 
-const CollectionCard = () => {
+const CollectionCard = ({collection}) => {
   return (
     <article className="collection-card">
       <div className="collection-card-image">
@@ -11,7 +11,7 @@ const CollectionCard = () => {
         />
       </div>
       <div className="collection-card-details">
-        <h2 className="collection-card-title">맛있는 파스타 레시피</h2>
+        <h2 className="collection-card-title"></h2>
         <time className="collection-card-date" dateTime="2024-01-15">2024-01-15</time>
         <div className="collection-card-actions">
           <button className="collection-card-button edit-button" aria-label="Edit recipe">

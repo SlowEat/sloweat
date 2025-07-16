@@ -31,23 +31,5 @@ public class CommentReport {
     private String reason;
 
     private LocalDateTime createdAt;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Status status;
-
-    public enum Status {
-        REQUEST("대기"),
-        APPROVE("처리"),
-        REJECT("반려");
-
-        private final String label;
-
-        Status(String label) {this.label = label;}
-
-        public String getLabel() {
-            return label;
-        }
-    }
 }
 
