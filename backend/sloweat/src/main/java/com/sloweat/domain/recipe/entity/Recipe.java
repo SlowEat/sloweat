@@ -41,10 +41,10 @@ public class Recipe {
     @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Status status = Status.NONE;
+    private Status status = Status.None;
 
     public enum Status {
-        NONE("신고 없음"),
+        None("신고 없음"),
         REQUEST("대기"),
         APPROVE("처리"),
         REJECT("반려");

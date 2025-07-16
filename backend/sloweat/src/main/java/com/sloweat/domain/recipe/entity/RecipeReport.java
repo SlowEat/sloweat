@@ -32,4 +32,5 @@ public class RecipeReport {
     private String reason;
 
     private LocalDateTime createdAt;
+
 }

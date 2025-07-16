@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class AdminRecipeRequest {
-  private String title;
+public class AdminCommentRequest {
+  private String content;
   private String author;
 }
