@@ -291,3 +291,15 @@ WHERE role = 'ROLE_USER';
 UPDATE user
 SET role = 'ADMIN'
 WHERE role = 'ROLE_ADMIN';
+
+-- 컬럼 enum 정의 및 DEFAULT 값 수정
+ALTER TABLE user
+MODIFY COLUMN role ENUM('ROLE_USER', 'ROLE_ADMIN') NOT NULL DEFAULT 'ROLE_USER';
+
+-- refresh 토큰 저장 용 테이블
+CREATE TABLE refresh (
+    refresh_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    refresh_token TEXT NOT NULL,
+    expiration VARCHAR(255) NOT NULL
+);
