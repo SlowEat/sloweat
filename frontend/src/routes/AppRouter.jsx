@@ -89,8 +89,8 @@ const AppRouter = () => (
     <ScrollToTop />
     <Routes>
       {/* 공통 - 로그인, 회원가입 페이지 */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/signUp" element={<SignUp />} />
+      <Route path="/auth/login" element={<Login />} />
+      <Route path="/auth/signUp" element={<SignUp />} />
 
       {/* 로그인 이후 user 페이지 */}
       <Route element={<MainLayout />}>
