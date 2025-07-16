@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface BookmarkCollectionRepository extends JpaRepository<BookmarkCollection, Integer> {
 
     Optional<BookmarkCollection> findByCollectionId(Integer collectionId);
+
+    Optional<BookmarkCollection> findByCollectionIdAndUser_UserId(Integer id, Integer userId);
 }
