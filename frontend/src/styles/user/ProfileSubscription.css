@@ -1,0 +1,300 @@
+.subscription-upgrade {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.upgrade-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.upgrade-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.upgrade-header p {
+  font-size: 16px;
+  color: #6b7280;
+}
+
+.premium-plan {
+  background-color: #f8fffe;
+  border: 1px solid #e0f2f1;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.plan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.plan-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.pricing {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.price {
+  font-size: 30px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.period {
+  font-size: 16px;
+  color: #6b7280;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px 0;
+}
+
+.features-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.check-icon {
+  width: 16px;
+  height: 16px;
+  color: #10b981;
+}
+
+.subscribe-btn {
+  width: 100%;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.subscription-note {
+  text-align: center;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.faq-section {
+  margin-top: 32px;
+}
+
+.faq-section h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 16px;
+}
+
+.faq-item {
+  border-bottom: 1px solid #e0f2f1;
+  padding: 16px 0;
+}
+
+.faq-item summary {
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq-item p {
+  margin-top: 8px;
+  color: #6b7280;
+}
+
+.subscription-management {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.subscription-status,
+.payment-method,
+.payment-history,
+.subscription-cancel {
+  background-color: #f8fffe;
+  border: 1px solid #e0f2f1;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.subscription-status h3,
+.payment-method h3,
+.payment-history h3,
+.subscription-cancel h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 16px;
+}
+
+.subscription-card,
+.payment-card {
+  background-color: white;
+  border: 1px solid #e0f2f1;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.subscription-info,
+.card-details {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.premium-icon,
+.card-icon,
+.receipt-icon {
+  font-size: 24px;
+}
+
+.subscription-details h4,
+.card-details h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+
+.subscription-details p,
+.card-details p {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 2px;
+}
+
+.price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.change-payment-btn {
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.payment-record {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background-color: white;
+  border: 1px solid #e0f2f1;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.record-details time {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.record-details p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 2px 0;
+}
+
+.amount {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.refund-btn {
+  background-color: white;
+  color: #dc2626;
+  border: 1px solid #fee2e2;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.subscription-cancel {
+  border-color: #fee2e2;
+}
+
+.subscription-cancel h3 {
+  color: #dc2626;
+}
+
+.subscription-cancel p {
+  color: #6b7280;
+  margin-bottom: 16px;
+}
+
+.cancel-btn {
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 24px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .subscription-upgrade,
+  .subscription-management {
+    padding: 16px;
+  }
+
+  .plan-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .subscription-info,
+  .payment-record {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
