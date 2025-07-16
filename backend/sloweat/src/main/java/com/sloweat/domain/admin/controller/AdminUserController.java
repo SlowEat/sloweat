@@ -10,7 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,5 +37,23 @@ public class AdminUserController {
   @GetMapping("/users/{userId}")
   public AdminUserResponse getUserById(@PathVariable Integer userId) {
     return adminUserService.getUserById(userId);
+  }
+
+  @PatchMapping("/users/{userId}/ban")
+  public ResponseEntity<Void> banUser(@PathVariable Integer userId) {
+    adminUserService.banUser(userId);
+    return ResponseEntity.noContent().build();
+  }
+
+  @PatchMapping("/users/{userId}/withdraw")
+  public ResponseEntity<Void> withdrawUser(@PathVariable Integer userId) {
+    adminUserService.withdrawUser(userId);
+    return  ResponseEntity.noContent().build();
+  }
+
+  @PatchMapping("/users/{userId}/activate")
+  public ResponseEntity<Void> activateUser(@PathVariable Integer userId) {
+    adminUserService.activateUser(userId);
+    return ResponseEntity.noContent().build();
   }
 }
