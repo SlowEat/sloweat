@@ -1,6 +1,7 @@
 import '../../styles/user/CollectionHeader.css';
 
-export default function CollectionHeader({ count = 0 }) {
+export default function CollectionHeader({ count = 0 , onCreateOpen}) {
+
   return (
     <div className="collection-header">
       <section className="collection-stats">
@@ -15,7 +16,7 @@ export default function CollectionHeader({ count = 0 }) {
         </p>
       </section>
 
-      <button type="button" className="add-collection-btn">
+      <button type="button" className="add-collection-btn" onClick={onCreateOpen}>
         <img
           src="https://c.animaapp.com/uCLj7VDt/img/frame.svg"
           alt="Add icon"
