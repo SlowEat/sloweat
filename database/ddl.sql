@@ -280,3 +280,14 @@ CREATE TABLE `recipe_tag` (
   CONSTRAINT `recipe_tag_ibfk_1` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`recipe_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `recipe_tag_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`tag_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='레시피-태그';
+
+
+-- 기존 값 'ROLE_USER' → 'USER'
+UPDATE user
+SET role = 'USER'
+WHERE role = 'ROLE_USER';
+
+-- 기존 값 'ROLE_ADMIN' → 'ADMIN'
+UPDATE user
+SET role = 'ADMIN'
+WHERE role = 'ROLE_ADMIN';
