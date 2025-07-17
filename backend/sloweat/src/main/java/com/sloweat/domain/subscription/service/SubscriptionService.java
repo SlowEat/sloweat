@@ -83,6 +83,16 @@ public class SubscriptionService {
     }
 
     /**
+     * 구독 상세 조회
+     */
+    public SubscriptionResponse getSubscription(Integer subscriptionId) {
+        Subscription subscription = subscriptionRepository.findById(subscriptionId)
+                .orElseThrow(() -> new RuntimeException("Subscription not found"));
+
+        return SubscriptionResponse.from(subscription);
+    }
+
+    /**
      * 결제 기록 생성
      */
     private void createPaymentRecord(Subscription subscription, JsonNode paymentResponse, Integer amount) {
