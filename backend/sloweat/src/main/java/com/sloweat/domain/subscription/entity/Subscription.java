@@ -23,7 +23,7 @@ public class Subscription {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "customer_uid",unique = true, nullable = false)
     private String customerUid;  // 빌링키 (아임포트)
 
     private LocalDateTime startDate;
