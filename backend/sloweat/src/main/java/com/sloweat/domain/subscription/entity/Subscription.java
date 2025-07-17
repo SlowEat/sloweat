@@ -1,8 +1,6 @@
 package com.sloweat.domain.subscription.entity;
 
-import com.sloweat.domain.recipe.entity.RecipeReport;
 import com.sloweat.domain.user.entity.User;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,6 +22,9 @@ public class Subscription {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Column(unique = true, nullable = false)
+    private String customerUid;  // 빌링키 (아임포트)
 
     private LocalDateTime startDate;
 
