@@ -6,7 +6,7 @@ import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sloweat.domain.admin.dto.user.AdminUserRequest;
 import com.sloweat.domain.admin.dto.user.AdminUserResponse;
-import com.sloweat.domain.admin.dto.QAdminUserResponse;
+import com.sloweat.domain.admin.dto.user.QAdminUserResponse;
 import com.sloweat.domain.user.entity.QUser;
 import com.sloweat.domain.user.entity.User.JoinType;
 import java.util.List;

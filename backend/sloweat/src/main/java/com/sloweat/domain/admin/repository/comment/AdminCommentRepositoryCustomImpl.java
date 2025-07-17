@@ -1,16 +1,12 @@
-package com.sloweat.domain.admin.repository;
+package com.sloweat.domain.admin.repository.comment;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sloweat.domain.admin.dto.AdminCommentRequest;
-import com.sloweat.domain.admin.dto.AdminCommentResponse;
-import com.sloweat.domain.admin.dto.AdminRecipeResponse;
-import com.sloweat.domain.admin.dto.QAdminCommentResponse;
-import com.sloweat.domain.admin.dto.QAdminRecipeResponse;
+import com.sloweat.domain.admin.dto.comment.AdminCommentRequest;
+import com.sloweat.domain.admin.dto.comment.AdminCommentResponse;
+import com.sloweat.domain.admin.dto.comment.QAdminCommentResponse;
 import com.sloweat.domain.comment.entity.QComment;
 import com.sloweat.domain.comment.entity.QCommentReport;
-import com.sloweat.domain.recipe.entity.QRecipe;
-import com.sloweat.domain.recipe.entity.QRecipeReport;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
