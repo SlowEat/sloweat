@@ -1,7 +1,7 @@
 package com.sloweat.domain.admin.controller;
 
-import com.sloweat.domain.admin.dto.AdminRecipeRequest;
-import com.sloweat.domain.admin.dto.AdminRecipeResponse;
+import com.sloweat.domain.admin.dto.recipe.AdminRecipeRequest;
+import com.sloweat.domain.admin.dto.recipe.AdminRecipeResponse;
 import com.sloweat.domain.admin.service.AdminRecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

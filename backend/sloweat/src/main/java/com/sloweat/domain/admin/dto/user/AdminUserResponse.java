@@ -1,4 +1,4 @@
-package com.sloweat.domain.admin.dto;
+package com.sloweat.domain.admin.dto.user;
 
 import com.querydsl.core.annotations.QueryProjection;
 import java.time.LocalDateTime;

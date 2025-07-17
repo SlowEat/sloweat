@@ -1,9 +1,8 @@
 package com.sloweat.domain.admin.service;
 
-import com.sloweat.domain.admin.dto.AdminCommentRequest;
-import com.sloweat.domain.admin.dto.AdminCommentResponse;
-import com.sloweat.domain.admin.repository.AdminCommentRepository;
-import com.sloweat.domain.admin.repository.AdminRecipeRepository;
+import com.sloweat.domain.admin.dto.comment.AdminCommentRequest;
+import com.sloweat.domain.admin.dto.comment.AdminCommentResponse;
+import com.sloweat.domain.admin.repository.comment.AdminCommentRepository;
 import com.sloweat.domain.admin.repository.comment_report.AdminCommentReportRepository;
 import com.sloweat.domain.comment.entity.Comment;
 import com.sloweat.domain.comment.entity.Comment.Status;

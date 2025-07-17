@@ -1,12 +1,11 @@
 package com.sloweat.domain.admin.service;
 
-import com.sloweat.domain.admin.dto.AdminRecipeRequest;
-import com.sloweat.domain.admin.dto.AdminRecipeResponse;
-import com.sloweat.domain.admin.repository.AdminRecipeRepository;
+import com.sloweat.domain.admin.dto.recipe.AdminRecipeRequest;
+import com.sloweat.domain.admin.dto.recipe.AdminRecipeResponse;
+import com.sloweat.domain.admin.repository.recipe.AdminRecipeRepository;
 import com.sloweat.domain.admin.repository.recipe_report.AdminRecipeReportRepository;
 import com.sloweat.domain.recipe.entity.Recipe;
 import com.sloweat.domain.recipe.entity.Recipe.Status;
-import com.sloweat.domain.recipe.entity.RecipeReport;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

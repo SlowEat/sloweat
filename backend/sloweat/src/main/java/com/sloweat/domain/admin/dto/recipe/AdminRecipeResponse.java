@@ -1,9 +1,7 @@
-package com.sloweat.domain.admin.dto;
+package com.sloweat.domain.admin.dto.recipe;
 
 import com.querydsl.core.annotations.QueryProjection;
-import com.sloweat.domain.recipe.entity.RecipeReport;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter

@@ -60,6 +60,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+      
         <!-- QueryDsl setting start -->
         <dependency>
             <groupId>com.querydsl</groupId>
@@ -74,6 +75,7 @@
             <classifier>jakarta</classifier>
             <version>5.0.0</version>
         </dependency>
+      
         <!-- QueryDsl setting end -->
         <dependency>
             <groupId>jakarta.persistence</groupId>
@@ -104,6 +106,17 @@
             <artifactId>jjwt-jackson</artifactId>
             <version>0.12.3</version>
             <scope>runtime</scope>
+
+        <!-- Jackson for JSON processing -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+          
+        <!-- Validation -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
     </dependencies>
 
@@ -133,6 +146,7 @@
                     </excludes>
                 </configuration>
             </plugin>
+          
             <!-- QueryDsl 세팅 -->
             <plugin>
                 <groupId>com.mysema.maven</groupId>

@@ -1,7 +1,7 @@
-package com.sloweat.domain.admin.repository;
+package com.sloweat.domain.admin.repository.recipe;
 
-import com.sloweat.domain.admin.dto.AdminRecipeRequest;
-import com.sloweat.domain.admin.dto.AdminRecipeResponse;
+import com.sloweat.domain.admin.dto.recipe.AdminRecipeRequest;
+import com.sloweat.domain.admin.dto.recipe.AdminRecipeResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

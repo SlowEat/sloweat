@@ -1,19 +1,18 @@
-package com.sloweat.domain.admin.repository;
+package com.sloweat.domain.admin.repository.user;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sloweat.domain.admin.dto.AdminUserRequest;
-import com.sloweat.domain.admin.dto.AdminUserResponse;
-import com.sloweat.domain.admin.dto.QAdminUserResponse;
+import com.sloweat.domain.admin.dto.user.AdminUserRequest;
+import com.sloweat.domain.admin.dto.user.AdminUserResponse;
+import com.sloweat.domain.admin.dto.user.QAdminUserResponse;
 import com.sloweat.domain.user.entity.QUser;
 import com.sloweat.domain.user.entity.User.JoinType;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import com.sloweat.domain.user.entity.User;
 
 public class AdminUserRepositoryCustomImpl implements AdminUserRepositoryCustom{
   private final JPAQueryFactory queryFactory;
