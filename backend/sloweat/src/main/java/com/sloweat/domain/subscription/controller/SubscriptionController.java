@@ -34,4 +34,13 @@ public class SubscriptionController {
         SubscriptionResponse response = subscriptionService.getSubscription(id);
         return ResponseEntity.ok(response);
     }
+
+    /**
+     * 구독 갱신
+     */
+    @PatchMapping("/subscription/{id}/renew")
+    public ResponseEntity<SubscriptionResponse> renewSubscription(@PathVariable Integer id) {
+        SubscriptionResponse response = subscriptionService.renewSubscription(id);
+        return ResponseEntity.ok(response);
+    }
 }
