@@ -83,7 +83,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth)->auth
                         //추후에 / -> 은 제거해야 함
-                        .requestMatchers("/api/auth/**","/","/login").permitAll()
+                        .requestMatchers("/api/auth/**","/login").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );

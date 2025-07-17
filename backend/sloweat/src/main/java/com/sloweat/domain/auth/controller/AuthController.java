@@ -6,6 +6,7 @@ import com.sloweat.domain.auth.service.ReissueService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +26,9 @@ public class AuthController {
     public ResponseEntity<String> signup(@RequestBody LocalSignupRequestDto dto){
         localSignupService.signup(dto);
         System.out.println("controller진입");
-        return ResponseEntity.ok("회원가입이 완료되었습니다.");
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body("회원가입이 완료되었습니다.");
     }
 
     //refresh -> access 토큰 재발급

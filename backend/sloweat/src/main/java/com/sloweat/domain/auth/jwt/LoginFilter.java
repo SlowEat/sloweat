@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 
+//todo : 명확한 에러 메세지 작성 -> 프론트 전달 고려
 @RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
