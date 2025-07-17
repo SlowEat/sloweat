@@ -1,5 +1,6 @@
 package com.sloweat.domain.auth.config;
 
+import com.sloweat.domain.auth.jwt.JWTFilter;
 import com.sloweat.domain.auth.jwt.JWTUtil;
 import com.sloweat.domain.auth.jwt.LoginFilter;
 import com.sloweat.domain.auth.repository.RefreshRepository;
@@ -69,6 +70,10 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         //필터 추가
+        //JWTFilter
+        http
+                .addFilterBefore(new JWTFilter(jwtUtil),LoginFilter.class);
+
         //LoginFilter
         http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil, refreshRepository)
