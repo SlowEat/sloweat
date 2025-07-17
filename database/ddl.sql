@@ -1,4 +1,3 @@
-
 DROP DATABASE IF EXISTS sloweat;
 CREATE DATABASE sloweat DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 USE sloweat;
@@ -192,8 +191,8 @@ CREATE TABLE `subscription` (
   `end_date` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`subscription_id`),
-  UNIQUE KEY `customer_uid` (`customer_uid`),
   KEY `user_id` (`user_id`),
+  UNIQUE KEY `customer_uid` (`customer_uid`),
   CONSTRAINT `subscription_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='구독';
 
@@ -286,3 +285,27 @@ CREATE TABLE `recipe_tag` (
   CONSTRAINT `recipe_tag_ibfk_1` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`recipe_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `recipe_tag_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`tag_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='레시피-태그';
+
+
+-- 기존 값 'ROLE_USER' → 'USER'
+UPDATE user
+SET role = 'USER'
+WHERE role = 'ROLE_USER';
+
+-- 기존 값 'ROLE_ADMIN' → 'ADMIN'
+UPDATE user
+SET role = 'ADMIN'
+WHERE role = 'ROLE_ADMIN';
+
+-- 컬럼 enum 정의 및 DEFAULT 값 수정
+ALTER TABLE user
+MODIFY COLUMN role ENUM('ROLE_USER', 'ROLE_ADMIN') NOT NULL DEFAULT 'ROLE_USER';
+
+-- refresh 토큰 저장 용 테이블
+CREATE TABLE refresh (
+    refresh_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    refresh_token TEXT NOT NULL,
+    expiration VARCHAR(255) NOT NULL
+);
+

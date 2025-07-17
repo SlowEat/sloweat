@@ -57,8 +57,8 @@ public class User {
     }
 
     public enum Role {
-        USER("사용자"),
-        ADMIN("관리자");
+        ROLE_USER("사용자"),
+        ROLE_ADMIN("관리자");
 
         private final String label;
 

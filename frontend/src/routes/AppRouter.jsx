@@ -63,8 +63,7 @@
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import ScrollToTop from '../utils/ScrollToTop';
-import Login from '../pages/user/Login';
-import SignUp from '../pages/user/SignUp';
+
 import MainLayout from '../layouts/user/MainLayout';
 import Home from '../pages/user/Home';
 import Search from '../pages/user/Search';
@@ -88,12 +87,10 @@ const AppRouter = () => (
   <BrowserRouter>
     <ScrollToTop />
     <Routes>
-      {/* 공통 - 로그인, 회원가입 페이지 */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/signUp" element={<SignUp />} />
 
       {/* 로그인 이후 user 페이지 */}
       <Route element={<MainLayout />}>
+        <Route path="*" element={<Navigate to="/" replace />} />
         <Route path="/" element={<Home />} />
         <Route path="/search" element={<Search />} />
         <Route path="/membership" element={<Membership />} />
