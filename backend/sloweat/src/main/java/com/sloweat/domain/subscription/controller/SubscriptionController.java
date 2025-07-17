@@ -25,4 +25,13 @@ public class SubscriptionController {
         SubscriptionResponse response = subscriptionService.createSubscription(userId, request);
         return ResponseEntity.ok(response);
     }
+
+    /**
+     * 구독 상세 조회
+     */
+    @GetMapping("/subscription/{id}")
+    public ResponseEntity<SubscriptionResponse> getSubscription(@PathVariable Integer id) {
+        SubscriptionResponse response = subscriptionService.getSubscription(id);
+        return ResponseEntity.ok(response);
+    }
 }
