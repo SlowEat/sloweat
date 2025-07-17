@@ -8,4 +8,5 @@ import lombok.Getter;
 public class AdminRecipeRequest {
   private String title;
   private String author;
+  private String status;
 }

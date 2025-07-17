@@ -30,9 +30,10 @@ public class AdminRecipeController {
     public Page<AdminRecipeResponse> getRecipes(
         @RequestParam(required = false) String title,
         @RequestParam(required = false) String author,
+        @RequestParam(required = false) String status,  // status 추가(프론트 필터링 위한)
         @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable  // 클라이언트가 아무런 페이징 정보를 요청하지 않았을 때의 기본 페이징 조건
     ) {
-        AdminRecipeRequest request = new AdminRecipeRequest(title, author);
+        AdminRecipeRequest request = new AdminRecipeRequest(title, author, status);
         return adminRecipeService.getRecipes(request, pageable);
     }
 
