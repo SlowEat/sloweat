@@ -195,7 +195,7 @@ const handlerDuplicateEmail = async () => {
                   />
                   <img
                     className="signup-password-toggle"
-                    src="https://c.animaapp.com/CgKu8nvQ/img/----.svg"
+                    src="https://c.animaapp.com/CgKu8nvQ/img/--.svg"
                     alt="비밀번호 보기/숨기기"
                     onClick={toggleConfirmPasswordVisibility}
                   />

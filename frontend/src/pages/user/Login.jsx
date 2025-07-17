@@ -80,7 +80,7 @@ const handleLogin = async (e) => {
                   onClick={togglePasswordVisibility}
                 >
                   <img 
-                    src="https://c.animaapp.com/JlqecQMn/img/----.svg" 
+                    src="https://c.animaapp.com/CgKu8nvQ/img/--.svg"
                     alt="비밀번호 보기" 
                     className="eye-icon" 
                   />
