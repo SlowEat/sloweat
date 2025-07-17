@@ -1,10 +1,10 @@
-package com.sloweat.domain.admin.repository;
+package com.sloweat.domain.admin.repository.recipe;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sloweat.domain.admin.dto.AdminRecipeRequest;
-import com.sloweat.domain.admin.dto.AdminRecipeResponse;
-import com.sloweat.domain.admin.dto.QAdminRecipeResponse;
+import com.sloweat.domain.admin.dto.recipe.AdminRecipeRequest;
+import com.sloweat.domain.admin.dto.recipe.AdminRecipeResponse;
+import com.sloweat.domain.admin.dto.recipe.QAdminRecipeResponse;
 import com.sloweat.domain.recipe.entity.QRecipe;
 import com.sloweat.domain.recipe.entity.QRecipeReport;
 import java.util.List;
