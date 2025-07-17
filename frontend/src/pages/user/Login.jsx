@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import {useNavigate} from 'react-router-dom';
-import axios from 'axios';
-
+import { login } from '../../api/auth';
 import './Login.css';
 
 function Login() {
@@ -16,33 +14,25 @@ function Login() {
   };
 
   //로그인
-  const handleLogin = async (e) => {
-    e.preventDefault();
+const handleLogin = async (e) => {
+  e.preventDefault();
 
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}login`,
-        { localEmail, password },
-        {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true,
-        }
-      );
+  try {
+    const response = await login(localEmail, password);
 
-      const accessToken = response.headers['authorization']?.replace('Bearer ', '');
-      if (accessToken) {
-        localStorage.setItem('accessToken', accessToken);
-        alert('로그인 성공!');
-        window.location.href = '/'; // 새로고침 -> 로그인 이후 페이지 라우팅
-      } else {
-        alert('accessToken을 받지 못했습니다.');
-      }
-    } catch (err) {
-      console.error('로그인 실패', err);
-      alert('로그인에 실패했습니다.');
+    const accessToken = response.headers['authorization']?.replace('Bearer ', '');
+    if (accessToken) {
+      localStorage.setItem('accessToken', accessToken);
+      alert('로그인 성공!');
+      window.location.href = '/';
+    } else {
+      alert('accessToken을 받지 못했습니다.');
     }
-  };
-  
+  } catch (err) {
+    console.error('로그인 실패', err);
+    alert('로그인에 실패했습니다.');
+  }
+};
 
   return (
     <main className="login-container" data-model-id="19:12">

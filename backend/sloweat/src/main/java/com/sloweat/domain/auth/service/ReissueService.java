@@ -50,7 +50,7 @@ public class ReissueService {
         //3. DB 존재 확인
         Boolean isExist = refreshRepository.existsByRefreshToken(refreshToken);
         if(!isExist){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("refresh token already exists");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("refresh token non exists");
         }
 
         //4. 새 토큰 발급

@@ -11,16 +11,15 @@ html, body {
   padding: 0;
   height: 100%;
   width: 100%;
-  background-color:#1a1a1a;
+  background-color: #1a1a1a;
 }
 
-
-.signup-wrapper{
-    display:flex;
-    justify-content: center;
-    width:100%;
-    height:100vb;
-    background-color: #F8FFFE;
+.signup-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  background-color: #F8FFFE;
 }
 
 .signup-view {
@@ -30,11 +29,9 @@ html, body {
 
 .signup-overlap {
   position: relative;
-  height : 93vh;
-  background-size: cover;
-  background-position: center;
-  width : 100%;
-  background-color:#F8FFFE;
+  height: 93vh;
+  width: 100%;
+  background-color: #F8FFFE;
 }
 
 /* 헤더 - 로고 영역 */
@@ -47,34 +44,21 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top : 10px;
+  margin-top: 30px;
 }
 
 .SLOWEAT-LOGO {
   width: 150px;
-  height: 150px;
-  background-image: url(https://c.animaapp.com/CgKu8nvQ/img/sloweat-logo-1@2x.png);
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-.tagline {
-  position : relative;
-  z-index : 10;
-  bottom : 27px;
-  font-size: 14px;
-  color: #6b7280;
-  font-weight: 500;
+  height: 100px;
 }
 
 /* 회원가입 폼 */
 .signup-form {
-  position:relative;
-  bottom : 20px;
-  z-index : 100;
+  position: relative;
+  bottom: 20px;
+  z-index: 100;
   width: 100%;
-  max-width: 340px;
+  max-width: 400px;
   margin: 0 auto;
 }
 
@@ -91,15 +75,16 @@ html, body {
 }
 
 .form-label {
-  display: block;
+  display: flex;
+  justify-content: space-between;
   font-weight: 500;
   color: #374151;
   font-size: 14px;
   margin-bottom: 6px;
 }
 
-.form-input {
-  width: 100%;
+.signup-form-input {
+  width: 75%;
   height: 44px;
   padding: 12px 14px;
   border: 1px solid #d1d5db;
@@ -107,15 +92,16 @@ html, body {
   font-size: 14px;
   color: #374151;
   transition: border-color 0.2s, box-shadow 0.2s;
+  margin-right: 10px;
 }
 
-.form-input:focus {
+.signup-form-input:focus {
   outline: none;
   border-color: #10b981;
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
 }
 
-.form-input::placeholder {
+.signup-form-input::placeholder {
   color: #9ca3af;
 }
 
@@ -123,7 +109,7 @@ html, body {
   position: relative;
 }
 
-.password-toggle {
+.signup-password-toggle {
   position: absolute;
   right: 12px;
   top: 50%;
@@ -135,13 +121,13 @@ html, body {
   transition: opacity 0.2s;
 }
 
-.password-toggle:hover {
+.signup-password-toggle:hover {
   opacity: 1;
 }
 
-.form-hint {
+.form-error {
   font-size: 12px;
-  color: #6b7280;
+  color: #d31010;
   margin-top: 6px;
 }
 
@@ -164,6 +150,11 @@ html, body {
   box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
 }
 
+.submit-button:disabled {
+  background-color: #ccc;
+  color: #999;
+  cursor: not-allowed;
+}
 
 .divider {
   border: none;
@@ -190,12 +181,12 @@ html, body {
 }
 
 .social-login-options {
-  width: 100%;
-  max-width: 100%;
+  max-width: 320px;
   height: auto;
   border-radius: 8px;
   cursor: pointer;
   transition: transform 0.2s;
+  margin-left : 38px;
 }
 
 .login-link {
@@ -216,3 +207,21 @@ html, body {
   color: #0d9668;
 }
 
+.duplicate-button {
+  width: 21%;
+  height: 44px;
+  background-color: #10b981;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 400;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+.duplicate-button:hover {
+  background-color: #0d9668;
+  box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+}

@@ -15,8 +15,18 @@ public class LocalSignupService {
 
     private final AuthUserRepository authUserRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    
-    //local 회원가입
+
+    //이메일 중복 검사
+    public boolean isEmailDuplicate(String email){
+        return authUserRepository.existsBylocalEmail(email);
+    }
+
+    //닉네임 중복 검사
+    public boolean isNicknameDuplicate(String nickname){
+        return authUserRepository.existsBynickname(nickname);
+    }
+
+    //회원가입
     public void signup(LocalSignupRequestDto dto) {
 
         String email = dto.getEmail();
