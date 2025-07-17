@@ -25,6 +25,12 @@ public class Payment {
     @JoinColumn(name = "subscription_id", nullable = false)
     private Subscription subscription;
 
+    @Column(name = "imp_uid", unique = true, nullable = false, length = 100)
+    private String impUid;
+
+    @Column(name = "merchant_uid", unique = true, nullable = false, length = 100)
+    private String merchantUid;
+
     private Integer amount;
 
     @Enumerated(EnumType.STRING)

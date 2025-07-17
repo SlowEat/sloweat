@@ -93,6 +93,81 @@ public class SubscriptionService {
     }
 
     /**
+     * 구독 갱신 (수동)
+     */
+    @Transactional
+    public SubscriptionResponse renewSubscription(Integer subscriptionId) {
+        Subscription subscription = subscriptionRepository.findById(subscriptionId)
+                .orElseThrow(() -> new RuntimeException("Subscription not found"));
+
+        if (subscription.getStatus() != Subscription.Status.ACTIVE) {
+            throw new RuntimeException("Only active subscriptions can be renewed");
+        }
+
+        // 정기결제 요청
+        JsonNode paymentResponse = iamportService.requestSubscriptionPayment(
+                subscription.getCustomerUid(),
+                10000, // 구독료 (고정값 또는 설정에서 가져오기)
+                "SlowEat 구독 갱신"
+        );
+
+        if (paymentResponse.get("code").asInt() != 0) {
+            throw new RuntimeException("Payment failed: " + paymentResponse.get("message").asText());
+        }
+
+        // 구독 기간 연장
+        subscription.setEndDate(subscription.getEndDate().plusMonths(1));
+        subscription = subscriptionRepository.save(subscription);
+
+        // 결제 기록 생성
+        createPaymentRecord(subscription, paymentResponse, 10000);
+
+        return SubscriptionResponse.from(subscription);
+    }
+
+    /**
+     * 자동 갱신 처리 (스케줄러에서 호출)
+     */
+    @Transactional
+    public void processAutoRenewal() {
+        LocalDateTime now = LocalDateTime.now();
+        List<Subscription> subscriptionsToRenew = subscriptionRepository
+                .findSubscriptionsForRenewal(Subscription.Status.ACTIVE, now);
+
+        for (Subscription subscription : subscriptionsToRenew) {
+            try {
+                // 정기결제 요청
+                JsonNode paymentResponse = iamportService.requestSubscriptionPayment(
+                        subscription.getCustomerUid(),
+                        10000,
+                        "SlowEat 구독 자동갱신"
+                );
+
+                if (paymentResponse.get("code").asInt() == 0) {
+                    // 성공 시 기간 연장
+                    subscription.setEndDate(subscription.getEndDate().plusMonths(1));
+                    createPaymentRecord(subscription, paymentResponse, 10000);
+                } else {
+                    // 실패 시 구독 취소
+                    subscription.setStatus(Subscription.Status.CANCEL);
+                    log.error("Auto renewal failed for subscription {}: {}",
+                            subscription.getSubscriptionId(),
+                            paymentResponse.get("message").asText());
+                }
+
+                subscriptionRepository.save(subscription);
+
+            } catch (Exception e) {
+                log.error("Error processing auto renewal for subscription {}",
+                        subscription.getSubscriptionId(), e);
+
+                subscription.setStatus(Subscription.Status.CANCEL);
+                subscriptionRepository.save(subscription);
+            }
+        }
+    }
+
+    /**
      * 결제 기록 생성
      */
     private void createPaymentRecord(Subscription subscription, JsonNode paymentResponse, Integer amount) {
@@ -100,6 +175,8 @@ public class SubscriptionService {
 
         Payment payment = Payment.builder()
                 .subscription(subscription)
+                .impUid(response.get("imp_uid").asText())
+                .merchantUid(response.get("merchant_uid").asText())
                 .amount(amount)
                 .status(Payment.Status.PAID)
                 .method(Payment.Method.CARD)
@@ -111,4 +188,5 @@ public class SubscriptionService {
 
         paymentRepository.save(payment);
     }
+
 }

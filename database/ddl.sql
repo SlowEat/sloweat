@@ -1,4 +1,3 @@
-
 DROP DATABASE IF EXISTS sloweat;
 CREATE DATABASE sloweat DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 USE sloweat;
@@ -186,12 +185,14 @@ CREATE TABLE `comment_report` (
 CREATE TABLE `subscription` (
   `subscription_id` int NOT NULL AUTO_INCREMENT,
   `user_id` int DEFAULT NULL COMMENT '구독자',
+  `customer_uid` VARCHAR(100) NOT NULL COMMENT '아임포트 결제 고유 ID',
   `status` enum('ACTIVE','CANCEL','EXPIRE') NOT NULL DEFAULT 'ACTIVE',
   `start_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `end_date` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`subscription_id`),
   KEY `user_id` (`user_id`),
+  UNIQUE KEY `customer_uid` (`customer_uid`),
   CONSTRAINT `subscription_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='구독';
 
@@ -242,6 +243,8 @@ CREATE TABLE `follow` (
 CREATE TABLE `payment` (
   `payment_id` int NOT NULL AUTO_INCREMENT,
   `subscription_id` int DEFAULT NULL COMMENT '구독 정보',
+  `imp_uid` VARCHAR(100) NOT NULL COMMENT '아임포트 결제 고유 ID',
+  `merchant_uid` VARCHAR(100) NOT NULL COMMENT '가맹점 주문 고유 ID',
   `amount` int NOT NULL COMMENT '결제금액',
   `status` enum('PAID','CANCEL','REFUND') NOT NULL,
   `method` enum('CARD','CASH') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
@@ -251,6 +254,8 @@ CREATE TABLE `payment` (
   `refund_date` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NOT NULL,
   PRIMARY KEY (`payment_id`),
+  UNIQUE KEY `imp_uid` (`imp_uid`),
+  UNIQUE KEY `merchant_uid` (`merchant_uid`),
   KEY `subscription_id` (`subscription_id`),
   CONSTRAINT `payment_ibfk_1` FOREIGN KEY (`subscription_id`) REFERENCES `subscription` (`subscription_id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='결제정보';
@@ -303,3 +308,4 @@ CREATE TABLE refresh (
     refresh_token TEXT NOT NULL,
     expiration VARCHAR(255) NOT NULL
 );
+
