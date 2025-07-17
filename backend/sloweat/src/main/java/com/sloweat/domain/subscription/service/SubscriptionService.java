@@ -126,6 +126,31 @@ public class SubscriptionService {
     }
 
     /**
+     * 구독 취소
+     */
+    @Transactional
+    public SubscriptionResponse cancelSubscription(Integer subscriptionId) {
+        Subscription subscription = subscriptionRepository.findById(subscriptionId)
+                .orElseThrow(() -> new RuntimeException("Subscription not found"));
+
+        if (subscription.getStatus() != Subscription.Status.ACTIVE) {
+            throw new RuntimeException("Only active subscriptions can be cancelled");
+        }
+
+        // 빌링키 삭제
+        JsonNode deleteResponse = iamportService.deleteBillingKey(subscription.getCustomerUid());
+        if (deleteResponse.get("code").asInt() != 0) {
+            log.warn("Failed to delete billing key: {}", deleteResponse.get("message").asText());
+        }
+
+        // 구독 상태 변경
+        subscription.setStatus(Subscription.Status.CANCEL);
+        subscription = subscriptionRepository.save(subscription);
+
+        return SubscriptionResponse.from(subscription);
+    }
+
+    /**
      * 자동 갱신 처리 (스케줄러에서 호출)
      */
     @Transactional
@@ -168,6 +193,21 @@ public class SubscriptionService {
     }
 
     /**
+     * 만료된 구독 처리
+     */
+    @Transactional
+    public void processExpiredSubscriptions() {
+        LocalDateTime now = LocalDateTime.now();
+        List<Subscription> expiredSubscriptions = subscriptionRepository
+                .findExpiredSubscriptions(Subscription.Status.ACTIVE, now);
+
+        for (Subscription subscription : expiredSubscriptions) {
+            subscription.setStatus(Subscription.Status.EXPIRE);
+            subscriptionRepository.save(subscription);
+        }
+    }
+
+    /**
      * 결제 기록 생성
      */
     private void createPaymentRecord(Subscription subscription, JsonNode paymentResponse, Integer amount) {
@@ -188,5 +228,4 @@ public class SubscriptionService {
 
         paymentRepository.save(payment);
     }
-
 }

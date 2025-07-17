@@ -43,4 +43,13 @@ public class SubscriptionController {
         SubscriptionResponse response = subscriptionService.renewSubscription(id);
         return ResponseEntity.ok(response);
     }
+
+    /**
+     * 구독 취소
+     */
+    @PatchMapping("/subscription/{id}/cancel")
+    public ResponseEntity<SubscriptionResponse> cancelSubscription(@PathVariable Integer id) {
+        SubscriptionResponse response = subscriptionService.cancelSubscription(id);
+        return ResponseEntity.ok(response);
+    }
 }
