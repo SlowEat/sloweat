@@ -103,5 +103,66 @@ public class IamportService {
         }
     }
 
+    /**
+     * 빌링키 삭제
+     */
+    public JsonNode deleteBillingKey(String customerUid) {
+        String url = iamportConfig.getApiUrl() + "/subscribe/customers/" + customerUid;
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(getAccessToken());
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, entity, String.class);
+            return objectMapper.readTree(response.getBody());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to parse delete billing key response", e);
+        }
+    }
+
+    /**
+     * 결제 취소/환불 요청
+     */
+    public JsonNode cancelPayment(String impUid, Integer amount, String reason) {
+        String url = iamportConfig.getApiUrl() + "/payments/cancel";
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("imp_uid", impUid);
+        body.put("amount", amount);
+        body.put("reason", reason);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(getAccessToken());
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
+            return objectMapper.readTree(response.getBody());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to parse cancel payment response", e);
+        }
+    }
+
+    /**
+     * 결제 정보 조회
+     */
+    public JsonNode getPaymentInfo(String impUid) {
+        String url = iamportConfig.getApiUrl() + "/payments/" + impUid;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(getAccessToken());
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+            return objectMapper.readTree(response.getBody());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to parse payment info response", e);
+        }
+    }
 }
