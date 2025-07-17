@@ -49,7 +49,7 @@ public class LocalSignupService {
             throw new IllegalArgumentException("비밀번호 확인이 일치하지 않습니다.");
         }
 
-        //dto -> Entity (todo : User Entity 수정? default 값)
+        //dto -> Entity
         User user = User.builder()
                 .joinType(User.JoinType.LOCAL)
                 .localEmail(email)
