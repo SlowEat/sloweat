@@ -1,6 +1,7 @@
 import React from "react";
 import "./Sidebar.css";
 import { useNavigate, useLocation } from "react-router-dom";
+import { logout } from "../../../api/user/auth";
 
 export const Sidebar = () => {
   const navigate = useNavigate();
@@ -8,6 +9,23 @@ export const Sidebar = () => {
 
   const isRecipePage =
     location.pathname === "/admin" || location.pathname === "/admin/recipes";
+
+  // 로그아웃 핸들러
+  const handleLogout = async () => {
+    const confirmed = window.confirm("정말 로그아웃 하시겠습니까?");
+    if (!confirmed) return;
+
+    try {
+      await logout();
+      alert("로그아웃 되었습니다.");
+
+      localStorage.removeItem("accessToken");
+      window.location.href = "/login";
+    } catch (err) {
+      console.error("로그아웃 실패", err);
+      alert("로그아웃 실패");
+    }
+  };
 
   return (
     <aside className="sidebar">
@@ -36,7 +54,9 @@ export const Sidebar = () => {
         </div>
 
         <div
-          className={`sidebar-item ${location.pathname === "/admin/comments" ? "active" : ""}`}
+          className={`sidebar-item ${
+            location.pathname === "/admin/comments" ? "active" : ""
+          }`}
           onClick={() => navigate("/admin/comments")}
         >
           <img
@@ -48,7 +68,9 @@ export const Sidebar = () => {
         </div>
 
         <div
-          className={`sidebar-item ${location.pathname === "/admin/users" ? "active" : ""}`}
+          className={`sidebar-item ${
+            location.pathname === "/admin/users" ? "active" : ""
+          }`}
           onClick={() => navigate("/admin/users")}
         >
           <img
@@ -60,7 +82,9 @@ export const Sidebar = () => {
         </div>
 
         <div
-          className={`sidebar-item ${location.pathname === "/admin/payments" ? "active" : ""}`}
+          className={`sidebar-item ${
+            location.pathname === "/admin/payments" ? "active" : ""
+          }`}
           onClick={() => navigate("/admin/payments")}
         >
           <img
@@ -72,7 +96,9 @@ export const Sidebar = () => {
         </div>
 
         <div
-          className={`sidebar-item ${location.pathname === "/admin/statistics" ? "active" : ""}`}
+          className={`sidebar-item ${
+            location.pathname === "/admin/statistics" ? "active" : ""
+          }`}
           onClick={() => navigate("/admin/statistics")}
         >
           <img
@@ -88,7 +114,7 @@ export const Sidebar = () => {
       <div className="sidebar-user">
         <div className="sidebar-user-top">
           <img
-            src="https://c.animaapp.com/rgpZJ8Rs/img/image@2x.png"
+            src="https://c.animaapp.com/rgpZJ8Rs/img/sloweat-logo-1@2x.png"
             alt="관리자 프로필"
             className="user-avatar"
           />
@@ -97,7 +123,9 @@ export const Sidebar = () => {
             <div className="user-handle">@admin</div>
           </div>
         </div>
-        <button className="logout-button">로그아웃</button>
+        <button className="logout-button" onClick={handleLogout}>
+          로그아웃
+        </button>
       </div>
     </aside>
   );
