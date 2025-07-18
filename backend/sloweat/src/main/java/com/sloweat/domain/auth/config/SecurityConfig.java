@@ -6,6 +6,7 @@ import com.sloweat.domain.auth.jwt.LoginFilter;
 import com.sloweat.domain.auth.repository.RefreshRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,6 +31,12 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
+
+    @Value("${jwt.access-token-validity}")
+    private long accessTokenValidity;
+
+    @Value("${jwt.refresh-token-validity}")
+    private long refreshTokenValidity;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -76,7 +83,12 @@ public class SecurityConfig {
 
         //LoginFilter
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil, refreshRepository)
+                .addFilterAt(new LoginFilter(
+                                authenticationManager(authenticationConfiguration),
+                                jwtUtil,
+                                refreshRepository,
+                                accessTokenValidity,
+                                refreshTokenValidity)
                     , UsernamePasswordAuthenticationFilter.class);
 
         //경로별 인가 작업

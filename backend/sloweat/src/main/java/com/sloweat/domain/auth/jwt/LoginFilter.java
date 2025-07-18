@@ -9,6 +9,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,6 +28,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
+    private final long accessTokenValidity;
+    private final long refreshTokenValidity;
 
     //로그인 인증 진입 메소드
     @Override
@@ -65,11 +68,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = customUserDetails.getAuthorities().iterator().next().toString();
 
         //토큰 생성
-        String access = jwtUtil.createJwt("access",localEmail,role,60*60*1000L); //1시간
-        String refresh = jwtUtil.createJwt("refresh",localEmail,role,24*60*60*1000L); //24시간
+        String access = jwtUtil.createJwt("access",localEmail,role,accessTokenValidity); //1시간
+        String refresh = jwtUtil.createJwt("refresh",localEmail,role,refreshTokenValidity); //24시간
 
         //refresh 토큰 저장
-        addRefreshEntity(localEmail,refresh,24*60*60*1000L);
+        addRefreshEntity(localEmail,refresh,refreshTokenValidity);
 
         //응답 설정
         response.addHeader("Authorization", "Bearer " + access); //access 토큰 -> header 저장
@@ -102,7 +105,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     //refresh 토큰 cookie 저장
     private Cookie createCookie(String key, String value){
         Cookie cookie = new Cookie(key,value);
-        cookie.setMaxAge(24*60*60); //24시간
+        cookie.setMaxAge((int)(refreshTokenValidity / 1000));
         cookie.setHttpOnly(true);
 
         return cookie;

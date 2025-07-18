@@ -8,6 +8,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,12 @@ public class ReissueService {
 
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
+
+    @Value("${jwt.access-token-validity}")
+    private long accessTokenValidity;
+
+    @Value("${jwt.refresh-token-validity}")
+    private long refreshTokenValidity;
 
     @Transactional
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response){
@@ -58,12 +65,12 @@ public class ReissueService {
         String role = jwtUtil.getRole(refreshToken);
 
 
-        String newAccess = jwtUtil.createJwt("access", localEmail, role, 600000L);
-        String newRefresh = jwtUtil.createJwt("refresh", localEmail, role, 86400000L);
+        String newAccess = jwtUtil.createJwt("access", localEmail, role, accessTokenValidity);
+        String newRefresh = jwtUtil.createJwt("refresh", localEmail, role, refreshTokenValidity);
 
         //5. DB 갱신
         refreshRepository.deleteByRefreshToken(refreshToken);
-        addRefreshEntity(localEmail, newRefresh, 86400000L);
+        addRefreshEntity(localEmail, newRefresh, refreshTokenValidity);
 
         //6. 응답 설정
         response.setHeader("Authorization", "Bearer " + newAccess);
@@ -90,7 +97,7 @@ public class ReissueService {
     //refresh 토큰 cookie 저장
     private Cookie createCookie(String key, String value){
         Cookie cookie = new Cookie(key,value);
-        cookie.setMaxAge(24*60*60); //24시간
+        cookie.setMaxAge((int)(refreshTokenValidity / 1000));
         cookie.setHttpOnly(true);
 
         return cookie;
