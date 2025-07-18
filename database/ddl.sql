@@ -7,6 +7,7 @@ USE sloweat;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- drop database 가 실행되는 경우에는 drop table 부분 주석 처리하세요!
+/*
 DROP TABLE sample;
 DROP TABLE recipe_tag;
 DROP TABLE tag;
@@ -23,6 +24,7 @@ DROP TABLE comment;
 DROP TABLE bookmark;
 DROP TABLE bookmark_collection;
 DROP TABLE user;
+*/
 -- drop database 가 실행되는 경우에는 drop table 부분 주석 처리하세요!
 
 
@@ -72,6 +74,7 @@ CREATE TABLE `recipe` (
   `views` int NOT NULL DEFAULT '0',
   `likes` int NOT NULL DEFAULT '0',
   `is_subscribed` tinyint(1) NOT NULL DEFAULT '0' COMMENT '구독자 전용 컨텐츠 여부, FALSE=무료',
+  `status` enum('NONE', 'REQUEST', 'APPROVE', 'REJECT') NOT NULL DEFAULT 'NONE' COMMENT '레시피 상태',
   PRIMARY KEY (`recipe_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `recipe_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE
@@ -116,7 +119,6 @@ CREATE TABLE `recipe_report` (
   `recipe_id` int NOT NULL COMMENT '신고 대상 게시글',
   `reason` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `status` enum('REQUEST','APPROVE','REJECT') NOT NULL DEFAULT 'REQUEST' COMMENT '처리 상태',
   PRIMARY KEY (`report_id`),
   UNIQUE KEY `user_id` (`user_id`,`recipe_id`),
   KEY `recipe_id` (`recipe_id`),
@@ -137,6 +139,7 @@ CREATE TABLE `comment` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `is_deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '소프트 딜리트(삭제여부)',
+  `status` enum('NONE', 'REQUEST', 'APPROVE', 'REJECT') NOT NULL DEFAULT 'NONE' COMMENT '댓글 상태',
   PRIMARY KEY (`comment_id`),
   KEY `parent_id` (`parent_id`),
   KEY `user_id` (`user_id`),
@@ -171,7 +174,6 @@ CREATE TABLE `comment_report` (
   `user_id` int DEFAULT NULL COMMENT '신고자',
   `reason` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `status` enum('REQUEST','APPROVE','REJECT') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'REQUEST',
   PRIMARY KEY (`report_id`),
   UNIQUE KEY `user_id` (`user_id`,`comment_id`),
   KEY `comment_id` (`comment_id`),
