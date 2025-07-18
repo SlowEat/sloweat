@@ -2,6 +2,7 @@ import React from "react";
 import "./FollowHeader.css";
 
 export const FollowHeader = ({activeTab, setActiveTab, onClose}) => {
+
   return (
     <div className="follow-header">
       <div className="header-container">
