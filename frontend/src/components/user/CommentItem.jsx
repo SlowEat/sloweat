@@ -3,9 +3,12 @@ import axiosInstance from "../../api/axiosInstance";
 import CommentForm from "./CommentForm";
 import "../../styles/user/CommentItem.css";
 
-const CommentItem = ({ comment, recipeId, userId, onAfterChange }) => {
+const CommentItem = ({ comment, recipeId, userId, postAuthorId, onAfterChange }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
+
+  const [liked, setLiked] = useState(comment.liked || false);
+  const [likeCount, setLikeCount] = useState(comment.likeCount || 0);
 
   const handleDelete = async () => {
     if (window.confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
@@ -48,17 +51,44 @@ const CommentItem = ({ comment, recipeId, userId, onAfterChange }) => {
     }
   };
 
+  const toggleLike = async () => {
+    try {
+      if (liked) {
+        await axiosInstance.delete(`/api/recipes/comments/${comment.commentId}/like`);
+        setLikeCount((prev) => prev - 1);
+      } else {
+        await axiosInstance.post(`/api/recipes/comments/${comment.commentId}/like`);
+        setLikeCount((prev) => prev + 1);
+      }
+      setLiked(!liked);
+    } catch (err) {
+      console.error("좋아요 처리 실패", err);
+    }
+  };
+
   return (
     <article className="comment-card">
       <div className="comment-card-container">
         <div className="comment-card-body">
-          <img className="comment-card-profile-image" src="https://c.animaapp.com/av5iO7ib/img/image-2@2x.png" alt="profile" />
+          <img
+            className="comment-card-profile-image"
+            src="https://c.animaapp.com/av5iO7ib/img/image-2@2x.png"
+            alt="profile"
+          />
           <div className="comment-card-user-info">
             <div className="comment-card-user-meta">
               <h2 className="comment-card-username">{comment.username}</h2>
+
+              {/* 작성자 마크 조건 */}
+              {comment.userId === postAuthorId && (
+                <span className="comment-author-badge">작성자</span>
+              )}
+
               <span className="comment-card-user-handle">@{comment.userId}</span>
               <span className="comment-card-separator">·</span>
-              <time className="comment-card-time">{new Date(comment.createdAt).toLocaleString()}</time>
+              <time className="comment-card-time">
+                {new Date(comment.createdAt).toLocaleString()}
+              </time>
             </div>
 
             {isEditing ? (
@@ -81,6 +111,10 @@ const CommentItem = ({ comment, recipeId, userId, onAfterChange }) => {
 
         {!isEditing && (
           <div className="comment-actions">
+            <button onClick={toggleLike}>
+              {liked ? "❤️" : "🤍"} {likeCount}
+            </button>
+
             {userId === comment.userId ? (
               <>
                 <button onClick={() => setIsEditing(true)}>수정</button>
