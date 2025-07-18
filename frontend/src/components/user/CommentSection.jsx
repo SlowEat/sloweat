@@ -8,10 +8,18 @@ const CommentSection = ({ recipeId, userId }) => {
   const [comments, setComments] = useState([]);
   const [isCreating, setIsCreating] = useState(false);
 
-  const fetchComments = async () => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const pageSize = 5;
+
+  const fetchComments = async (page = 0) => {
     try {
-      const res = await axiosInstance.get(`/api/recipes/${recipeId}/comments`);
-      setComments(res.data);
+      const res = await axiosInstance.get(
+        `/api/recipes/${recipeId}/comments?page=${page}&size=${pageSize}`
+      );
+      setComments(res.data.content);
+      setTotalPages(res.data.totalPages);
+      setCurrentPage(res.data.number);
     } catch (err) {
       console.error("댓글 목록 불러오기 실패", err);
     }
@@ -21,12 +29,19 @@ const CommentSection = ({ recipeId, userId }) => {
     fetchComments();
   }, [recipeId]);
 
+  const handlePageChange = (page) => {
+    fetchComments(page);
+  };
+
   return (
     <section className="comment-section">
-      <header className="comment-header">
-        <h2 className="comment-title">댓글 ({comments.length})</h2>
+      <header className="comment-section-header">
+        <h2 className="comment-section-title">댓글 ({comments.length})</h2>
         {!isCreating && (
-          <button className="comment-create-button" onClick={() => setIsCreating(true)}>
+          <button
+            className="comment-create-button"
+            onClick={() => setIsCreating(true)}
+          >
             댓글 작성
           </button>
         )}
@@ -37,7 +52,7 @@ const CommentSection = ({ recipeId, userId }) => {
           recipeId={recipeId}
           userId={userId}
           onSuccess={() => {
-            fetchComments();
+            fetchComments(0);
             setIsCreating(false);
           }}
           onCancel={() => setIsCreating(false)}
@@ -51,9 +66,37 @@ const CommentSection = ({ recipeId, userId }) => {
             comment={comment}
             recipeId={recipeId}
             userId={userId}
-            onAfterChange={fetchComments}
+            onAfterChange={() => fetchComments(currentPage)}
           />
         ))}
+      </div>
+
+      <div className="comment-pagination">
+        <button
+          className="comment-page-button"
+          disabled={currentPage === 0}
+          onClick={() => handlePageChange(currentPage - 1)}
+        >
+          이전
+        </button>
+
+        {Array.from({ length: totalPages }, (_, i) => (
+          <button
+            key={i}
+            className={`comment-page-button ${i === currentPage ? "active" : ""}`}
+            onClick={() => handlePageChange(i)}
+          >
+            {i + 1}
+          </button>
+        ))}
+
+        <button
+          className="comment-page-button"
+          disabled={currentPage === totalPages - 1}
+          onClick={() => handlePageChange(currentPage + 1)}
+        >
+          다음
+        </button>
       </div>
     </section>
   );
