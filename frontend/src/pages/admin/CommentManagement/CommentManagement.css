@@ -229,7 +229,7 @@
 
 /* 현재 페이지인 경우 강조 */
 .comment-page-btn.active {
-  background-color: #3b82f6;
+  background-color: #10b981;
   color: white;
   border: none;
 }

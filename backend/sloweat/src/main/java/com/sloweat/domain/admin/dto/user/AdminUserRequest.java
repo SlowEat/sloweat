@@ -7,4 +7,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class AdminUserRequest {
   private String nickname;
+  private String status;
 }

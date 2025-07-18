@@ -9,6 +9,7 @@ import com.sloweat.domain.admin.dto.user.AdminUserResponse;
 import com.sloweat.domain.admin.dto.user.QAdminUserResponse;
 import com.sloweat.domain.user.entity.QUser;
 import com.sloweat.domain.user.entity.User.JoinType;
+import com.sloweat.domain.user.entity.User.Status;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -32,6 +33,11 @@ public class AdminUserRepositoryCustomImpl implements AdminUserRepositoryCustom{
 
     if(request.getNickname() != null && !request.getNickname().isBlank()){
       where.and(user.nickname.containsIgnoreCase(request.getNickname()));
+    }
+
+    // 상태 필터링 추가
+    if(request.getStatus() != null && !request.getStatus().isBlank()){
+      where.and(user.status.eq(Status.valueOf(request.getStatus())));
     }
 
     // 가입 방식에 따라 이메일 선택
