@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { checkEmail, checkNickname, signup } from '../../api/auth';
+import { checkEmail, checkNickname, signup } from '../../api/user/auth';
 import logo from '../../img/logo.svg';
 import './SignUp.css';
 
