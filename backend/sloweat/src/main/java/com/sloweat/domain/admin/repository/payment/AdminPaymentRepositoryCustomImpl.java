@@ -115,7 +115,9 @@ public class AdminPaymentRepositoryCustomImpl implements AdminPaymentRepositoryC
           String filter = request.getStatus();
           if(filter == null || filter.isBlank()) return true;
           return dto.getStatus().equals(filter);
-        }).toList();
+        })
+        .sorted((a,b) -> b.getPayDate().compareTo(a.getPayDate()))
+        .toList();
 
     int start = (int) pageable.getOffset();
     int end = Math.min(start + pageable.getPageSize(), responses.size());
