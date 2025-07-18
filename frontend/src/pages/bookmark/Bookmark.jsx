@@ -26,7 +26,7 @@ export default function Bookmark() {
 
     const fetchCollections = async () => {
         try {
-            const response = await api.get('/api/bookmark-collections');
+            const response = await api.get('api/bookmark-collections');
             setCollections(response.data);
         } catch (error) {
             console.error('북마크 컬렉션 불러오기 실패:', error);
