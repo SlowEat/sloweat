@@ -15,13 +15,15 @@ import org.springframework.web.bind.annotation.*;
 public class ProfileController {
 
     private final ProfileService profileService;
-
+    
+    //프로필 불러오기
     @GetMapping("/users/me/profile")
     public ResponseEntity<MyProfileResponseDTO> getMyProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
        MyProfileResponseDTO dto = profileService.getMyProfile(customUserDetails);
        return ResponseEntity.ok(dto);
     }
-
+    
+    //프로필 수정
     @PatchMapping("/users/me/profile")
     public ResponseEntity<Void> editMyProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @RequestBody MyProfileRequestDTO myProfileRequestDTO) {

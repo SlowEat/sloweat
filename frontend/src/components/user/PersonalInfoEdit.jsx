@@ -1,9 +1,10 @@
 import {useState, useEffect} from 'react';
 import ProfilePictureUploader from './ProfilePictureUploader';
+import PasswordChangeModal from './PasswordChangeModal';
 import { checkNickname } from '../../api/user/auth';
 import { editMyProfile } from '../../api/user/profile';
 
-const PersonalInfoEdit = ({profile : initialProfile, profileUpdated}) => {
+const PersonalInfoEdit = ({profile : initialProfile}) => {
 
   const [profile, setProfile] = useState({});
   const [errors, setErrors] = useState({});
@@ -67,7 +68,8 @@ const PersonalInfoEdit = ({profile : initialProfile, profileUpdated}) => {
 
       await editMyProfile(requestDTO);
       alert('수정되었습니다');
-      profileUpdated();
+      window.location.reload();
+
 
     }catch(err){
       console.error('프로필 수정 실패',err);

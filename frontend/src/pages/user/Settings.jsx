@@ -14,18 +14,17 @@ const Settings = () => {
   const [profile, setProfile] = useState(null);
 
   //사용자 profile 반환
-  const fetchProfile = async () => {
-    try {
-      const res = await getMyProfile();
-      setProfile(res.data);
-    } catch (err) {
-      console.error('프로필 불러오기 실패', err);
-    }
-  };
-
-  useEffect(() => {
-    fetchProfile();
-  }, []);
+    useEffect(()=>{
+      const profile = async()=>{
+        try{
+          const res = await getMyProfile();
+          setProfile(res.data);
+        }catch(err){
+          console.error('프로필 불러오기 실패',err);
+        }
+      };
+      profile();
+    },[]);
 
 
   const renderContent = () => {
@@ -35,7 +34,7 @@ const Settings = () => {
         return (
           <div style={{ width: '675px' }}>
             {/* 개인정보 수정 */}
-            <PersonalInfoEdit profile={profile} profileUpdated={fetchProfile}/>
+            <PersonalInfoEdit profile={profile}/>
 
             {/* 회원 탈퇴 */}
             <AccountWithdrawal />
