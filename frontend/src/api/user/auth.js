@@ -1,5 +1,6 @@
 //auth 관련 api
 import axios from 'axios';
+import axiosInstance from '../axiosInstance';
 
 //api/auth/check-email
 export const checkEmail = async (email) => {
@@ -43,4 +44,9 @@ export const signup = (email, password, passwordConfirm, nickname) =>
       withCredentials: true,
     }
   );
+};
+
+// POST /logout
+export const logout = async () => {
+  return axiosInstance.post('logout');
 };

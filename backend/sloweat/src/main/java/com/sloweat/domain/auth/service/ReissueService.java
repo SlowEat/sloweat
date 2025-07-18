@@ -42,7 +42,6 @@ public class ReissueService {
             }
         }
 
-
         if(refreshToken==null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("refresh token null");
         }
@@ -86,6 +85,9 @@ public class ReissueService {
         //현재 시간 + 만료 일자
         Date date = new Date(System.currentTimeMillis()+expiredMs);
 
+        // 기존 username 관련 refresh 전부 삭제
+        refreshRepository.deleteByUsername(localEmail);
+
         Refresh refreshEntity = Refresh.builder()
                 .username(localEmail)
                 .refreshToken(refresh)
@@ -100,6 +102,7 @@ public class ReissueService {
         Cookie cookie = new Cookie(key,value);
         cookie.setMaxAge((int)(refreshTokenValidity / 1000));
         cookie.setHttpOnly(true);
+        cookie.setPath("/");
 
         return cookie;
     }
