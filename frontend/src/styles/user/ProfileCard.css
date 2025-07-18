@@ -10,13 +10,13 @@
   align-items: center;
   width: 100%;
   padding: 16px;
-  border-radius: 8px;
+  border-radius: 9999px;
   transition: background-color 0.3s ease;
 }
 
 .profilecard-link:hover .profilecard-view {
   background-color: #f3f4f6;
-  border-radius : 9999px;
+  border-radius: 9999px;
   cursor: pointer;
 }
 
@@ -42,7 +42,7 @@
   font-size: 16px;
   font-weight: bold;
   color: #000;
-  margin-bottom : 5px;
+  margin-bottom: 5px;
 }
 
 .profilecard-username {
@@ -56,17 +56,31 @@
   cursor: pointer;
 }
 
+.profilecard-frame {
+  transform: scaleY(-1);
+}
+
+.profilecard-logout-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
 .profilecard-logout-dropdown {
+  display: none; 
   position: absolute;
-  width : 78px;
-  bottom : 100%;
+  top : -38px;
   right: 0;
   margin-top: 4px;
+  width: 78px;
   background-color: white;
   border: 1px solid #e5e7eb;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 10;
+}
+
+.profilecard-logout-wrapper:hover .profilecard-logout-dropdown {
+  display: block;
 }
 
 .profilecard-logout-button {
@@ -80,6 +94,8 @@
   text-align: left;
 }
 
-.profilecard-frame{
-  transform: scaleY(-1);
+.profilecard-logout-button:hover {
+  background-color: #ff7373;
+  color : white;
+  border-radius : 10px;
 }

@@ -9,7 +9,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -67,9 +66,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         //role
         String role = customUserDetails.getAuthorities().iterator().next().toString();
 
+        //userId
+        String userId = customUserDetails.getUserId().toString();
+
+
         //토큰 생성
-        String access = jwtUtil.createJwt("access",localEmail,role,accessTokenValidity); //1시간
-        String refresh = jwtUtil.createJwt("refresh",localEmail,role,refreshTokenValidity); //24시간
+        String access = jwtUtil.createJwt("access",localEmail,role,userId,accessTokenValidity); //1시간
+        String refresh = jwtUtil.createJwt("refresh",localEmail,role,userId,refreshTokenValidity); //24시간
 
         //refresh 토큰 저장
         addRefreshEntity(localEmail,refresh,refreshTokenValidity);

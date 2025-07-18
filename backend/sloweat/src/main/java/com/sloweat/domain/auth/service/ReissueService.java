@@ -63,10 +63,11 @@ public class ReissueService {
         //4. 새 토큰 발급
         String localEmail = jwtUtil.getLocalEmail(refreshToken);
         String role = jwtUtil.getRole(refreshToken);
+        String userId = jwtUtil.getUserId(refreshToken);
 
 
-        String newAccess = jwtUtil.createJwt("access", localEmail, role, accessTokenValidity);
-        String newRefresh = jwtUtil.createJwt("refresh", localEmail, role, refreshTokenValidity);
+        String newAccess = jwtUtil.createJwt("access", localEmail, role, userId, accessTokenValidity);
+        String newRefresh = jwtUtil.createJwt("refresh", localEmail, role, userId, refreshTokenValidity);
 
         //5. DB 갱신
         refreshRepository.deleteByRefreshToken(refreshToken);

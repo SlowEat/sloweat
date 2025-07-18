@@ -36,7 +36,7 @@ axiosInstance.interceptors.response.use(
       try {
         //새 토큰 요청하는 로직 실행
         const res = await axios.post(
-          process.env.REACT_APP_API_BASE_URL + 'reissue',
+          process.env.REACT_APP_API_BASE_URL + 'api/auth/reissue',
           {},
           { withCredentials: true }
         );

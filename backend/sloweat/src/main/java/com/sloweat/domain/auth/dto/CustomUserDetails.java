@@ -33,6 +33,11 @@ public class CustomUserDetails implements UserDetails {
     public String getUsername() {
         return user.getLocalEmail();
     }
+
+    //고유Id 설정
+    public Integer getUserId(){
+        return user.getUserId();
+    }
     
     /// 로그인 가능여부 설정
     @Override

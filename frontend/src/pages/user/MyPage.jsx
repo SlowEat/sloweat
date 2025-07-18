@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import '../../layouts/user/MainLayout.css'
-import Profile from '../../components/user/Profile'
+import MyProfile from '../../components/user/MyProfile'
 import MyPageTabNavigation from '../../components/user/MyPageTabNavigation'
 import Recipe from "../../components/user/RecipeCard"
 import CommentCard from '../../components/user/CommentCard'
@@ -12,15 +12,7 @@ export default function MyPage() {
     <div className="main-layout-content">
       <div className="mypage-header">
         <h1 className="tap-title">마이페이지</h1>
-        <Profile isMine={true} isPremium={true} />
-
-        {/* //사용 예시 -  다른 사람 마이페이지 (내가 팔로우 중) */}
-        {/* <Profile isMine={false} initialFollowing={true} /> */}
-
-        {/* //사용 예시 - 다른 사람 마이페이지 (팔로우 안함) */}
-        {/* <Profile isMine={false} initialFollowing={false} /> */}
-
-        
+        <MyProfile/>
         <MyPageTabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
 

@@ -13,6 +13,8 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Inte
 
     Optional<Subscription> findByUserUserIdAndStatus(Integer userId, Subscription.Status status);
 
+    boolean existsByUserUserIdAndStatus(Integer userId, Subscription.Status status);
+
     Optional<Subscription> findByCustomerUid(String customerUid);
 
     @Query("SELECT s FROM Subscription s WHERE s.status = :status AND s.endDate <= :now")
@@ -20,4 +22,6 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Inte
 
     @Query("SELECT s FROM Subscription s WHERE s.status = :status AND FUNCTION('DAY', s.endDate) = FUNCTION('DAY', :renewalDate)")
     List<Subscription> findSubscriptionsForRenewal(@Param("status") Subscription.Status status, @Param("renewalDate") LocalDateTime renewalDate);
+
+
 }
