@@ -28,9 +28,10 @@ public class AdminCommentController {
   public Page<AdminCommentResponse> getComments(
       @RequestParam(required = false) String content,
       @RequestParam(required = false) String author,
+      @RequestParam(required = false) String status,
       @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
   ){
-    AdminCommentRequest request = new AdminCommentRequest(content, author);
+    AdminCommentRequest request = new AdminCommentRequest(content, author, status);
     return adminCommentService.getComments(request, pageable);
   }
 
