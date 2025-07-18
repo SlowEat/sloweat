@@ -31,4 +31,18 @@ public class SubscriptionScheduler {
         }
     }
 
+    /**
+     * 매일 오전 10시에 만료된 구독 처리
+     */
+    @Scheduled(cron = "0 0 10 * * *")
+    public void processExpiredSubscriptions() {
+        log.info("Starting expired subscription process");
+        try {
+            subscriptionService.processExpiredSubscriptions();
+            log.info("Expired subscription process completed");
+        } catch (Exception e) {
+            log.error("Error during expired subscription process", e);
+        }
+    }
+
 }

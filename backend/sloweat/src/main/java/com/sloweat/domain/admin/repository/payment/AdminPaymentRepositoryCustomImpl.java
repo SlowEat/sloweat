@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -116,5 +117,18 @@ public class AdminPaymentRepositoryCustomImpl implements AdminPaymentRepositoryC
 
     List<AdminPaymentResponse> pageList = responses.subList(start, end);
     return new PageImpl<>(pageList, pageable, responses.size());
+  }
+
+  @Override
+  public Optional<Payment> findLatestPayment(Integer subscriptionId) {
+    QPayment payment = QPayment.payment;
+
+    return Optional.ofNullable(
+        queryFactory
+            .selectFrom(payment)
+            .where(payment.subscription.subscriptionId.eq(subscriptionId))
+            .orderBy(payment.payDate.desc())
+            .fetchFirst()
+    );
   }
 }

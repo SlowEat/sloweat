@@ -38,6 +38,11 @@ public class AdminRecipeRepositoryCustomImpl implements AdminRecipeRepositoryCus
       where.and(recipe.user.nickname.containsIgnoreCase(request.getAuthor()));
     }
 
+    // status 필터링 추가
+    if (request.getStatus() != null && !request.getStatus().isBlank()) {
+      where.and(recipe.status.stringValue().eq(request.getStatus()));
+    }
+
     // 메인 쿼리
     List<AdminRecipeResponse> responses = queryFactory
         .select(new QAdminRecipeResponse( // dto로 매핑
