@@ -25,9 +25,11 @@ public class AdminPaymentController {
   private final AdminPaymentService adminPaymentService;
 
   @GetMapping("/payments")
-  public Page<AdminPaymentResponse> getPayments(@RequestParam(required = false) String nickname,
+  public Page<AdminPaymentResponse> getPayments(
+      @RequestParam(required = false) String nickname,
+      @RequestParam(required = false) String status,
       @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
-    AdminPaymentRequest request = new AdminPaymentRequest(nickname);
+    AdminPaymentRequest request = new AdminPaymentRequest(nickname, status);
     return adminPaymentService.getPayments(request, pageable);
   }
 
