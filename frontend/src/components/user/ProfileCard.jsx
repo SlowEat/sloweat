@@ -1,20 +1,44 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/user/ProfileCard.css';
+import { getMyProfile } from '../../api/user/profile';
+import {logout} from '../../api/user/auth';
 
 export default function ProfileCard() {
-  const [showLogout, setShowLogout] = useState(false);
   const navigate = useNavigate();
 
-  const toggleLogout = (e) => {
-    e.stopPropagation(); // 부모 클릭 방지
-    setShowLogout((prev) => !prev);
-  };
+  const [profile,setProfile] = useState(null);
 
-  const handleLogout = (e) => {
+  useEffect(()=>{
+    const profile = async()=>{
+      try{
+        const res = await getMyProfile();
+        setProfile(res.data);
+      }catch(err){
+        console.error('프로필 불러오기 실패',err);
+      }
+    };
+    profile();
+  },[]);
+
+  const handleLogout = async (e) => {
     e.stopPropagation();
-    alert('로그아웃 되었습니다.');
-    setShowLogout(false);
+
+    const confirmed = window.confirm('정말 로그아웃 하시겠습니까?');
+    if (!confirmed) return;
+
+    try {
+      await logout();
+      alert('로그아웃 되었습니다.');
+
+      localStorage.removeItem('accessToken');
+      setProfile(null);
+
+      window.location.href = '/login';
+    } catch (err) {
+      console.error('로그아웃 실패', err);
+      alert('로그아웃 실패');
+    }
   };
 
   const handleNavigate = () => {
@@ -31,15 +55,16 @@ export default function ProfileCard() {
             alt="Profile picture of Kim Cook"
           />
           <div className="profilecard-info">
-            <h1 className="profilecard-name">김요리</h1>
-            <p className="profilecard-username">@kimcook</p>
+
+            <h1 className="profilecard-name">{profile?.nickname}</h1>
+            <p className="profilecard-username">@{profile?.id}</p>
           </div>
 
-          <div style={{ position: 'relative' }}>
+          <div className="profilecard-logout-wrapper">
             <button
               className="profilecard-action"
               aria-label="profilecard actions"
-              onClick={toggleLogout}
+              onClick={(e) => e.stopPropagation()}
             >
               <img
                 className="profilecard-frame"
@@ -48,13 +73,11 @@ export default function ProfileCard() {
               />
             </button>
 
-            {showLogout && (
-              <div className="profilecard-logout-dropdown">
-                <button className="profilecard-logout-button" onClick={handleLogout}>
-                  로그아웃
-                </button>
-              </div>
-            )}
+            <div className="profilecard-logout-dropdown" onClick={(e) => e.stopPropagation()}>
+              <button className="profilecard-logout-button" onClick={handleLogout}>
+                로그아웃
+              </button>
+            </div>
           </div>
         </div>
       </div>

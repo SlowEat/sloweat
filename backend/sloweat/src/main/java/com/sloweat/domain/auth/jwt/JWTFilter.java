@@ -55,12 +55,15 @@ public class JWTFilter extends OncePerRequestFilter {
         //access 토큰이 맞다면 토큰에서 user 정보 획득
         String localEmail = jwtUtil.getLocalEmail(token);
         String role = jwtUtil.getRole(token);
+        Integer userId = Integer.valueOf(jwtUtil.getUserId(token));
+
 
         //임시 인증용 user Entity 생성
         User user = User.builder()
                 .localEmail(localEmail)
                 .localPassword("temppassword")
-                .role(User.Role.ROLE_USER)
+                .role(User.Role.valueOf(role))
+                .userId(userId)
                 .build();
         
         //시큐리티 인증
@@ -72,7 +75,5 @@ public class JWTFilter extends OncePerRequestFilter {
         
         //다음 필터로 넘김
         filterChain.doFilter(request,response);
-
-
     }
 }

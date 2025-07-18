@@ -1,11 +1,14 @@
 package com.sloweat.domain.auth.config;
 
+import com.sloweat.domain.auth.jwt.CustomLogoutFilter;
 import com.sloweat.domain.auth.jwt.JWTFilter;
 import com.sloweat.domain.auth.jwt.JWTUtil;
 import com.sloweat.domain.auth.jwt.LoginFilter;
 import com.sloweat.domain.auth.repository.RefreshRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.CustomLog;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +19,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -30,6 +34,12 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
+
+    @Value("${jwt.access-token-validity}")
+    private long accessTokenValidity;
+
+    @Value("${jwt.refresh-token-validity}")
+    private long refreshTokenValidity;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -76,14 +86,23 @@ public class SecurityConfig {
 
         //LoginFilter
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil, refreshRepository)
+                .addFilterAt(new LoginFilter(
+                                authenticationManager(authenticationConfiguration),
+                                jwtUtil,
+                                refreshRepository,
+                                accessTokenValidity,
+                                refreshTokenValidity)
                     , UsernamePasswordAuthenticationFilter.class);
+
+        //LogoutFilter
+        http
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil,refreshRepository), LogoutFilter.class);
 
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth)->auth
                         //추후에 / -> 은 제거해야 함
-                        .requestMatchers("/api/auth/**","/login").permitAll()
+                        .requestMatchers("/api/auth/**","/login","/logout").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );
