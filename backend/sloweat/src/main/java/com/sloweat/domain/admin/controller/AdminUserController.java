@@ -26,9 +26,10 @@ public class AdminUserController {
   @GetMapping("/users")
   public Page<AdminUserResponse> getUsers(
       @RequestParam(required = false) String nickname,
+      @RequestParam(required = false) String status,  // 상태 추가
       @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
   ){
-    AdminUserRequest request = new AdminUserRequest(nickname);
+    AdminUserRequest request = new AdminUserRequest(nickname, status);
     return adminUserService.getUsers(request, pageable);
   }
 
