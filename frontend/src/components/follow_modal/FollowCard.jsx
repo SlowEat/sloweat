@@ -1,19 +1,43 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate  } from "react-router-dom";
 import "./FollowCard.css";
+import api from "../../api/axiosInstance";
 
 export const FollowCard = ({
+  followId,
   username,
   userId,
   followerCount,
   profileImg,
-  isFollowing: initialFollowing = false,
+  isFollowed: initialFollowing = false,
+  email
 }) => {
-  const [isFollowing, setIsFollowing] = useState(initialFollowing);
+  const [isFollowed, setIsFollowed] = useState(initialFollowing);
 
   const handleFollowToggle = () => {
-    setIsFollowing((prev) => !prev);
-    // 여기서 API 요청도 함께 처리하면 됨 (예: follow/unfollow)
+    if(isFollowed) {
+      setUnFollow();
+    }else{
+      setFollow();
+    }
+    setIsFollowed((prev) => !prev);
+  };
+
+  const setFollow = async () => {
+    try {
+      await api.post('api/follow', {toUserId : userId});
+    } catch (error) {
+      console.error('팔로우 설정 실패:', error);
+    }
+  };
+
+  const setUnFollow = async () => {
+    try {
+      const response = await api.delete(`api/follow/${userId}`); //Unfollow 대상 userId
+
+    } catch (error) {
+      console.error('언팔로우 설정 실패:', error);
+    }
   };
 
   const navigate = useNavigate();
@@ -29,16 +53,16 @@ export const FollowCard = ({
         <img className="profile-img" src={profileImg} alt="Profile" />
 
         <div className="username">{username}</div>
-        <div className="user-id">{userId}</div>
+        <div className="user-id">{email}</div>
         <div className="follower-count-label">팔로워</div>
         <div className="follower-count">{followerCount}</div>
 
         <div className="follow-button-wrapper">
           <div
-            className={`follow-button ${isFollowing ? "following" : "not-following"}`}
+            className={`follow-button ${isFollowed ? "following" : "not-following"}`}
             onClick={handleFollowToggle}
           >
-            {isFollowing ? "팔로잉" : "팔로우"}
+            {isFollowed ? "팔로잉" : "팔로우"}
           </div>
         </div>
       </div>

@@ -1,11 +1,13 @@
 package com.sloweat.domain.follow.controller;
 
+import com.sloweat.domain.auth.dto.CustomUserDetails;
 import com.sloweat.domain.follow.dto.FollowRequestDto;
 import com.sloweat.domain.follow.dto.FollowResponseDto;
 import com.sloweat.domain.follow.service.FollowService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,41 +23,41 @@ public class FollowController {
     @PostMapping("/follow")
     public ResponseEntity<Void> follow(
             @RequestBody FollowRequestDto requestDto,
-            HttpSession session) {
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        Integer fromUserId = 1;
+        Integer fromUserId = userDetails.getUserId();
 
         followService.follow(fromUserId, requestDto);
         return ResponseEntity.ok().build();
     }
 
     // 언팔로우 요청
-    @DeleteMapping("/follow")
+    @DeleteMapping("/follow/{userId}")
     public ResponseEntity<Void> unfollow(
-            @RequestParam("toUserId") Integer toUserId,
-            HttpSession session) {
+            @PathVariable Integer userId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        Integer fromUserId = 1;
+        Integer fromUserId = userDetails.getUserId();
 
-        followService.unfollow(fromUserId, toUserId);
+        followService.unfollow(fromUserId, userId);
         return ResponseEntity.ok().build();
     }
 
     // 팔로워 목록
     @GetMapping("/followers")
     public ResponseEntity<List<FollowResponseDto>> getFollowers(
-            HttpSession session) {
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        Integer userId = 1;
+        Integer userId = userDetails.getUserId();
         return ResponseEntity.ok(followService.getFollowers(userId));
     }
 
     // 팔로잉 목록
     @GetMapping("/followings")
     public ResponseEntity<List<FollowResponseDto>> getFollowings(
-            HttpSession session) {
-        Integer userId = 1;
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
 
+        Integer userId = userDetails.getUserId();
         return ResponseEntity.ok(followService.getFollowings(userId));
     }
 }
