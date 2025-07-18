@@ -9,7 +9,6 @@
 .subscribe-banner-view {
   position: relative;
   width: 242px;
-  height: 100%;
   border-radius: 12px;
   background: linear-gradient(135deg, #138f84, #34d399);
   padding: 16px;
