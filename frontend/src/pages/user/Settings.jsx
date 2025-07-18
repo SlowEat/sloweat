@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Settings.css';
 import SettingNavigation from '../../components/user/SettingNavigation';
 import PersonalInfoEdit from '../../components/user/PersonalInfoEdit';
@@ -6,28 +6,46 @@ import AccountWithdrawal from '../../components/user/AccountWithdrawal';
 import ProfileSubscriptionGuest from '../../components/user/ProfileSubscriptionGuest';
 import ProfileSubscriptionMember from '../../components/user/ProfileSubscriptionMember';
 
-const Settings = () => {
-  const [activeTab, setActiveTab] = useState('account');
+import {getMyProfile} from '../../api/user/profile';
 
-  // 사용자 구독 상태 - 실제로는 API나 Context에서 가져와야 함
-  // 예시: const { isSubscribed } = useAuth(); 또는 useSubscription();
-  const [isSubscribed, setIsSubscribed] = useState(true); // 임시로 state 사용
+const Settings = () => {
+  //계정 설정, 구독 관리 탭
+  const [activeTab, setActiveTab] = useState('account');
+  const [profile, setProfile] = useState(null);
+
+  //사용자 profile 반환
+  const fetchProfile = async () => {
+    try {
+      const res = await getMyProfile();
+      setProfile(res.data);
+    } catch (err) {
+      console.error('프로필 불러오기 실패', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
 
   const renderContent = () => {
     switch (activeTab) {
+      //계정 설정 탭
       case 'account':
         return (
           <div style={{ width: '675px' }}>
             {/* 개인정보 수정 */}
-            <PersonalInfoEdit />
+            <PersonalInfoEdit profile={profile} profileUpdated={fetchProfile}/>
 
             {/* 회원 탈퇴 */}
             <AccountWithdrawal />
           </div>
         );
-
+        
+      //구독 관리 탭
       case 'subscription':
-        return isSubscribed ? <ProfileSubscriptionMember /> : <ProfileSubscriptionGuest />;
+        //구독자,비구독자
+        return profile?.isSubscribed ? <ProfileSubscriptionMember /> : <ProfileSubscriptionGuest />;
 
       default:
         return (

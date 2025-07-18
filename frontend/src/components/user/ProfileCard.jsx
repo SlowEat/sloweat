@@ -19,7 +19,7 @@ export default function ProfileCard() {
       }
     };
     profile();
-  },[]);
+  },[profile]);
 
   const handleLogout = async (e) => {
     e.stopPropagation();

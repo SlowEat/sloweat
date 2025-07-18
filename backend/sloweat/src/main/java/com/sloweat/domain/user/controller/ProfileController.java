@@ -1,14 +1,13 @@
 package com.sloweat.domain.user.controller;
 
 import com.sloweat.domain.auth.dto.CustomUserDetails;
+import com.sloweat.domain.user.dto.MyProfileRequestDTO;
 import com.sloweat.domain.user.dto.MyProfileResponseDTO;
 import com.sloweat.domain.user.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +20,13 @@ public class ProfileController {
     public ResponseEntity<MyProfileResponseDTO> getMyProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
        MyProfileResponseDTO dto = profileService.getMyProfile(customUserDetails);
        return ResponseEntity.ok(dto);
+    }
+
+    @PatchMapping("/users/me/profile")
+    public ResponseEntity<Void> editMyProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                           @RequestBody MyProfileRequestDTO myProfileRequestDTO) {
+        profileService.editMyProfile(customUserDetails,myProfileRequestDTO);
+        return ResponseEntity.ok().build();
     }
 
 
