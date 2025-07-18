@@ -9,7 +9,6 @@ import com.sloweat.domain.user.dto.MyProfileResponseDTO;
 import com.sloweat.domain.user.entity.User;
 import com.sloweat.domain.user.repository.UserRepository;
 import lombok.*;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
