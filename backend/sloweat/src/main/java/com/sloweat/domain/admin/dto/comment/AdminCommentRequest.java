@@ -8,4 +8,5 @@ import lombok.Getter;
 public class AdminCommentRequest {
   private String content;
   private String author;
+  private String status;
 }
