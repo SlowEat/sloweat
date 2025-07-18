@@ -1,141 +1,252 @@
 import React, { useEffect, useState } from "react";
 import "./PaymentManagement.css";
+import {
+  fetchAdminPayments,
+  rejectRefundBySubscriptionId,
+} from "../../../api/admin/adminPayment";
+
+// 페이지 번호 목록 계산 + 블록 단위 페이징 구현 함수
+const getPaginationRange = (currentPage, totalPages, blockSize = 5) => {
+  const currentBlock = Math.floor(currentPage / blockSize);
+  const startPage = currentBlock * blockSize;
+  const endPage = Math.min(startPage + blockSize, totalPages);
+
+  const range = [];
+  for (let i = startPage; i < endPage; i++) {
+    range.push(i);
+  }
+
+  return {
+    range,
+    hasPrevBlock: startPage > 0,
+    hasNextBlock: endPage < totalPages,
+    prevBlockPage: startPage - 1,
+    nextBlockPage: endPage,
+  };
+};
+
+// 상태값 영어 -> 한글
+const statusMap = {
+  PAID: "결제완료",
+  REQUEST: "환불요청",
+  COMPLETE: "환불완료",
+  REJECT: "환불거절",
+};
+
+// 상태값 한글 -> 영어
+const reverseStatusMap = {
+  전체: null,
+  결제완료: "PAID",
+  환불요청: "REQUEST",
+  환불완료: "COMPLETE",
+  환불거절: "REJECT",
+};
 
 const PaymentManagement = () => {
   const [payments, setPayments] = useState([]);
-  const [filterStatus, setFilterStatus] = useState("전체");
+  const [page, setPage] = useState(0); // 현재 페이지
+  const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
+  const [nicknameKeyword, setNicknameKeyword] = useState(""); // 닉네임 검색
+  const [filterStatus, setFilterStatus] = useState("전체"); // 상태 필터 상태 추가
 
+  // 구독 내역 로딩
+  const loadPayments = async (
+    page = 0,
+    nickname = nicknameKeyword,
+    status = filterStatus
+  ) => {
+    try {
+      const response = await fetchAdminPayments({
+        nickname: nickname || undefined,
+        status: reverseStatusMap[status],
+        page: page,
+        size: 9,
+      });
+
+      // 백엔드에서 받은 데이터 프론트 형식으로 변환
+      const formatted = response.content.map((item) => ({
+        id: item.id,
+        nickname: item.nickname,
+        date: formatDate(item.payDate),
+        amount: `${item.amount.toLocaleString()}원`,
+        period: item.subscriptionPeriod,
+        status: statusMap[item.status],
+      }));
+      setPayments(formatted);
+      setPage(page);
+      setTotalPages(response.totalPages);
+    } catch (err) {
+      console.error("결제 목록 불러오기 실패", err);
+    }
+  };
+
+  // 날짜 포맷 함수(yyyy-mm-dd)
+  const formatDate = (isoString) => {
+    const date = new Date(isoString);
+    return date.toISOString().split("T")[0]; // yyyy-mm-dd
+  };
+
+  // 필터 변경 시 데이터 로딩
   useEffect(() => {
-    const dummyPayments = [
-      {
-        id: 1,
-        userId: 1,
-        date: "2024-01-01",
-        amount: "9,900원",
-        period: "1개월",
-        status: "결제완료",
-      },
-      {
-        id: 2,
-        userId: 2,
-        date: "2024-01-05",
-        amount: "9,900원",
-        period: "1개월",
-        status: "결제완료",
-      },
-      {
-        id: 3,
-        userId: 3,
-        date: "2023-12-01",
-        amount: "9,900원",
-        period: "1개월",
-        status: "환불완료",
-      },
-      {
-        id: 4,
-        userId: 4,
-        date: "2024-01-10",
-        amount: "9,900원",
-        period: "1개월",
-        status: "환불요청",
-      },
-    ];
-    setPayments(dummyPayments);
-  }, []);
+    loadPayments(page, nicknameKeyword, filterStatus);
+  }, [filterStatus]);
 
   const handleFilterChange = (e) => {
     setFilterStatus(e.target.value);
   };
 
-  const handleRefundComplete = (paymentId) => {
-    const updatedPayments = payments.map((payment) =>
-        payment.id === paymentId ? { ...payment, status: "환불완료" } : payment
-    );
-    setPayments(updatedPayments);
+  // 환불 거절 처리 함수
+  const handleRefundReject = async (subscriptionId) => {
+    try {
+      await rejectRefundBySubscriptionId(subscriptionId);
+      alert("환불 거절 완료");
+      await loadPayments(page, nicknameKeyword, filterStatus);
+    } catch (err) {
+      console.error("거절 처리 실패", err);
+    }
   };
 
-  const filteredPayments =
-      filterStatus === "전체"
-          ? payments
-          : payments.filter((payment) => payment.status === filterStatus);
+  // 페이징 범위 계산
+  const { range, hasPrevBlock, hasNextBlock, prevBlockPage, nextBlockPage } =
+    getPaginationRange(page, totalPages);
 
   return (
-      <div className="payment-wrapper">
-        <div className="payment-content-box">
-          <div className="payment-page-header">
-            <h1 className="payment-page-title">결제 관리</h1>
-            <div className="payment-search">
-              <input type="text" placeholder="검색..." className="payment-search-input" />
-              <img
-                  src="https://c.animaapp.com/rgpZJ8Rs/img/frame-4.svg"
-                  alt="검색"
-                  className="payment-search-icon"
-              />
-            </div>
-          </div>
-
-          <div className="payment-filter-bar">
-            <div className="payment-section-title">결제 내역</div>
-            <select
-                className="payment-status-filter"
-                value={filterStatus}
-                onChange={handleFilterChange}
+    <div className="payment-wrapper">
+      <div className="payment-content-box">
+        <div className="payment-page-header">
+          <h1 className="payment-page-title">결제 관리</h1>
+          <div className="payment-search">
+            <input
+              type="text"
+              placeholder="닉네임 검색"
+              className="payment-search-input"
+              value={nicknameKeyword}
+              onChange={(e) => setNicknameKeyword(e.target.value)}
+            />
+            <button
+              className="payment-search-button"
+              onClick={() => loadPayments(0)}
             >
-              <option value="전체">전체</option>
-              <option value="결제완료">결제완료</option>
-              <option value="환불요청">환불요청</option>
-              <option value="환불완료">환불완료</option>
-            </select>
+              검색
+            </button>
+          </div>
+        </div>
+
+        {/* 필터 선택 */}
+        <div className="payment-filter-bar">
+          <div className="payment-section-title">결제 내역</div>
+          <select
+            className="payment-status-filter"
+            value={filterStatus}
+            onChange={handleFilterChange}
+          >
+            <option value="전체">전체</option>
+            <option value="결제완료">결제완료</option>
+            <option value="환불요청">환불요청</option>
+            <option value="환불완료">환불완료</option>
+            <option value="환불거절">환불거절</option>
+          </select>
+        </div>
+
+        {/* 구독 내역 테이블 */}
+        <section className="payment-table">
+          <div className="payment-table-header payment-grid">
+            <span>구독 ID</span>
+            <span>닉네임</span>
+            <span>결제일</span>
+            <span>금액</span>
+            <span>기간</span>
+            <span>상태</span>
+            <span>작업</span>
           </div>
 
-          <section className="payment-table">
-            <div className="payment-table-header payment-grid">
-              <span>결제 ID</span>
-              <span>회원 ID</span>
-              <span>결제일</span>
-              <span>금액</span>
-              <span>기간</span>
-              <span>상태</span>
-              <span>작업</span>
-            </div>
-
-            {filteredPayments.map((payment) => (
-                <div className="payment-table-row payment-grid" key={payment.id}>
-                  <span>{payment.id}</span>
-                  <span>{payment.userId}</span>
-                  <span>{payment.date}</span>
-                  <span>{payment.amount}</span>
-                  <span>{payment.period}</span>
-                  <span>
+          {payments.map((payment) => (
+            <div className="payment-table-row payment-grid" key={payment.id}>
+              <span>{payment.id}</span>
+              <span>{payment.nickname}</span>
+              <span>{payment.date}</span>
+              <span>{payment.amount}</span>
+              <span>{payment.period}</span>
+              <span>
                 <span
-                    className={`payment-badge ${
-                        payment.status === "결제완료"
-                            ? "payment-complete"
-                            : payment.status === "환불요청"
-                                ? "payment-requested"
-                                : "payment-refunded"
-                    }`}
+                  className={`payment-badge ${
+                    payment.status === "결제완료"
+                      ? "payment-complete"
+                      : payment.status === "환불요청"
+                      ? "payment-requested"
+                      : "payment-refunded"
+                  }`}
                 >
                   {payment.status}
                 </span>
               </span>
-                  <span>
+              <span>
+                {/* 환불 요청 상태일 때만 승인/거절 버튼 표시 */}
                 {payment.status === "환불요청" ? (
+                  <span className="payment-action-wrapper">
                     <button
-                        className="refund-btn"
-                        onClick={() => handleRefundComplete(payment.id)}
+                      className="payment-approve-btn"
+                      // onClick={() => handleRefundApprove(payment.id)}
                     >
-                      환불
+                      승인
                     </button>
+                    <button
+                      className="payment-reject-btn"
+                      onClick={() => handleRefundReject(payment.id)}
+                    >
+                      거절
+                    </button>
+                  </span>
                 ) : (
-                    <span>-</span>
+                  <span>-</span>
                 )}
               </span>
-                </div>
-            ))}
-          </section>
+            </div>
+          ))}
+        </section>
+
+        {/* 페이징 */}
+        <div className="user-pagination">
+          <button
+            className="user-page-btn"
+            disabled={page === 0}
+            onClick={() => loadPayments(0)}
+          >
+            &laquo;
+          </button>
+          <button
+            className="user-page-btn"
+            disabled={!hasPrevBlock}
+            onClick={() => loadPayments(prevBlockPage)}
+          >
+            &lt;
+          </button>
+          {range.map((p) => (
+            <button
+              key={p}
+              className={`recipe-page-btn ${p === page ? "active" : ""}`}
+              onClick={() => loadPayments(p)}
+            >
+              {p + 1}
+            </button>
+          ))}
+          <button
+            className="user-page-btn"
+            disabled={!hasNextBlock}
+            onClick={() => loadPayments(nextBlockPage)}
+          >
+            &gt;
+          </button>
+          <button
+            className="user-page-btn"
+            disabled={page === totalPages - 1}
+            onClick={() => loadPayments(totalPages - 1)}
+          >
+            &raquo;
+          </button>
         </div>
       </div>
+    </div>
   );
 };
 

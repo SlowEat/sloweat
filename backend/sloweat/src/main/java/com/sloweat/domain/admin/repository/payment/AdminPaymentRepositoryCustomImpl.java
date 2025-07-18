@@ -85,7 +85,7 @@ public class AdminPaymentRepositoryCustomImpl implements AdminPaymentRepositoryC
       continuousMonthsMap.put(entry.getKey(), count);
     }
 
-    // 최신 결제 정보
+    // 최신 결제 정보 (유저별 1건만 유지. 제일 최신 정보)
     Map<Integer, Tuple> latestPaymentMap = result.stream()
         .collect(Collectors.toMap(
             t -> t.get(user.userId),  // key: userId
@@ -93,7 +93,7 @@ public class AdminPaymentRepositoryCustomImpl implements AdminPaymentRepositoryC
             (oldVal, newVal) -> newVal  // 중복 키 발생 시 user 기준 최신 값 유지
         ));
 
-    // DTO 변환
+    // DTO 변환 + 상태 필터링 여기에서 처리
     List<AdminPaymentResponse> responses = latestPaymentMap.entrySet().stream()
         .map(entry -> {
           Tuple t = entry.getValue();
@@ -110,7 +110,14 @@ public class AdminPaymentRepositoryCustomImpl implements AdminPaymentRepositoryC
               continuousMonthsMap.getOrDefault(uid, 1) + "개월",
               status
           );
-        }).toList();
+        })
+        .filter(dto -> {
+          String filter = request.getStatus();
+          if(filter == null || filter.isBlank()) return true;
+          return dto.getStatus().equals(filter);
+        })
+        .sorted((a,b) -> b.getPayDate().compareTo(a.getPayDate()))
+        .toList();
 
     int start = (int) pageable.getOffset();
     int end = Math.min(start + pageable.getPageSize(), responses.size());
