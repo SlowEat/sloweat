@@ -23,7 +23,6 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@Valid @RequestBody LocalSignupRequestDto dto){
         localSignupService.signup(dto);
-        System.out.println("controller진입");
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body("회원가입이 완료되었습니다.");

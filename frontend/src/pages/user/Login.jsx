@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { login } from '../../api/auth';
+import { login } from '../../api/user/auth';
 import './Login.css';
 
 function Login() {
@@ -80,7 +80,7 @@ const handleLogin = async (e) => {
                   onClick={togglePasswordVisibility}
                 >
                   <img 
-                    src="https://c.animaapp.com/JlqecQMn/img/----.svg" 
+                    src="https://c.animaapp.com/CgKu8nvQ/img/--.svg"
                     alt="비밀번호 보기" 
                     className="eye-icon" 
                   />
