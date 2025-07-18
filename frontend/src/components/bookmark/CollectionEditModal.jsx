@@ -20,7 +20,7 @@ const CollectionEditModal = ({ isOpen, onClose, collection, onUpdateSuccess }) =
     }
 
     try {
-      const response = await api.put(`/api/bookmark-collections/${collection.collectionId}`, {
+      const response = await api.put(`api/bookmark-collections/${collection.collectionId}`, {
         collectionName: collectionName.trim(),
       });
       onClose();

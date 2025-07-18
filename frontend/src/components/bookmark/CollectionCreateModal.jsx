@@ -16,7 +16,7 @@ const CollectionCreateModal = ({ isOpen, onClose, onCreateSuccess }) => {
     }
 
     try {
-      const response = await api.post("/api/bookmark-collections", {
+      const response = await api.post("api/bookmark-collections", {
         collectionName: collectionName.trim(),
       });
       onClose();

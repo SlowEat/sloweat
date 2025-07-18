@@ -7,7 +7,7 @@ const CollectionCard = ({collection, onEditOpen, onDeleteSuccess}) => {
   const handleDelete = async () => {
 
     try {
-      const response = await api.delete(`/api/bookmark-collections/${collection.collectionId}`);
+      const response = await api.delete(`api/bookmark-collections/${collection.collectionId}`);
       onDeleteSuccess(); // 목록 화면 갱신
     } catch (error) {
       alert("컬렉션 삭제에 실패했습니다.");
