@@ -1,25 +1,9 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/user/ProfileCard.css';
-import { getMyProfile } from '../../api/user/profile';
 import {logout} from '../../api/user/auth';
 
-export default function ProfileCard() {
+export default function ProfileCard({ profile }) {
   const navigate = useNavigate();
-
-  const [profile,setProfile] = useState(null);
-
-  useEffect(()=>{
-    const profile = async()=>{
-      try{
-        const res = await getMyProfile();
-        setProfile(res.data);
-      }catch(err){
-        console.error('프로필 불러오기 실패',err);
-      }
-    };
-    profile();
-  },[]);
 
   const handleLogout = async (e) => {
     e.stopPropagation();
@@ -32,7 +16,6 @@ export default function ProfileCard() {
       alert('로그아웃 되었습니다.');
 
       localStorage.removeItem('accessToken');
-      setProfile(null);
 
       window.location.href = '/login';
     } catch (err) {
