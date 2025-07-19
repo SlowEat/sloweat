@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+
 import './Settings.css';
 import SettingNavigation from '../../components/user/SettingNavigation';
 import PersonalInfoEdit from '../../components/user/PersonalInfoEdit';
@@ -10,7 +12,9 @@ import {getMyProfile} from '../../api/user/profile';
 
 const Settings = () => {
   //계정 설정, 구독 관리 탭
-  const [activeTab, setActiveTab] = useState('account');
+  const location = useLocation();
+  const initialTab = location.state?.tab || 'account'; 
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [profile, setProfile] = useState(null);
 
   //사용자 profile 반환

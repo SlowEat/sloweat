@@ -1,6 +1,6 @@
 import SubscribeBanner from "../../components/user/SubscribeBanner.jsx";
-import { Link } from "react-router-dom"; 
 import {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
 import SideBar from "../../components/user/SideBar.jsx";
 import ProfileCard from "../../components/user/ProfileCard.jsx";
 import { getMyProfile } from '../../api/user/profile';
@@ -24,7 +24,7 @@ export default function Tab() {
       };
       profile();
     },[]);
-  
+
   return (
     <div className="main-layout-tab">
             <div className="tab-logo">
@@ -33,7 +33,7 @@ export default function Tab() {
                 </Link>
             </div>
             {/* 구독 유도 광고 (비구독자 전용) */}
-            <SubscribeBanner></SubscribeBanner>
+            {profile?.subscribed===false && <SubscribeBanner></SubscribeBanner>}
             {/* 탭 바 */}
             <SideBar></SideBar>
             {/* 프로필 카드*/}
@@ -41,4 +41,3 @@ export default function Tab() {
     </div>
   );
 }
-

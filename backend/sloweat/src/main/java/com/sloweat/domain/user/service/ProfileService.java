@@ -40,7 +40,7 @@ public class ProfileService {
                 .id(id)
                 .profileImgPath(user.getProfileImgPath())
                 .introduce(user.getIntroduce())
-                .isSubscribed(subscriptionRepository.existsByUserUserIdAndStatus(userId, Subscription.Status.ACTIVE))
+                .subscribed(subscriptionRepository.existsByUserUserIdAndStatus(userId, Subscription.Status.ACTIVE))
                 .followerCnt(follower_cnt)
                 .followingCnt(following_cnt)
                 .postCnt(post_cnt)

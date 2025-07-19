@@ -12,7 +12,7 @@ public class MyProfileResponseDTO {
     private String id;
     private String profileImgPath;
     private String introduce;
-    private boolean isSubscribed;
+    private boolean subscribed;
     private long followerCnt;
     private long followingCnt;
     private long postCnt;
