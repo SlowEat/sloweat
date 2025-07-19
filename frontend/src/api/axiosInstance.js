@@ -48,7 +48,7 @@ axiosInstance.interceptors.response.use(
 
           //수정된 원본 요청으로 API 호출 재시도
           originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
-          return axios(originalRequest);
+          return axiosInstance(originalRequest);
         }
       } catch (err) {
         localStorage.removeItem('accessToken');
