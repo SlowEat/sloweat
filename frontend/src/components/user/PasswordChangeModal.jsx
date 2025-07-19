@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import '../../styles/user/PasswordChangeModal.css';
-import { changePassword } from '../../api/user/auth';
+import { changePassword } from '../../api/user/profile';
 
 const PasswordChangeModal = ({ onClose }) => {
   //비밀번호 숨김처리
