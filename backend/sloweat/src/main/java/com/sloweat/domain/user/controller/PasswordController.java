@@ -1,8 +1,8 @@
-package com.sloweat.domain.auth.controller;
+package com.sloweat.domain.user.controller;
 
 import com.sloweat.domain.auth.dto.CustomUserDetails;
 import com.sloweat.domain.auth.dto.EditPasswordRequestDTO;
-import com.sloweat.domain.auth.service.PasswordService;
+import com.sloweat.domain.user.service.PasswordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

@@ -1,4 +1,4 @@
-package com.sloweat.domain.auth.service;
+package com.sloweat.domain.user.service;
 
 import com.sloweat.domain.auth.dto.CustomUserDetails;
 import com.sloweat.domain.auth.dto.EditPasswordRequestDTO;

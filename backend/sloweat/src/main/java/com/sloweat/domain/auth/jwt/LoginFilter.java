@@ -71,8 +71,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 
         //토큰 생성
-        String access = jwtUtil.createJwt("access",localEmail,role,userId,accessTokenValidity); //1시간
-        String refresh = jwtUtil.createJwt("refresh",localEmail,role,userId,refreshTokenValidity); //24시간
+        String access = jwtUtil.createJwt("access",localEmail,role,userId,accessTokenValidity);
+        String refresh = jwtUtil.createJwt("refresh",localEmail,role,userId,refreshTokenValidity);
 
         //refresh 토큰 저장
         addRefreshEntity(localEmail,refresh,refreshTokenValidity);
