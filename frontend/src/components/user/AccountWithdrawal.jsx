@@ -1,6 +1,22 @@
+import { withdrawal } from "../../api/user/profile";
+
 const AccountWithdrawal = () => {
-  const handleWithdrawal = () => {
-    console.log('회원 탈퇴 버튼 클릭됨');
+
+  const handleWithdrawal = async () => {
+    const res = window.confirm('회원을 탈퇴하시겠습니까?');
+    if(!res){
+      return;
+    }
+
+    try{
+      await withdrawal();
+      localStorage.removeItem('accessToken');
+      alert('회원 탈퇴가 완료되었습니다.');
+      window.location.reload();
+    }catch(error){
+      console.error('회원 탈퇴 실패',error);
+      alert('회원 탈퇴에 실패했습니다. 다시 시도해주세요');
+    }
   };
 
   return (

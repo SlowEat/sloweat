@@ -17,3 +17,8 @@ export const editMyProfile = async (requestDTO) => {
 export const changePassword = async (requestDTO) => {
   return axiosInstance.patch('api/users/me/password',requestDTO)
 }
+
+//회원 탈퇴
+export const withdrawal = async ()=>{
+  return axiosInstance.patch('api/users/me');
+}
