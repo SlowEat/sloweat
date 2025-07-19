@@ -1,16 +1,14 @@
-// src/pages/user/PostEntireList.jsx
-
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import RecipeCard from '../../components/user/RecipeCard'; // 카드 컴포넌트 재사용
-// import '../../styles/user/PostEntireList.css'; // 필요한 경우 스타일 분리
+import axiosInstance from '../../api/axiosInstance';
+import RecipeCard from '../../components/user/RecipeCard';
+// import '../../styles/user/PostEntireList.css';
 
 export default function PostEntireList() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('http://localhost:8080/api/recipes/all')
+    axiosInstance.get('/api/recipes/all')
       .then(res => {
         setRecipes(res.data);
         setLoading(false);

@@ -8,6 +8,18 @@ spring:
     password: admin1234
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+jwt:
+  secret: SGxhZGRpbjpvcGVuIHNlc2FtZQBAAAAAASSSAAAAAAQQQAAAAAHHHAAAAAAAAAA=
+  access-token-validity: 300000 # 5분
+  refresh-token-validity: 604800000 # 7일
+
+# 아임포트 설정
+iamport:
+  api:
+    key: 0855764552444670
+    secret: CVgpZ99K9XzflxBTGsA0uwwRDUfQkwY5Qhd6vWma5cMQSd1h19A9Tu1xaEUwDPwnysFKAUYbPRgaWsm3
+    url: https://api.iamport.kr
+
   jpa:
     hibernate:
       ddl-auto: validate # 실무에서는 'validate' 또는 'none' 권장

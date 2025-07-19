@@ -309,3 +309,17 @@ CREATE TABLE refresh (
     expiration VARCHAR(255) NOT NULL
 );
 
+-- tag 테이블 기본값 세팅
+INSERT INTO tag (tag_id, tag_name, tag_type) VALUES
+(1, '혼밥', 'situation'),
+(2, '파티', 'situation'),
+(3, '야식', 'situation'),
+(4, '한식', 'type'),
+(5, '양식', 'type'),
+(6, '중식', 'type'),
+(7, '파스타', 'ingredient'),
+(8, '닭고기', 'ingredient'),
+(9, '계란', 'ingredient'),
+(10, '굽기', 'method'),
+(11, '끓이기', 'method'),
+(12, '볶기', 'method');

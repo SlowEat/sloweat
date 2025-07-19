@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../../api/axiosInstance';
 import '../../styles/user/RecipeForm.css';
 import '../../styles/user/Filter.css';
 
@@ -16,7 +16,7 @@ const RecipeForm = () => {
     tags: {
       situation: '야식',
       type: '양식',
-      material: '파스타',
+      ingredient: '파스타',
       method: '끓이기'
     }
   });
@@ -46,26 +46,30 @@ const RecipeForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const { situation, type, ingredient, method } = formData.tags;
+
+    if (!situation || !type || !ingredient || !method) {
+      alert('태그를 모두 선택해주세요! (종류, 상황, 재료, 방법)');
+      return;
+    }
+
     const requestData = {
       userId: 1,
       title: formData.title,
       content: formData.content,
       cookingTime: parseInt(formData.duration),
-      isSubscribed: formData.isPremium
+      isSubscribed: formData.isPremium,
+      type,
+      situation,
+      ingredient,
+      method
     };
 
     try {
-      const response = await axios.post('http://localhost:8080/api/recipes', requestData, {
-        headers: {
-          'Cache-Control': 'no-cache'
-        }
-      });
+      const response = await axiosInstance.post('/api/recipes', requestData);
       console.log('작성 성공 응답:', response.data);
-
-      console.log('작성 성공:', response.data);
       alert('글이 성공적으로 등록되었습니다!');
 
-      // ✅ 작성된 게시글 ID 기반으로 상세 페이지 이동
       const newRecipeId = response.data.id;
       navigate(`/postdetail/${newRecipeId}`);
     } catch (error) {
@@ -121,7 +125,7 @@ const RecipeForm = () => {
         </div>
 
         <div className="recipe-form-group">
-          <label>태그</label>
+          <label>태그 *</label>
           <div className="filter-group">
             <select
               className="select-box filter-select"
@@ -147,8 +151,8 @@ const RecipeForm = () => {
 
             <select
               className="select-box filter-select"
-              value={formData.tags.material}
-              onChange={(e) => handleTagChange(e, 'material')}
+              value={formData.tags.ingredient}
+              onChange={(e) => handleTagChange(e, 'ingredient')}
             >
               <option value="">재료</option>
               <option value="파스타">파스타</option>

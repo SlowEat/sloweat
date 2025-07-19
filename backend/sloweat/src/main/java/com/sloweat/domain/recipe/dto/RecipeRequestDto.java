@@ -11,5 +11,11 @@ public class RecipeRequestDto {
     private int cookingTime;        // 요리 시간
     private boolean isSubscribed;   // 유료 여부
 
-    // 추후 확장 가능: 이미지 URL, 태그 등
+    /**
+     * ✅ 태그 4종류: 프론트에서 각각 선택해서 전달
+     */
+    private String type;            // 예: "한식"
+    private String situation;       // 예: "혼밥"
+    private String ingredient;        // 예: "계란"
+    private String method;          // 예: "볶기"
 }
