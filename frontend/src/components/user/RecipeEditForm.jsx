@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../../api/axiosInstance';
 import '../../styles/user/RecipeForm.css';
 import '../../styles/user/Filter.css';
 
@@ -17,27 +17,26 @@ const RecipeEditForm = () => {
     tags: {
       situation: '',
       type: '',
-      material: '',
+      ingredient: '',
       method: ''
     }
   });
 
-  // ✅ 기존 글 정보 불러와서 세팅
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/recipes/${id}`);
+        const response = await axiosInstance.get(`/api/recipes/${id}`);
         const recipe = response.data;
         setFormData({
           title: recipe.title,
           content: recipe.content,
           duration: recipe.cookingTime.toString(),
           isPremium: recipe.subscribed,
-          photo: null, // 이미지 수정 제외 가능
+          photo: null,
           tags: {
             situation: recipe.situation || '',
             type: recipe.type || '',
-            material: recipe.material || '',
+            ingredient: recipe.ingredient || '',
             method: recipe.method || ''
           }
         });
@@ -72,20 +71,30 @@ const RecipeEditForm = () => {
     }));
   };
 
-  // ✅ PUT 요청으로 수정 처리
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const { type, situation, ingredient, method } = formData.tags;
+
+    if (!type || !situation || !ingredient || !method) {
+      alert('태그를 모두 선택해주세요!');
+      return;
+    }
+
     const requestData = {
-      userId: 1, // 예시: 유저는 수정 불가, 고정
+      userId: 1,
       title: formData.title,
       content: formData.content,
       cookingTime: parseInt(formData.duration),
-      isSubscribed: formData.isPremium
+      isSubscribed: formData.isPremium,
+      type,
+      situation,
+      ingredient,
+      method
     };
 
     try {
-      await axios.put(`http://localhost:8080/api/recipes/${id}`, requestData);
+      await axiosInstance.put(`/api/recipes/${id}`, requestData);
       alert('수정이 완료되었습니다!');
       navigate(`/postdetail/${id}`);
     } catch (error) {
@@ -151,7 +160,7 @@ const RecipeEditForm = () => {
               <option value="중식">중식</option>
             </select>
 
-            <select value={formData.tags.material} onChange={(e) => handleTagChange(e, 'material')}>
+            <select value={formData.tags.ingredient} onChange={(e) => handleTagChange(e, 'ingredient')}>
               <option value="">재료</option>
               <option value="파스타">파스타</option>
               <option value="닭고기">닭고기</option>
