@@ -61,9 +61,15 @@
   line-height: 18px;
 }
 
-.mypage-profile-username,
+.mypage-profile-username{
+  font-size: 15px;
+  line-height: 22.5px;
+  font-weight: 400;
+}
+
 .mypage-profile-description {
-  margin: 0;
+  width : 520px;
+  margin-top : 8px;
   font-size: 15px;
   line-height: 22.5px;
   font-weight: 400;

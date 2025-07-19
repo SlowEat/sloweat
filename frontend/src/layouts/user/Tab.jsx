@@ -1,13 +1,30 @@
 import SubscribeBanner from "../../components/user/SubscribeBanner.jsx";
 import { Link } from "react-router-dom"; 
+import {useEffect, useState} from "react";
 import SideBar from "../../components/user/SideBar.jsx";
 import ProfileCard from "../../components/user/ProfileCard.jsx";
+import { getMyProfile } from '../../api/user/profile';
 import './MainLayout.css';
 import logo from '../../img/logo.svg';
 
 
 //좌측 탭
 export default function Tab() {
+  const [profile,setProfile] = useState(null);
+
+  //프로필 불러오기
+  useEffect(()=>{
+      const profile = async()=>{
+        try{
+          const res = await getMyProfile();
+          setProfile(res.data);
+        }catch(err){
+          console.error('프로필 불러오기 실패',err);
+        }
+      };
+      profile();
+    },[]);
+  
   return (
     <div className="main-layout-tab">
             <div className="tab-logo">
@@ -20,7 +37,7 @@ export default function Tab() {
             {/* 탭 바 */}
             <SideBar></SideBar>
             {/* 프로필 카드*/}
-            <ProfileCard></ProfileCard>
+            <ProfileCard profile={profile}></ProfileCard>
     </div>
   );
 }

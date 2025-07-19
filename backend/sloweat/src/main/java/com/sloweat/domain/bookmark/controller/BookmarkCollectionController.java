@@ -1,5 +1,6 @@
 package com.sloweat.domain.bookmark.controller;
 
+import com.sloweat.domain.auth.dto.CustomUserDetails;
 import com.sloweat.domain.bookmark.dto.BookmarkCollectionRequestDto;
 import com.sloweat.domain.bookmark.dto.BookmarkCollectionResponseDto;
 import com.sloweat.domain.bookmark.service.BookmarkCollectionService;
@@ -7,6 +8,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +24,8 @@ public class BookmarkCollectionController {
     @PostMapping
     public ResponseEntity<BookmarkCollectionResponseDto> createCollection(
             @RequestBody BookmarkCollectionRequestDto request,
-            HttpSession session) {
-        Integer userId = 1;
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Integer userId = userDetails.getUserId();
 
         bookmarkCollectionService.createCollection(userId, request);
 
@@ -32,8 +34,9 @@ public class BookmarkCollectionController {
 
     // 컬렉션 전체 조회
     @GetMapping
-    public ResponseEntity<List<BookmarkCollectionResponseDto>> getCollections(HttpSession session) {
-        Integer userId = 1;
+    public ResponseEntity<List<BookmarkCollectionResponseDto>> getCollections(
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Integer userId = userDetails.getUserId();
 
         return ResponseEntity.ok(bookmarkCollectionService.getCollections(userId));
     }
@@ -43,9 +46,7 @@ public class BookmarkCollectionController {
     public ResponseEntity<BookmarkCollectionResponseDto> updateCollection(
             @PathVariable Integer collectionId,
             @RequestBody BookmarkCollectionRequestDto request,
-            HttpSession session) {
-
-        Integer userId = 1;
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         bookmarkCollectionService.updateCollection(collectionId, request);
 
