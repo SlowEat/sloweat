@@ -3,8 +3,11 @@ package com.sloweat.domain.bookmark.entity;
 import com.sloweat.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "bookmark_collection")
@@ -25,6 +28,10 @@ public class BookmarkCollection {
 
     private String collectionName;
 
-    private LocalDateTime createdAt;
+    @OneToMany(mappedBy = "bookmarkCollection", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Bookmark> bookmarks = new ArrayList<>();
+
+    @CreationTimestamp
+    private LocalDateTime createdAt = LocalDateTime.now();
 }
 
