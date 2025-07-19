@@ -1,6 +1,7 @@
 import '../../styles/user/CollectionCard.css';
 import api from '../../api/axiosInstance';
 import { formatDateTime } from "../../utils/dateTimeUtils";
+import { useNavigate } from "react-router-dom";
 
 const CollectionCard = ({collection, onEditOpen, onDeleteSuccess}) => {
 
@@ -21,9 +22,16 @@ const CollectionCard = ({collection, onEditOpen, onDeleteSuccess}) => {
     }
   };
 
+  //컬렉션 클릭 -> 북마크 목록
+  const navigate = useNavigate();
+  const handleBookmarkList = (collectionId, collectionName) => {
+    navigate(`/bookmark/list/${collectionId}/${encodeURIComponent(collectionName)}`);
+  }
+
+
   return (
     <article className="collection-card">
-      <div className="collection-card-image">
+      <div className="collection-card-image" onClick={() => handleBookmarkList(collection.collectionId, collection.collectionName)}>
         <img 
           src="https://wimg.heraldcorp.com/news/cms/2025/01/23/news-p.v1.20250123.b3c0f983bcad430e8f458ecfd8daed55_P1.jpg" 
           alt="음식 이미지"
@@ -31,7 +39,7 @@ const CollectionCard = ({collection, onEditOpen, onDeleteSuccess}) => {
         />
       </div>
       <div className="collection-card-details">
-        <h2 className="collection-card-title">{collection.collectionName}</h2>
+        <h2 className="collection-card-title">{collection.collectionName} ({collection.bookmarkCount})개</h2>
         <time className="collection-card-date">{formatDateTime(collection.createdAt)}</time>
         <div className="collection-card-actions">
           <button className="collection-card-button edit-button" aria-label="Edit recipe" onClick={() => onEditOpen(collection)}>

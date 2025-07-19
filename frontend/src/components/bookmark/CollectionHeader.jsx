@@ -12,7 +12,7 @@ export default function CollectionHeader({ count = 0 , onCreateOpen, openBookmar
         />
         <p className="bookmark-count">
           <span className="count">{count}</span>
-          <span>개의 북마크</span>
+          <span>개의 컬렉션</span>
         </p>
       </section>
 
@@ -24,14 +24,15 @@ export default function CollectionHeader({ count = 0 , onCreateOpen, openBookmar
         />
         <span className="btn-text">컬렉션 추가</span>
       </button>
-        <button type="button" className="add-collection-btn" onClick={openBookmarkModal}>
+
+        {/*<button type="button" className="add-collection-btn" onClick={openBookmarkModal}>
             <img
                 src="https://c.animaapp.com/uCLj7VDt/img/frame.svg"
                 alt="Add icon"
                 className="add-icon"
             />
             <span className="btn-text">북마크 추가</span>
-        </button>
+        </button>*/}
     </div>
   );
 }

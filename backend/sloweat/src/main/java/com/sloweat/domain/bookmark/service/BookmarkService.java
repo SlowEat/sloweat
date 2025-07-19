@@ -7,6 +7,7 @@ import com.sloweat.domain.bookmark.entity.Bookmark;
 import com.sloweat.domain.bookmark.entity.BookmarkCollection;
 import com.sloweat.domain.bookmark.repository.BookmarkCollectionRepository;
 import com.sloweat.domain.bookmark.repository.BookmarkRepository;
+import com.sloweat.domain.bookmark.repository.BookmarkRepositoryCustom;
 import com.sloweat.domain.recipe.dto.RecipeResponseDto;
 import com.sloweat.domain.recipe.entity.Recipe;
 import com.sloweat.domain.user.entity.User;
@@ -26,6 +27,7 @@ public class BookmarkService {
 
     private final BookmarkRepository bookmarkRepository;
     private final BookmarkCollectionRepository bookmarkCollectionRepository;
+    private final BookmarkRepositoryCustom bookmarkRepositoryCustom;
 
     // 북마크 생성
     @Transactional
@@ -55,12 +57,7 @@ public class BookmarkService {
 
         List<Bookmark> bookmarks = bookmarkRepository.findByCollectionId(collectionId);
 
-        List<BookmarkResponseDto> result = bookmarks.stream()
-                .map(bookmark -> BookmarkResponseDto.builder()
-                        .bookmarkId(bookmark.getBookmarkId())
-                        .collectionId(collectionId)
-                        .userId(userId).build()
-                ).collect(Collectors.toList());
+        List<BookmarkResponseDto> result = bookmarkRepositoryCustom.getBookmarks(collectionId);
 
         return result;
     }
