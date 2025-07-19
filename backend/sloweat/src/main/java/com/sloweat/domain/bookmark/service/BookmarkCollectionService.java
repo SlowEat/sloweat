@@ -4,6 +4,7 @@ import com.sloweat.domain.bookmark.dto.BookmarkCollectionRequestDto;
 import com.sloweat.domain.bookmark.dto.BookmarkCollectionResponseDto;
 import com.sloweat.domain.bookmark.entity.BookmarkCollection;
 import com.sloweat.domain.bookmark.repository.BookmarkCollectionRepository;
+import com.sloweat.domain.bookmark.repository.BookmarkCollectionRepositoryCustom;
 import com.sloweat.domain.user.entity.User;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 public class BookmarkCollectionService {
 
     private final BookmarkCollectionRepository bookmarkCollectionRepository;
+    private final BookmarkCollectionRepositoryCustom bookmarkCollectionRepositoryCustom;
 
     // 컬렉션 생성
     public void createCollection(Integer userId, BookmarkCollectionRequestDto request){
@@ -35,9 +37,10 @@ public class BookmarkCollectionService {
     // 컬렉션 조회
     public List<BookmarkCollectionResponseDto> getCollections(Integer userId){
 
-        List<BookmarkCollection> bookmarkCollectionList = bookmarkCollectionRepository.findAll();
+        //List<BookmarkCollection> bookmarkCollectionList = bookmarkCollectionRepository.findAll();
+        List<BookmarkCollectionResponseDto> bookmarkCollectionList = bookmarkCollectionRepositoryCustom.getBookmarkCollections(userId);
 
-        List<BookmarkCollectionResponseDto> result  = bookmarkCollectionList.stream()
+       /* List<BookmarkCollectionResponseDto> result  = bookmarkCollectionList.stream()
                 .map(collection -> BookmarkCollectionResponseDto.builder()
                         .collectionId(collection.getCollectionId())
                         .collectionName(collection.getCollectionName())
@@ -45,9 +48,9 @@ public class BookmarkCollectionService {
                         .createdAt(collection.getCreatedAt())
                         .build()
                 )
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
 
-        return result;
+        return bookmarkCollectionList;
     }
 
     // 컬렉션 수정

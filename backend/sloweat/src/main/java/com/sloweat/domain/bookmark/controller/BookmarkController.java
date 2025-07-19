@@ -1,5 +1,6 @@
 package com.sloweat.domain.bookmark.controller;
 
+import com.sloweat.domain.auth.dto.CustomUserDetails;
 import com.sloweat.domain.bookmark.dto.BookmarkCollectionRequestDto;
 import com.sloweat.domain.bookmark.dto.BookmarkRequestDto;
 import com.sloweat.domain.bookmark.dto.BookmarkResponseDto;
@@ -9,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,8 +26,9 @@ public class BookmarkController {
     @PostMapping
     public ResponseEntity<BookmarkResponseDto> createBookmark(
             @RequestBody BookmarkRequestDto request,
-            HttpSession session) {
-        Integer userId = 1;
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        Integer userId =userDetails.getUserId();
 
         bookmarkService.createBookmark(userId, request);
 
@@ -36,8 +39,8 @@ public class BookmarkController {
     @GetMapping("/{collectionId}")
     public ResponseEntity<List<BookmarkResponseDto>> getBookmarks(
             @PathVariable Integer collectionId,
-            HttpSession session) {
-        Integer userId = 1;
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Integer userId = userDetails.getUserId();
 
         List<BookmarkResponseDto> bookmarks = bookmarkService.getBookmarks(userId, collectionId);
         return ResponseEntity.ok(bookmarks);
@@ -48,10 +51,11 @@ public class BookmarkController {
     public ResponseEntity<BookmarkResponseDto> updateBookmark(
             @PathVariable Integer bookmarkId,
             @RequestBody BookmarkRequestDto request,
-            HttpSession session) {
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        Integer userId = 1;
+        Integer userId = userDetails.getUserId();
         request.setUserId(userId);
+
         bookmarkService.updateBookmark(bookmarkId, request);
 
         return ResponseEntity.status(HttpStatus.OK).build(); // 200
@@ -61,8 +65,9 @@ public class BookmarkController {
     @DeleteMapping("/{bookmarkId}")
     public ResponseEntity<Void> deleteBookmark(
             @PathVariable Integer bookmarkId,
-            HttpSession session) {
-        Integer userId = 1;
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        Integer userId = userDetails.getUserId();
 
         bookmarkService.deleteBookmark(bookmarkId, userId);
         return ResponseEntity.noContent().build(); // 204

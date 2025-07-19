@@ -32,5 +32,5 @@ public class Bookmark {
     @JoinColumn(name = "collection_id", nullable = false)
     private BookmarkCollection bookmarkCollection;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 }

@@ -1,0 +1,14 @@
+input[type="radio"] {
+    width: 17px;
+    height: 17px;
+}
+.screen .overlap-group-wrapper {
+    height: 330px;
+    overflow: scroll;
+}
+.overlap{
+ /*   left:130px;*/
+}
+.view-2,.view-3,.view-4 {
+    cursor: pointer;
+}

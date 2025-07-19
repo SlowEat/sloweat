@@ -32,7 +32,7 @@ public class BookmarkService {
     public void createBookmark(Integer userId, BookmarkRequestDto request) {
         Bookmark bookmark = new Bookmark();
         User user = new User();
-        user.setUserId(request.getUserId());
+        user.setUserId(userId);
 
         Recipe recipe = new Recipe();
         recipe.setRecipeId(request.getRecipeId());
