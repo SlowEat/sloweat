@@ -2,7 +2,15 @@ import React, { useState, useRef, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import "../../styles/user/CommentForm.css";
 
-const CommentForm = ({ recipeId, userId, isEditing = false, initialText = "", onSuccess, onCancel }) => {
+const CommentForm = ({
+  recipeId,
+  userId,
+  isEditing = false,
+  initialText = "",
+  parentId = null,
+  onSuccess,
+  onCancel,
+}) => {
   const [text, setText] = useState(initialText);
   const textareaRef = useRef(null);
   const maxLength = 300;
@@ -22,6 +30,7 @@ const CommentForm = ({ recipeId, userId, isEditing = false, initialText = "", on
       await axiosInstance.post(`/api/recipes/${recipeId}/comments`, {
         userId,
         content: text.trim(),
+        parentId: parentId, // 대댓글인 경우 parentId 포함
       });
       setText("");
       if (onSuccess) onSuccess();
@@ -31,8 +40,13 @@ const CommentForm = ({ recipeId, userId, isEditing = false, initialText = "", on
   };
 
   return (
-    <form className={`comment-form ${isEditing ? "editing" : ""}`} onSubmit={handleSubmit}>
-      <h3 className="comment-form-title">{isEditing ? "댓글 수정" : "댓글 작성"}</h3>
+    <form
+      className={`comment-form ${isEditing ? "editing" : ""}`}
+      onSubmit={handleSubmit}
+    >
+      <h3 className="comment-form-title">
+        {isEditing ? "댓글 수정" : parentId ? "답글 작성" : "댓글 작성"}
+      </h3>
       <textarea
         ref={textareaRef}
         className="comment-textarea"
@@ -44,13 +58,23 @@ const CommentForm = ({ recipeId, userId, isEditing = false, initialText = "", on
         rows={4}
       />
       <div className="comment-form-info">
-        <span className="comment-form-charcount">{text.length} / {maxLength}</span>
+        <span className="comment-form-charcount">
+          {text.length} / {maxLength}
+        </span>
       </div>
       <div className="comment-form-actions">
-        <button type="button" className="comment-button comment-button-secondary" onClick={onCancel}>
+        <button
+          type="button"
+          className="comment-button comment-button-secondary"
+          onClick={onCancel}
+        >
           {isEditing ? "취소" : "닫기"}
         </button>
-        <button type="submit" className="comment-button comment-button-primary" disabled={!text.trim()}>
+        <button
+          type="submit"
+          className="comment-button comment-button-primary"
+          disabled={!text.trim()}
+        >
           {isEditing ? "수정" : "등록"}
         </button>
       </div>

@@ -110,7 +110,7 @@
   user-select: none;
 }
 
-/* ✅ 작성자 뱃지 스타일 */
+/* 작성자 뱃지 스타일 */
 .comment-author-badge {
   font-size: 12px;
   font-weight: 600;
@@ -119,4 +119,24 @@
   border-radius: 4px;
   padding: 2px 6px;
   margin-left: 6px;
+}
+
+.comment-reply-wrapper {
+  margin-left: 44px;
+  margin-top: 10px;
+}
+
+.comment-reply-button {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #2563eb;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.comment-reply-button:hover {
+  text-decoration: underline;
 }
