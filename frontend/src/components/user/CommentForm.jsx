@@ -4,7 +4,6 @@ import "../../styles/user/CommentForm.css";
 
 const CommentForm = ({
   recipeId,
-  userId,
   isEditing = false,
   initialText = "",
   parentId = null,
@@ -28,9 +27,8 @@ const CommentForm = ({
 
     try {
       await axiosInstance.post(`/api/recipes/${recipeId}/comments`, {
-        userId,
         content: text.trim(),
-        parentId: parentId, // 대댓글인 경우 parentId 포함
+        parentId: parentId,
       });
       setText("");
       if (onSuccess) onSuccess();
