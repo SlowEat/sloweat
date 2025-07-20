@@ -28,16 +28,44 @@ function SearchBar({ onSearch }) {
   };
 
   return (
-    <div className="searchbar-container">
+    <div className="searchbar-container" style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      gap: '12px',
+      marginBottom: '1rem'
+    }}>
       <input
         type="text"
         className="search-input"
         placeholder="레시피 키워드를 입력하세요"
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
+        style={{
+          flex: 1,
+          height: '40px', // ✅ 높이 줄임
+          padding: '0 12px',
+          fontSize: '15px',
+          borderRadius: '6px',
+          border: '1px solid #ccc',
+          backgroundColor: '#f8f8f8'
+        }}
       />
 
-      <button className="search-button" onClick={handleSearch}>
+      <button
+        className="search-button"
+        onClick={handleSearch}
+        style={{
+          height: '40px',         // ✅ 검색버튼 높이 통일
+          padding: '0 14px',
+          fontSize: '15px',
+          borderRadius: '6px',
+          border: 'none',
+          backgroundColor: '#4CAF50',
+          color: 'white',
+          cursor: 'pointer'
+        }}
+      >
         🔍 검색
       </button>
 
@@ -45,6 +73,13 @@ function SearchBar({ onSearch }) {
         className="select-box sort-select"
         value={sortOption}
         onChange={(e) => setSortOption(e.target.value)}
+        style={{
+          height: '40px',         // ✅ 높이 통일
+          fontSize: '15px',
+          padding: '0 10px',
+          borderRadius: '6px',
+          border: '1px solid #ccc'
+        }}
       >
         <option value="최신순">최신순</option>
         <option value="인기순">인기순</option>
