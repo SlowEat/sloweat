@@ -57,7 +57,7 @@ public class BookmarkService {
 
         List<Bookmark> bookmarks = bookmarkRepository.findByCollectionId(collectionId);
 
-        List<BookmarkResponseDto> result = bookmarkRepositoryCustom.getBookmarks(collectionId);
+        List<BookmarkResponseDto> result = bookmarkRepositoryCustom.getBookmarks(collectionId, userId);
 
         return result;
     }

@@ -1,7 +1,20 @@
-.screen .new-collection-modal{
-    top : -124px;
+.screen.new-collection-modal{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    width:100vw;
+    height:100vh;
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px; /* 작은 화면 대응 */
 }
 
 .screen .view-wrapper {
-    left : 0px;
+    left: -30px;
+    top: 290px;
 }
