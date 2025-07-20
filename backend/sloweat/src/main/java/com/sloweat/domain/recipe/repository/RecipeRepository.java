@@ -10,19 +10,19 @@ import java.util.List;
 
 public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
 
-    /**
-     * 🔍 제목에 검색어가 포함된 레시피 조회 (대소문자 무시)
-     */
+    // 🔍 제목 포함 검색
     List<Recipe> findByTitleContainingIgnoreCase(String keyword);
 
-    /**
-     * 🔍 제목 또는 본문에 검색어가 포함된 레시피 조회 (대소문자 무시)
-     */
+    // 🔍 제목 또는 본문 포함 검색
     List<Recipe> findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(String titleKeyword, String contentKeyword);
 
-    /**
-     * 🔍 Tag 기반 필터 검색: 종류, 상황, 재료, 방법 태그가 모두 만족하는 레시피 반환
-     */
+    // ✅ 🔍 제목+본문 포함 검색 (조회수 내림차순)
+    List<Recipe> findByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByViewsDesc(String titleKeyword, String contentKeyword);
+
+    // ✅ 🔍 제목+본문 포함 검색 (등록일 내림차순)
+    List<Recipe> findByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByCreatedAtDesc(String titleKeyword, String contentKeyword);
+
+    // 🔍 필터 검색 (모든 태그 타입이 만족하는 레시피만 조회)
     @Query("""
         SELECT r FROM Recipe r
         JOIN RecipeTag rt ON rt.recipe = r
@@ -41,23 +41,18 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
             @Param("method") String method
     );
 
-    /**
-     * ✅ 특정 유저가 작성한 레시피 목록 조회
-     */
+    // ✅ 특정 유저가 작성한 레시피 목록 조회
     List<Recipe> findByUser(User user);
 
-    /**
-     * 🏆 좋아요 많은 순 정렬
-     */
+    // 🏆 좋아요순 정렬
     List<Recipe> findAllByOrderByLikesDesc();
 
-    /**
-     * 🕓 최신순 정렬
-     */
+    // 🕓 최신순 정렬
     List<Recipe> findAllByOrderByCreatedAtDesc();
 
-    /**
-     * 📊 특정 유저가 작성한 레시피 개수 조회
-     */
+    // 📈 조회수순 정렬
+    List<Recipe> findAllByOrderByViewsDesc();
+
+    // 📊 특정 유저가 작성한 레시피 개수
     long countByUser(User user);
 }

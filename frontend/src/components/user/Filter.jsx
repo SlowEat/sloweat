@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axiosInstance from '../../api/axiosInstance'; // ✅ 수정된 부분
+import axiosInstance from '../../api/axiosInstance';
 import '../../styles/user/Filter.css';
 
 function Filter({ onSearch }) {
@@ -7,7 +7,7 @@ function Filter({ onSearch }) {
   const [situationFilter, setSituationFilter] = useState('');
   const [materialFilter, setMaterialFilter] = useState('');
   const [methodFilter, setMethodFilter] = useState('');
-  const [sortOption, setSortOption] = useState('최신순');
+  const [sortOption, setSortOption] = useState('최신순'); // ✅ 정렬 옵션 기본값
 
   const handleFilterSearch = async () => {
     if (!typeFilter || !situationFilter || !materialFilter || !methodFilter) {
@@ -16,12 +16,19 @@ function Filter({ onSearch }) {
     }
 
     try {
+      // ✅ 정렬 옵션 백엔드 기준에 맞게 변환
+      let sortParam = 'latest';
+      if (sortOption === '인기순') sortParam = 'popular';
+      else if (sortOption === '최신순') sortParam = 'latest';
+      // 평점순 정렬은 현재 미지원 상태
+
       const response = await axiosInstance.get('/api/recipes/search', {
         params: {
           type: typeFilter,
           situation: situationFilter,
           ingredient: materialFilter,
-          method: methodFilter
+          method: methodFilter,
+          sort: sortParam // ✅ 정렬 파라미터 포함
         }
       });
 
@@ -69,10 +76,11 @@ function Filter({ onSearch }) {
         <button className="search-button" onClick={handleFilterSearch}>필터 검색</button>
       </div>
 
+      {/* ✅ 정렬 드롭다운 */}
       <select className="select-box sort-select" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
         <option value="최신순">최신순</option>
         <option value="인기순">인기순</option>
-        <option value="평점순">평점순</option>
+        {/* <option value="평점순">평점순</option> */}
       </select>
     </div>
   );
