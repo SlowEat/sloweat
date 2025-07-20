@@ -17,3 +17,8 @@ export const fetchAdminPayments = async ({
 export const rejectRefundBySubscriptionId = async (subscriptionId) => {
   await axiosInstance.patch(`api/admin/payments/${subscriptionId}/reject`);
 };
+
+// 환불 승인 처리 API
+export const approveRefundBySubscriptionId = async (subscriptionId) => {
+  await axiosInstance.patch(`api/payments/${subscriptionId}/refund/approve`);
+};

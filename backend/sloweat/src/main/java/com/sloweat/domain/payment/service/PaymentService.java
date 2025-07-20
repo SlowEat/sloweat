@@ -5,6 +5,7 @@ import com.sloweat.domain.payment.dto.PaymentRequest;
 import com.sloweat.domain.payment.dto.PaymentResponse;
 import com.sloweat.domain.payment.entity.Payment;
 import com.sloweat.domain.payment.repository.PaymentRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -75,13 +76,15 @@ public class PaymentService {
      * 환불 승인 처리 (관리자용)
      */
     @Transactional
-    public PaymentResponse approveRefund(Integer paymentId) {
-        Payment payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new RuntimeException("Payment not found"));
+    public PaymentResponse approveRefund(Integer subscriptionId) {
+        Payment payment = paymentRepository.findTopBySubscriptionSubscriptionIdOrderByCreatedAtDesc(subscriptionId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 구독의 결제 내역이 존재하지 않습니다."));
 
         if (payment.getRefundStatus() != Payment.RefundStatus.REQUEST) {
-            throw new RuntimeException("No refund request found");
+            throw new RuntimeException("환불 요청 상태가 아닙니다 ");
         }
+
+
 
         // 아임포트 환불 요청
         JsonNode cancelResponse = iamportService.cancelPayment(
