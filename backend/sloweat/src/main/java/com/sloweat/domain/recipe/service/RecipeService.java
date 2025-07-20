@@ -24,9 +24,6 @@ public class RecipeService {
     private final RecipeLikeRepository recipeLikeRepository;
     private final UserRepository userRepository;
 
-    /**
-     * 📝 게시글 등록
-     */
     public int saveRecipe(Integer userId, RecipeRequestDto dto) {
         Recipe recipe = new Recipe();
 
@@ -36,6 +33,8 @@ public class RecipeService {
         recipe.setIsSubscribed(dto.isSubscribed());
         recipe.setCreatedAt(LocalDateTime.now());
         recipe.setUpdatedAt(LocalDateTime.now());
+        recipe.setViews(0); // ✅ 초기 조회수 설정
+        recipe.setLikes(0); // ✅ 초기 좋아요 수 설정
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다: ID = " + userId));
@@ -65,9 +64,6 @@ public class RecipeService {
         return savedRecipe.getRecipeId();
     }
 
-    /**
-     * ✏️ 게시글 수정
-     */
     @Transactional
     public void updateRecipe(int recipeId, Integer userId, RecipeRequestDto dto) {
         Recipe recipe = recipeRepository.findById(recipeId)
@@ -106,9 +102,6 @@ public class RecipeService {
         }
     }
 
-    /**
-     * 🗑️ 게시글 삭제
-     */
     @Transactional
     public void deleteRecipe(int recipeId, Integer userId) {
         Recipe recipe = recipeRepository.findById(recipeId)
@@ -132,6 +125,9 @@ public class RecipeService {
         boolean alreadyLiked = recipeLikeRepository.existsByRecipeAndUser(recipe, user);
         if (alreadyLiked) return;
 
+        recipe.setLikes(recipe.getLikes() + 1); // ✅ 좋아요 증가
+        recipeRepository.save(recipe);
+
         RecipeLike like = new RecipeLike();
         like.setRecipe(recipe);
         like.setUser(user);
@@ -147,7 +143,27 @@ public class RecipeService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: ID = " + userId));
 
+        recipe.setLikes(Math.max(0, recipe.getLikes() - 1)); // ✅ 좋아요 감소 (음수 방지)
+        recipeRepository.save(recipe);
+
         recipeLikeRepository.deleteByRecipeAndUser(recipe, user);
+    }
+
+    @Transactional
+    public RecipeResponseDto getRecipeDetailWithViewIncrease(Integer id) {
+        Recipe recipe = recipeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("레시피를 찾을 수 없습니다: ID = " + id));
+
+        // ✅ 조회수 증가
+        recipe.setViews(recipe.getViews() + 1);
+        recipeRepository.save(recipe);
+
+        List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
+        List<String> tagNames = recipeTags.stream()
+                .map(rt -> rt.getTag().getTagName())
+                .toList();
+
+        return toDto(recipe, tagNames, "https://image.server.com/photo1.jpg");
     }
 
     public RecipeResponseDto getRecipeDetail(Integer id) {
@@ -208,8 +224,8 @@ public class RecipeService {
         dto.setCookingTime(recipe.getCookingTime());
         dto.setSubscribed(recipe.getIsSubscribed());
         dto.setCreatedAt(recipe.getCreatedAt());
-        dto.setViews(recipe.getViews());
-        dto.setLikes(recipe.getLikes());
+        dto.setViews(recipe.getViews());         // ✅ 조회수 포함
+        dto.setLikes(recipe.getLikes());         // ✅ 좋아요 수 포함
         dto.setTags(tags);
         dto.setPhotoUrls(List.of(photoUrl));
         return dto;

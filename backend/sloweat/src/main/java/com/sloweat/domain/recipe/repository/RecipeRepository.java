@@ -60,4 +60,9 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
      * 📊 특정 유저가 작성한 레시피 개수 조회
      */
     long countByUser(User user);
+
+    /**
+     * 📈 조회수 높은 순 정렬 (인기순 추천)
+     */
+    List<Recipe> findAllByOrderByViewsDesc(); // ✅ New!
 }

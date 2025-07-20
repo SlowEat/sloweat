@@ -4,15 +4,17 @@ import axiosInstance from '../../api/axiosInstance';
 import '../../styles/user/RecipeCard.css';
 
 function Recipe({ isDetail = false, isMyPost = false, data }) {
-  const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(data?.likeCount || 0);
+  const [liked, setLiked] = useState(data?.isLiked ?? false);
+  const [likeCount, setLikeCount] = useState(data?.likes ?? 0);
   const [bookmarked, setBookmarked] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
 
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate(`/postdetail/${data?.recipeId}`);
+    if (!isDetail) {
+      navigate(`/postdetail/${data?.recipeId}`);
+    }
   };
 
   const handleLike = async (e) => {
@@ -21,12 +23,11 @@ function Recipe({ isDetail = false, isMyPost = false, data }) {
     try {
       if (liked) {
         await axiosInstance.delete(`/api/recipes/${data.recipeId}/like`);
-        setLikeCount((count) => count - 1);
+        setLikeCount((count) => Math.max(0, count - 1));
       } else {
         await axiosInstance.post(`/api/recipes/${data.recipeId}/like`);
         setLikeCount((count) => count + 1);
       }
-
       setLiked((prev) => !prev);
     } catch (error) {
       console.error('좋아요 처리 실패:', error);
@@ -66,7 +67,7 @@ function Recipe({ isDetail = false, isMyPost = false, data }) {
     try {
       await axiosInstance.delete(`/api/recipes/${data.recipeId}`);
       alert('삭제가 완료되었습니다!');
-      navigate('/mypage'); // 삭제 후 내 글 목록으로 이동 (필요 시 변경)
+      navigate('/mypage');
     } catch (error) {
       console.error('삭제 실패:', error);
       alert('삭제 중 오류가 발생했습니다.');
@@ -152,9 +153,12 @@ function Recipe({ isDetail = false, isMyPost = false, data }) {
               </div>
 
               <div className="recipe-card-bottom-right">
-                <div className="recipe-card-view-count">
-                  👁 <p>{data?.viewCount || 0}</p>
-                </div>
+                {/* ✅ 상세 모드일 때만 조회수 표시 */}
+                {isDetail && (
+                  <div className="recipe-card-view-count">
+                    👁 <span>{data?.views ?? 0}</span>
+                  </div>
+                )}
                 <button
                   className={`recipe-card-bookmark-button ${bookmarked ? 'active' : ''}`}
                   onClick={handleBookmark}

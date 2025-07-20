@@ -33,11 +33,11 @@ public class RecipeController {
     }
 
     /**
-     * 📄 게시글 상세 조회 (인증 없이 가능)
+     * 📄 게시글 상세 조회 + 조회수 증가 (인증 없이 가능)
      */
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<RecipeResponseDto>> getRecipeDetail(@PathVariable Integer id) {
-        RecipeResponseDto responseDto = recipeService.getRecipeDetail(id);
+        RecipeResponseDto responseDto = recipeService.getRecipeDetailWithViewIncrease(id); // ✅ 변경된 서비스 메서드
         return ResponseEntity.ok(new ApiResponse<>(true, "조회 성공", responseDto));
     }
 
@@ -51,7 +51,7 @@ public class RecipeController {
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         Integer userId = userDetails.getUserId();
-        recipeService.updateRecipe(id, userId, dto); // 서비스 단에서 본인 글 검증
+        recipeService.updateRecipe(id, userId, dto);
         return ResponseEntity.ok(new ApiResponse<>(true, "수정 성공", null));
     }
 
@@ -64,7 +64,7 @@ public class RecipeController {
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         Integer userId = userDetails.getUserId();
-        recipeService.deleteRecipe(id, userId); // 서비스 단에서 본인 글 검증
+        recipeService.deleteRecipe(id, userId);
         return ResponseEntity.ok(new ApiResponse<>(true, "삭제 성공", null));
     }
 
