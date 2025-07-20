@@ -3,6 +3,7 @@ import "./PaymentManagement.css";
 import {
   fetchAdminPayments,
   rejectRefundBySubscriptionId,
+  approveRefundBySubscriptionId,
 } from "../../../api/admin/adminPayment";
 
 // 페이지 번호 목록 계산 + 블록 단위 페이징 구현 함수
@@ -95,6 +96,17 @@ const PaymentManagement = () => {
     setFilterStatus(e.target.value);
   };
 
+  // 환불 승인 처리 함수
+    const handleRefundApprove = async (subscriptionId) => {
+      try {
+        await approveRefundBySubscriptionId(subscriptionId);
+        alert("환불 승인 완료");
+        await loadPayments(page, nicknameKeyword, filterStatus);
+      } catch (err) {
+        console.error("승인 처리 실패", err);
+      }
+    };
+
   // 환불 거절 처리 함수
   const handleRefundReject = async (subscriptionId) => {
     try {
@@ -183,10 +195,11 @@ const PaymentManagement = () => {
               <span>
                 {/* 환불 요청 상태일 때만 승인/거절 버튼 표시 */}
                 {payment.status === "환불요청" ? (
+
                   <span className="payment-action-wrapper">
                     <button
                       className="payment-approve-btn"
-                      // onClick={() => handleRefundApprove(payment.id)}
+                      onClick={() => handleRefundApprove(payment.id)}
                     >
                       승인
                     </button>

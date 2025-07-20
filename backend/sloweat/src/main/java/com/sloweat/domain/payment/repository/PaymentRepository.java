@@ -21,5 +21,5 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer> {
 
     List<Payment> findByStatusAndRefundStatus(Payment.Status status, Payment.RefundStatus refundStatus);
 
-    List<Payment> findTop1BySubscriptionSubscriptionIdOrderByCreatedAtDesc(Integer subscriptionId);
+    Optional<Payment> findTopBySubscriptionSubscriptionIdOrderByCreatedAtDesc(Integer subscriptionId);
 }
