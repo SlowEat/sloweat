@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import { useNavigate  } from "react-router-dom";
 import "./FollowCard.css";
 import api from "../../api/axiosInstance";
+import useFollow from "../../utils/useFollow";
 
 export const FollowCard = ({
   followId,
@@ -10,35 +11,12 @@ export const FollowCard = ({
   followerCount,
   profileImg,
   isFollowed: initialFollowing = false,
-  email
+  email,
+  reloadProfile
 }) => {
-  const [isFollowed, setIsFollowed] = useState(initialFollowing);
 
-  const handleFollowToggle = () => {
-    if(isFollowed) {
-      setUnFollow();
-    }else{
-      setFollow();
-    }
-    setIsFollowed((prev) => !prev);
-  };
-
-  const setFollow = async () => {
-    try {
-      await api.post('api/follow', {toUserId : userId});
-    } catch (error) {
-      console.error('팔로우 설정 실패:', error);
-    }
-  };
-
-  const setUnFollow = async () => {
-    try {
-      const response = await api.delete(`api/follow/${userId}`); //Unfollow 대상 userId
-
-    } catch (error) {
-      console.error('언팔로우 설정 실패:', error);
-    }
-  };
+  // Follow / UnFollow
+  const { isFollowed, handleFollowToggle } = useFollow(initialFollowing, userId, reloadProfile);
 
   const navigate = useNavigate();
   const handleProfileClick = () =>{
