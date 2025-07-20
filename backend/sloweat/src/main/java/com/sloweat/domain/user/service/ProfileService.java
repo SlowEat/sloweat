@@ -1,6 +1,7 @@
 package com.sloweat.domain.user.service;
 
 import com.sloweat.domain.auth.dto.CustomUserDetails;
+import com.sloweat.domain.auth.dto.EditPasswordRequestDTO;
 import com.sloweat.domain.follow.repository.FollowRepository;
 import com.sloweat.domain.recipe.repository.RecipeRepository;
 import com.sloweat.domain.subscription.entity.Subscription;
@@ -10,6 +11,7 @@ import com.sloweat.domain.user.dto.MyProfileResponseDTO;
 import com.sloweat.domain.user.entity.User;
 import com.sloweat.domain.user.repository.UserRepository;
 import lombok.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;

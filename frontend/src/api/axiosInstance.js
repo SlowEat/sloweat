@@ -13,7 +13,7 @@ axiosInstance.interceptors.request.use(
 
     //토큰이 존재하면 요청 헤더에 accessToken 추가
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers['authorization'] = `Bearer ${token}`;
     }
     return config;
   },
@@ -30,8 +30,10 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
     
     //오류 응답이 401 상태코드이고, 해당 요청이 재시도되지 않았다면 새 토큰을 신청
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
+    if (error.response?.status === 401 
+        && !originalRequest._retry
+        &&!originalRequest.url.includes("/api/auth/reissue")) {
+        originalRequest._retry = true;
 
       try {
         //새 토큰 요청하는 로직 실행
@@ -46,9 +48,16 @@ axiosInstance.interceptors.response.use(
         if (newToken) {
           localStorage.setItem('accessToken', newToken);
 
+          delete originalRequest.headers?.authorization;
+
           //수정된 원본 요청으로 API 호출 재시도
-          originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
-          return axios(originalRequest);
+          originalRequest.headers = {
+            ...(originalRequest.headers || {}),
+            Authorization: `Bearer ${newToken}`
+        };
+
+
+          return axiosInstance(originalRequest);
         }
       } catch (err) {
         localStorage.removeItem('accessToken');

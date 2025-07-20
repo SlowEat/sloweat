@@ -57,13 +57,19 @@ function Recipe({ isDetail = false, isMyPost = false, data }) {
   };
 
   const handleEdit = () => {
-    alert('수정 페이지로 이동합니다.');
-    navigate(`/postform/${data?.id}`);
+    navigate(`/postform/${data?.recipeId}`);
   };
 
-  const handleDelete = () => {
-    if (window.confirm('삭제하시겠습니까?')) {
-      alert('삭제되었습니다.');
+  const handleDelete = async () => {
+    if (!window.confirm('삭제하시겠습니까?')) return;
+
+    try {
+      await axiosInstance.delete(`/api/recipes/${data.recipeId}`);
+      alert('삭제가 완료되었습니다!');
+      navigate('/mypage'); // 삭제 후 내 글 목록으로 이동 (필요 시 변경)
+    } catch (error) {
+      console.error('삭제 실패:', error);
+      alert('삭제 중 오류가 발생했습니다.');
     }
   };
 

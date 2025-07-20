@@ -10,9 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/recipes")
@@ -21,38 +19,67 @@ public class RecipeController {
 
     private final RecipeService recipeService;
 
+    /**
+     * 📝 게시글 등록 (로그인 사용자만 가능)
+     */
     @PostMapping
-    public ResponseEntity<Map<String, Integer>> createRecipe(@RequestBody RecipeRequestDto recipeDto) {
-        int savedId = recipeService.saveRecipe(recipeDto);
-        Map<String, Integer> responseBody = new HashMap<>();
-        responseBody.put("id", savedId);
-        return ResponseEntity.ok(responseBody);
+    public ResponseEntity<ApiResponse<Integer>> createRecipe(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody RecipeRequestDto recipeDto
+    ) {
+        Integer userId = userDetails.getUserId();
+        int savedId = recipeService.saveRecipe(userId, recipeDto);
+        return ResponseEntity.ok(new ApiResponse<>(true, "작성 성공", savedId));
     }
 
+    /**
+     * 📄 게시글 상세 조회 (인증 없이 가능)
+     */
     @GetMapping("/{id}")
-    public ResponseEntity<RecipeResponseDto> getRecipeDetail(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<RecipeResponseDto>> getRecipeDetail(@PathVariable Integer id) {
         RecipeResponseDto responseDto = recipeService.getRecipeDetail(id);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(new ApiResponse<>(true, "조회 성공", responseDto));
     }
 
+    /**
+     * ✏️ 게시글 수정 (자신의 글만 수정 가능)
+     */
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateRecipe(@PathVariable Integer id, @RequestBody RecipeRequestDto dto) {
-        recipeService.updateRecipe(id, dto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ApiResponse<Void>> updateRecipe(
+            @PathVariable Integer id,
+            @RequestBody RecipeRequestDto dto,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        Integer userId = userDetails.getUserId();
+        recipeService.updateRecipe(id, userId, dto); // 서비스 단에서 본인 글 검증
+        return ResponseEntity.ok(new ApiResponse<>(true, "수정 성공", null));
     }
 
+    /**
+     * 🗑️ 게시글 삭제 (자신의 글만 삭제 가능)
+     */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRecipe(@PathVariable Integer id) {
-        recipeService.deleteRecipe(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ApiResponse<Void>> deleteRecipe(
+            @PathVariable Integer id,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        Integer userId = userDetails.getUserId();
+        recipeService.deleteRecipe(id, userId); // 서비스 단에서 본인 글 검증
+        return ResponseEntity.ok(new ApiResponse<>(true, "삭제 성공", null));
     }
 
+    /**
+     * 📚 전체 게시글 조회
+     */
     @GetMapping("/all")
-    public ResponseEntity<List<RecipeResponseDto>> getAllRecipes() {
+    public ResponseEntity<ApiResponse<List<RecipeResponseDto>>> getAllRecipes() {
         List<RecipeResponseDto> recipeList = recipeService.getAllRecipes();
-        return ResponseEntity.ok(recipeList);
+        return ResponseEntity.ok(new ApiResponse<>(true, "전체 조회 성공", recipeList));
     }
 
+    /**
+     * 🔍 필터 검색
+     */
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<RecipeResponseDto>>> searchRecipes(
             @RequestParam String type,
@@ -61,40 +88,41 @@ public class RecipeController {
             @RequestParam String method
     ) {
         List<RecipeResponseDto> results = recipeService.searchByTags(type, situation, ingredient, method);
-        ApiResponse<List<RecipeResponseDto>> response = new ApiResponse<>(true, "필터 검색 성공", results);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/search-keyword")
-    public ResponseEntity<ApiResponse<List<RecipeResponseDto>>> searchByKeyword(@RequestParam String keyword) {
-        List<RecipeResponseDto> results = recipeService.searchByKeyword(keyword);
-        ApiResponse<List<RecipeResponseDto>> response = new ApiResponse<>(true, "검색어 기반 검색 성공", results);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new ApiResponse<>(true, "필터 검색 성공", results));
     }
 
     /**
-     * ❤️ 좋아요 등록 (✅ 인증 사용자 기준)
+     * 🔎 키워드 검색
+     */
+    @GetMapping("/search-keyword")
+    public ResponseEntity<ApiResponse<List<RecipeResponseDto>>> searchByKeyword(@RequestParam String keyword) {
+        List<RecipeResponseDto> results = recipeService.searchByKeyword(keyword);
+        return ResponseEntity.ok(new ApiResponse<>(true, "검색어 기반 검색 성공", results));
+    }
+
+    /**
+     * ❤️ 좋아요 등록
      */
     @PostMapping("/{id}/like")
-    public ResponseEntity<Void> likeRecipe(
+    public ResponseEntity<ApiResponse<Void>> likeRecipe(
             @PathVariable int id,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         Integer userId = userDetails.getUserId();
         recipeService.likeRecipe(id, userId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ApiResponse<>(true, "좋아요 등록 성공", null));
     }
 
     /**
-     * 💔 좋아요 취소 (✅ 인증 사용자 기준)
+     * 💔 좋아요 취소
      */
     @DeleteMapping("/{id}/like")
-    public ResponseEntity<Void> unlikeRecipe(
+    public ResponseEntity<ApiResponse<Void>> unlikeRecipe(
             @PathVariable int id,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         Integer userId = userDetails.getUserId();
         recipeService.unlikeRecipe(id, userId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ApiResponse<>(true, "좋아요 취소 성공", null));
     }
 }

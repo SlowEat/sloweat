@@ -26,7 +26,8 @@ const RecipeEditForm = () => {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get(`/api/recipes/${id}`);
-        const recipe = response.data;
+        const recipe = response.data.data;
+
         setFormData({
           title: recipe.title,
           content: recipe.content,
@@ -82,7 +83,6 @@ const RecipeEditForm = () => {
     }
 
     const requestData = {
-      userId: 1,
       title: formData.title,
       content: formData.content,
       cookingTime: parseInt(formData.duration),

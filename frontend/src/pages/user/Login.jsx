@@ -89,16 +89,9 @@ const handleLogin = async (e) => {
             </div>
             <button type="submit" className="login-button">로그인</button>
             <div className="login-options">
-              <a href="#" className="option-link">아이디 찾기</a> | <a href="#" className="option-link">비밀번호 찾기</a> |
-              <a href="/signup" className="option-link">회원가입</a>
+              <p className="login-link">회원이 아니신가요? <a href="/signup">회원가입</a></p>
             </div>
           </form>
-          <div className="social-login">
-            <hr className="divider" />
-            <a href="#" className="kakao-login">
-              <img src="https://c.animaapp.com/JlqecQMn/img/------@2x.png" alt="카카오 로그인" className="kakao-button" />
-            </a>
-          </div>
         </div>
       </div>
     </main>
