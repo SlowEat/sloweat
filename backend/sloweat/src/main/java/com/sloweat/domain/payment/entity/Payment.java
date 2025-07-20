@@ -54,6 +54,13 @@ public class Payment {
     private LocalDateTime createdAt;
 
 
+    @Column(name = "card_company", length = 50)
+    private String cardCompany;
+
+
+    @Column(name = "card_number_masked", length = 100 )
+    private String cardNumberMasked;
+
     public enum Status {
         PAID("결제완료"),
         CANCEL("결제취소"),
@@ -82,6 +89,7 @@ public class Payment {
     }
 
     public enum RefundStatus {
+        NONE("기본 값"),
         REQUEST("요청"),
         APPROVE("승인"),
         REJECT("반려");
