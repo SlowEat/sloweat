@@ -1,8 +1,8 @@
 import {useState, useEffect} from 'react';
 import ProfilePictureUploader from './ProfilePictureUploader';
-import PasswordChangeModal from './PasswordChangeModal';
 import { checkNickname } from '../../api/user/auth';
 import { editMyProfile } from '../../api/user/profile';
+import PasswordChangeModal from '../../components/user/PasswordChangeModal';
 
 const PersonalInfoEdit = ({profile : initialProfile}) => {
 
@@ -10,6 +10,7 @@ const PersonalInfoEdit = ({profile : initialProfile}) => {
   const [errors, setErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
+  const [isPasswordModalOpen,setIsPasswordModalOpen] = useState(false);
   const isSameNickname = profile.nickname === initialProfile?.nickname;
   const isSameIntroduce = profile.introduce === initialProfile?.introduce;
   const isChanged = !isSameNickname || !isSameIntroduce;
@@ -21,6 +22,7 @@ const PersonalInfoEdit = ({profile : initialProfile}) => {
       setErrors({});
       setIsFormValid(false); 
       setIsNicknameChecked(false);
+      setIsPasswordModalOpen(false);
     }
     }, [initialProfile]);
 
@@ -77,9 +79,11 @@ const PersonalInfoEdit = ({profile : initialProfile}) => {
     }
   };
 
+  //비밀번호 변경 모달 
   const handlePasswordChange = () => {
-    console.log('비밀번호 변경 버튼 클릭됨');
+    setIsPasswordModalOpen(true);
   };
+
 
   return (
     <div className="settings-personal-info-edit">
@@ -93,7 +97,7 @@ const PersonalInfoEdit = ({profile : initialProfile}) => {
           type="text"
           className="settings-input-field"
           style={{pointerEvents:"none", backgroundColor:"#f3f3f3ff",color:"gray"}}
-          value={profile?.id}
+          value={profile?.id || ""}
           readOnly
         />
       </div>
@@ -151,6 +155,14 @@ const PersonalInfoEdit = ({profile : initialProfile}) => {
           비밀번호 변경
         </button>
       </div>
+
+      
+      {/* 전역 모달 */}
+      {isPasswordModalOpen && (
+          <div className="password-change-modal-overlay">
+              <PasswordChangeModal onClose={() => setIsPasswordModalOpen(false)} />
+          </div>
+      )}
     </div>
   );
 };
