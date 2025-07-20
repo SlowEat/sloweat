@@ -164,37 +164,19 @@ const ProfileSubscriptionGuest = ({ userId, userInfo }) => {
             <svg className="check-icon" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
-            <span>전문가 요리 팁</span>
-          </li>
-          <li>
-            <svg className="check-icon" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-            </svg>
-            <span>우선 고객 지원</span>
-          </li>
-          <li>
-            <svg className="check-icon" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-            </svg>
-            <span>고급 필터링</span>
-          </li>
-          <li>
-            <svg className="check-icon" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-            </svg>
-            <span>오프라인 다운로드</span>
-          </li>
-          <li>
-            <svg className="check-icon" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-            </svg>
-            <span>개인 맞춤 추천</span>
-          </li>
-          <li>
-            <svg className="check-icon" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-            </svg>
             <span>광고 없는 경험</span>
+          </li>
+          <li>
+            <svg className="check-icon" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+            <span>무제한 북마크 컬렉션</span>
+          </li>
+          <li>
+            <svg className="check-icon" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+            <span>전문가/셰프 프리미엄 영상 제공</span>
           </li>
         </ul>
 
@@ -208,7 +190,7 @@ const ProfileSubscriptionGuest = ({ userId, userInfo }) => {
         </button>
 
         <p className="subscription-note">
-          언제든지 취소 가능 • 안전한 결제 • 7일 무료 체험
+          3일 내 언제든지 취소 가능 • 안전한 결제
         </p>
       </div>
 
