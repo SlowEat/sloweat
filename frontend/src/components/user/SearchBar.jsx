@@ -4,20 +4,22 @@ import '../../styles/user/SearchBar.css';
 
 function SearchBar({ onSearch }) {
   const [keyword, setKeyword] = useState('');
+  const [sortOption, setSortOption] = useState('최신순');
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-
+  const handleSearch = async () => {
     if (!keyword.trim()) {
       alert('검색어를 입력해주세요!');
       return;
     }
 
     try {
+      const sortParam = sortOption === '인기순' ? 'popular' : 'latest';
+
       const response = await axiosInstance.get('/api/recipes/search-keyword', {
-        params: { keyword }
+        params: { keyword, sort: sortParam }
       });
-      onSearch(response.data.data); // ApiResponse에서 data 꺼내기
+
+      onSearch(response.data.data);
     } catch (error) {
       console.error('검색 실패:', error);
       alert('검색 중 오류가 발생했습니다.');
@@ -26,23 +28,28 @@ function SearchBar({ onSearch }) {
   };
 
   return (
-    <main className="search-container">
-      <form className="search-form" role="search" onSubmit={handleSearch}>
-        <label htmlFor="search-input" className="visually-hidden">검색</label>
-        <input
-          type="search"
-          id="search-input"
-          className="search-input"
-          placeholder="검색 할 내용을 입력하세요"
-          aria-label="검색 할 내용을 입력하세요"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-        />
-        <button type="submit" className="search-button" aria-label="검색">
-          <img className="search-icon" src="https://c.animaapp.com/2V7rIzZS/img/--.svg" alt="검색 아이콘" />
-        </button>
-      </form>
-    </main>
+    <div className="searchbar-container">
+      <input
+        type="text"
+        className="search-input"
+        placeholder="레시피 키워드를 입력하세요"
+        value={keyword}
+        onChange={(e) => setKeyword(e.target.value)}
+      />
+
+      <button className="search-button" onClick={handleSearch}>
+        🔍 검색
+      </button>
+
+      <select
+        className="select-box sort-select"
+        value={sortOption}
+        onChange={(e) => setSortOption(e.target.value)}
+      >
+        <option value="최신순">최신순</option>
+        <option value="인기순">인기순</option>
+      </select>
+    </div>
   );
 }
 
