@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../api/axiosInstance';
 import '../../styles/user/RecipeCard.css';
+import api from "../../api/axiosInstance";
 
-function Recipe({ isDetail = false, isMyPost = false, data }) {
-  const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(data?.likeCount || 0);
-  const [bookmarked, setBookmarked] = useState(false);
+function Recipe({ isDetail = false, isMyPost = true, recipe, openBookmarkModal, setRecipeId}) {
+  const [liked, setLiked] = useState(recipe.isLiked);
+  const [likeCount, setLikeCount] = useState(recipe?.likeCount || 0);
+  const [bookmarked, setBookmarked] = useState(recipe.isBookmarked);
   const [isFollowing, setIsFollowing] = useState(false);
 
   const navigate = useNavigate();
@@ -16,10 +17,10 @@ function Recipe({ isDetail = false, isMyPost = false, data }) {
 
     try {
       if (liked) {
-        await axiosInstance.delete(`/api/recipes/${data.recipeId}/like`);
+        await axiosInstance.delete(`/api/recipes/${recipe.recipeId}/like`);
         setLikeCount((count) => count - 1);
       } else {
-        await axiosInstance.post(`/api/recipes/${data.recipeId}/like`);
+        await axiosInstance.post(`/api/recipes/${recipe.recipeId}/like`);
         setLikeCount((count) => count + 1);
       }
 
@@ -30,9 +31,24 @@ function Recipe({ isDetail = false, isMyPost = false, data }) {
     }
   };
 
-  const handleBookmark = (e) => {
-    e.stopPropagation();
+
+  const deleteBookmark = async (bookmarkId) => {
+    await api.delete(`/api/bookmarks/${bookmarkId}`);
     setBookmarked((prev) => !prev);
+  };
+
+  const handleBookmark = (bookmarked, bookmarkId) => {
+
+    if(bookmarked){
+      const confirmed = window.confirm("북마크를 해제 하시겠습니까?");
+      if (confirmed) {
+        //북마크 해제
+        deleteBookmark(bookmarkId);
+      }
+    }else{
+      // 북마크 설정 팝업
+      openBookmarkModal();
+    }
   };
 
   const handleReport = (e) => {
@@ -54,7 +70,7 @@ function Recipe({ isDetail = false, isMyPost = false, data }) {
 
   const handleEdit = () => {
     alert('수정 페이지로 이동합니다.');
-    navigate(`/postform/${data?.id}`);
+    navigate(`/postform/${recipe?.id}`);
   };
 
   const handleDelete = () => {
@@ -73,12 +89,12 @@ function Recipe({ isDetail = false, isMyPost = false, data }) {
               <img
                 onClick={handleProfileClick}
                 className="recipe-card-profile-image"
-                src={data?.chefProfileUrl || 'https://c.animaapp.com/RwKPZPrR/img/---@2x.png'}
+                src={recipe?.chefProfileUrl || 'https://c.animaapp.com/RwKPZPrR/img/---@2x.png'}
                 alt="프로필 이미지"
               />
               <div className="recipe-card-profile-info">
                 <div className="recipe-card-chef-name-row">
-                  <h1 className="recipe-card-chef-name">{data?.chefName || '익명 셰프'}</h1>
+                  <h1 className="recipe-card-chef-name">{recipe?.chefName || '익명 셰프'}</h1>
                   {isDetail && (
                     <button
                       className={`follower-card-button ${isFollowing ? 'following' : ''}`}
@@ -89,7 +105,7 @@ function Recipe({ isDetail = false, isMyPost = false, data }) {
                   )}
                 </div>
                 <div className="recipe-card-meta-info">
-                  <span className="recipe-card-username">@{data?.username || 'unknown'}</span>
+                  <span className="recipe-card-username">@{recipe?.username || 'unknown'}</span>
                 </div>
               </div>
 
@@ -111,8 +127,8 @@ function Recipe({ isDetail = false, isMyPost = false, data }) {
 
             {/* 본문 내용 */}
             <p className="recipe-card-description">
-              {data?.content
-                ? data.content.split('\n').map((line, idx) => (
+              {recipe?.content
+                ? recipe.content.split('\n').map((line, idx) => (
                     <span key={idx}>{line}<br /></span>
                   ))
                 : '레시피 내용이 없습니다.'
@@ -121,7 +137,7 @@ function Recipe({ isDetail = false, isMyPost = false, data }) {
 
             {/* 해시태그 */}
             <ul className="recipe-card-hashtags">
-              {data?.tags?.map((tag, idx) => (
+              {recipe?.tags?.map((tag, idx) => (
                 <li key={idx} className="recipe-card-hashtag">#{tag}</li>
               ))}
             </ul>
@@ -131,25 +147,26 @@ function Recipe({ isDetail = false, isMyPost = false, data }) {
               <div className="recipe-card-left-actions">
                 <div className="recipe-card-cooking-time">
                   <img className="clock-icon" src="..." alt="조리시간" />
-                  <span className="time">{data?.cookingTime}분</span>
+                  <span className="time">{recipe?.cookingTime}분</span>
                 </div>
-                <button
-                  className={`recipe-card-likes ${liked ? 'active' : ''}`}
-                  onClick={handleLike}
+                <button type="button"
+                    className={`recipe-card-likes ${liked ? 'active' : ''}`}
+                    onClick={handleLike}
                 >
-                  ❤️ <span className="recipe-card-like-count">{likeCount}</span>
+                  {liked ? '❤️' : '🤍'}{' '}
+                  <span className="recipe-card-like-count">{likeCount}</span>
                 </button>
               </div>
 
               <div className="recipe-card-bottom-right">
                 <div className="recipe-card-view-count">
-                  👁 <p>{data?.viewCount || 0}</p>
+                  👁 <p>{recipe?.viewCount || 0}</p>
                 </div>
-                <button
-                  className={`recipe-card-bookmark-button ${bookmarked ? 'active' : ''}`}
-                  onClick={handleBookmark}
+                <button type="button"
+                    className={`recipe-card-bookmark-button ${bookmarked ? 'active' : ''}`}
+                    onClick={() => handleBookmark(bookmarked, recipe.bookmarkId)}
                 >
-                  📌
+                  {bookmarked ? '⭐' : '📕'}
                 </button>
               </div>
             </div>

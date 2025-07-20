@@ -8,8 +8,8 @@ import {formatDateTime} from "../../utils/dateTimeUtils";
 
 const BookmarkModal = ({isOpen, onClose, recipeId}) => {
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
-  const closeCollectionModal = () => setIsCollectionModalOpen(false);
   const openCollectionModal = () => setIsCollectionModalOpen(true);
+  const closeCollectionModal = () => setIsCollectionModalOpen(false);
 
   const [selectedCollectionId, setSelectedCollectionId] = useState(null);
 
@@ -45,7 +45,7 @@ const BookmarkModal = ({isOpen, onClose, recipeId}) => {
         recipeId: 1,
         collectionId: selectedCollectionId,
       });
-      alert("북마크 저장 완료!");
+      alert("북마크가 저장되었습니다.");
       onClose();
     } catch (e) {
       console.error("북마크 저장 실패:", e);
@@ -55,7 +55,7 @@ const BookmarkModal = ({isOpen, onClose, recipeId}) => {
 
 
   return (
-    <div className="screen">
+    <div className="screen bookmark-modal-overlay">
       <div className="div">
         <div className="view">
           <div className="overlap">
@@ -67,12 +67,11 @@ const BookmarkModal = ({isOpen, onClose, recipeId}) => {
             <div className="overlap-group-wrapper">
 
             {collections.map((collection) => (
-              <div className="overlap-group-2">
+              <div className="overlap-group-2" onClick={() => setSelectedCollectionId(collection.collectionId)} style={{ cursor: 'pointer' }}>
                 <div className="rectangle" />
                 <div className="overlap-2">
                   <div className="text-wrapper-2">{collection.collectionName}</div>
                   <div className="text-wrapper-3">{collection.bookmarkCount}개 항목</div>
-                  {/*<div className="text-wrapper-3">12개 항목</div>*/}
                 </div>
                 <div className="rectangle-2">
                   <input type="radio"
@@ -104,6 +103,8 @@ const BookmarkModal = ({isOpen, onClose, recipeId}) => {
                 </div>
               </div>
             </div>
+
+            {/*새 컬렉션 만들기 모달 팝업*/}
             <BookmarkNewCollectionModal isOpen={isCollectionModalOpen} onClose={closeCollectionModal} onCreateSuccess={fetchCollections}/>
           </div>
         </div>

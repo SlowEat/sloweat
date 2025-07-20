@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface BookmarkRepositoryCustom {
 
-    public List<BookmarkResponseDto> getBookmarks(Integer collectionId);
+    public List<BookmarkResponseDto> getBookmarks(Integer collectionId, Integer loginUserId);
 }
