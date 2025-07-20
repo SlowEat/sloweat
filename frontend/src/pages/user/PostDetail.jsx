@@ -20,7 +20,7 @@ export default function PostDetail() {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get(`/api/recipes/${id}`);
-        setRecipeData(response.data);
+        setRecipeData(response.data.data);
         setLoading(false);
       } catch (err) {
         console.error('상세 조회 실패:', err);
