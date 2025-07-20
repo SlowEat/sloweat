@@ -137,7 +137,7 @@ const handlerDuplicateEmail = async () => {
       <div className="signup-view">
         <div className="signup-overlap">
         <header className="signup-header">
-            <div className="logo-container">
+            <div className="signup-logo-container">
               <img className="SLOWEAT-LOGO" src={logo} alt="로고이미지"></img>
             </div>
           </header>
@@ -222,14 +222,6 @@ const handlerDuplicateEmail = async () => {
                 disabled={!isFormValid || !isEmailChecked || !isNicknameChecked}>회원가입</button>
             </form>
             <p className="login-link">이미 계정이 있으신가요? <a href="/login">로그인</a></p>
-            <hr className="divider" />
-            <div className="social-login">
-              <img
-                src="https://c.animaapp.com/CgKu8nvQ/img/-----@2x.png"
-                alt="소셜 로그인 옵션"
-                className="social-login-options"
-              />
-            </div>
           </section>
 
         </div>

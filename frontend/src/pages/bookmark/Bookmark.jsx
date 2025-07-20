@@ -41,7 +41,7 @@ export default function Bookmark() {
 
 
     //북마크 추가
-    const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(true);
+    const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
     const openBookmarkModal = () => setIsBookmarkModalOpen(true);
     const closeBookmarkModal = () => setIsBookmarkModalOpen(false);
 
