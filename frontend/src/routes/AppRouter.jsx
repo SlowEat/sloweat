@@ -82,6 +82,7 @@ import PaymentManagement from '../pages/admin/PaymentManagement/PaymentManagemen
 import StatReport from '../pages/admin/StatReport/StatReport';
 import TempMyPage from '../pages/temp_mypage/MyPage';
 import PostRouter from '../routes/PostRouter'; // ✅ PostRouter import 추가
+import BookmarkList from "../components/bookmark/BookmarkList";
 
 const AppRouter = () => (
   <BrowserRouter>
@@ -99,6 +100,7 @@ const AppRouter = () => (
         <Route path="/userpage" element={<UserPage />} />
         <Route path="/postform" element={<PostForm />} />
         <Route path="/bookmark" element={<Bookmark />} />
+        <Route path="/bookmark/list/:collectionId/:collectionName" element={<BookmarkList />} /> {/*컬렉션에서 북마크 목록 조회*/}
         <Route path="/settings" element={<Settings />} />
       </Route>
 

@@ -32,7 +32,7 @@ const CollectionEditModal = ({ isOpen, onClose, collection, onUpdateSuccess }) =
   };
 
   return (
-      <div className="screen">
+      <div className="screen follow-modal-overlay">
         <div className="div">
           <div className="view-wrapper">
             <div className="view-6">
