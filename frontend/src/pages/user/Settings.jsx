@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-
+import React, { useState, useEffect } from 'react';
+import { subscriptionApi } from '../../api/subscription/subscriptionApi';
 import './Settings.css';
 import SettingNavigation from '../../components/user/SettingNavigation';
 import PersonalInfoEdit from '../../components/user/PersonalInfoEdit';
@@ -8,52 +7,132 @@ import AccountWithdrawal from '../../components/user/AccountWithdrawal';
 import ProfileSubscriptionGuest from '../../components/user/ProfileSubscriptionGuest';
 import ProfileSubscriptionMember from '../../components/user/ProfileSubscriptionMember';
 
-import {getMyProfile} from '../../api/user/profile';
-
 const Settings = () => {
-  //계정 설정, 구독 관리 탭
-  const location = useLocation();
-  const initialTab = location.state?.tab || 'account'; 
-  const [activeTab, setActiveTab] = useState(initialTab);
-  const [profile, setProfile] = useState(null);
+  const [activeTab, setActiveTab] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
+  const [subscriptionInfo, setSubscriptionInfo] = useState(null);
+  const [isSubscribed, setIsSubscribed] = useState(null);
+  const [userId, setUserId] = useState(null);  // userId 상태 추가
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  //사용자 profile 반환
-    useEffect(()=>{
-      const profile = async()=>{
-        try{
-          const res = await getMyProfile();
-          setProfile(res.data);
-        }catch(err){
-          console.error('프로필 불러오기 실패',err);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // 1. 프로필 정보 조회 (구독 여부 포함)
+        const profileResponse = await subscriptionApi.getSubscriptionUser();
+        const profileData = profileResponse;
+
+        console.log('프로필 API 응답:', profileData);
+
+        setUserInfo(profileData);
+        setIsSubscribed(profileData.subscribed);
+
+        // 2. 구독자인 경우 구독 상세 정보도 조회
+        if (profileData.subscribed) {
+          try {
+            const subscriptionResponse = await subscriptionApi.getSubscription();
+            console.log('구독 API 응답:', subscriptionResponse);
+
+            setSubscriptionInfo(subscriptionResponse);
+            setUserId(subscriptionResponse.userId);  // userId 설정
+            setActiveTab('subscription');
+          } catch (subscriptionError) {
+            console.error('구독 정보 조회 실패:', subscriptionError);
+            setActiveTab('subscription');
+          }
+        } else {
+          // 비구독자인 경우 구독 탭을 기본으로 설정 (구독 유도)
+          setActiveTab('subscription');
+          setUserId(null);
         }
-      };
-      profile();
-    },[]);
+      } catch (error) {
+        console.error('사용자 정보 조회 실패:', error);
+        setError('사용자 정보를 불러오는 데 실패했습니다.');
+        setActiveTab('account');
+        setUserId(null);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchUserData();
+  }, []);
+
+  const handleSubscriptionChange = async () => {
+    try {
+      const profileResponse = await subscriptionApi.getSubscriptionUser();
+      const profileData = profileResponse.data;
+
+      setUserInfo(profileData);
+      setIsSubscribed(profileData.subscribed);
+
+      if (profileData.subscribed) {
+        const subscriptionResponse = await subscriptionApi.getSubscription();
+        setSubscriptionInfo(subscriptionResponse);
+        setUserId(subscriptionResponse.userId);
+      } else {
+        setUserId(null);
+      }
+    } catch (error) {
+      console.error('구독 상태 업데이트 실패:', error);
+    }
+  };
 
   const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="loading-container">
+          <div className="loading">사용자 정보를 불러오는 중...</div>
+        </div>
+      );
+    }
+
+    if (error) {
+      return (
+        <div className="error-container">
+          <div className="error-message">
+            <p>{error}</p>
+            <button className="retry-btn" onClick={() => window.location.reload()}>
+              다시 시도
+            </button>
+          </div>
+        </div>
+      );
+    }
+
     switch (activeTab) {
-      //계정 설정 탭
       case 'account':
         return (
           <div style={{ width: '675px' }}>
-            {/* 개인정보 수정 */}
-            <PersonalInfoEdit profile={profile}/>
-
-            {/* 회원 탈퇴 */}
+            <PersonalInfoEdit userInfo={userInfo} setUserInfo={setUserInfo} />
             <AccountWithdrawal />
           </div>
         );
-        
-      //구독 관리 탭
+
       case 'subscription':
-        //구독자,비구독자
-        return profile?.isSubscribed ? <ProfileSubscriptionMember /> : <ProfileSubscriptionGuest />;
+        return isSubscribed ? (
+          <ProfileSubscriptionMember
+            userId={userId}
+            userInfo={userInfo}
+            subscriptionInfo={subscriptionInfo}
+            onSubscriptionChange={handleSubscriptionChange}
+          />
+        ) : (
+          <ProfileSubscriptionGuest
+            userId={userInfo.userId}
+            userInfo={userInfo}
+            onSubscriptionSuccess={handleSubscriptionChange}
+          />
+        );
 
       default:
         return (
           <div style={{ width: '675px' }}>
-            <PersonalInfoEdit />
+            <PersonalInfoEdit userInfo={userInfo} setUserInfo={setUserInfo} />
             <AccountWithdrawal />
           </div>
         );
@@ -65,7 +144,7 @@ const Settings = () => {
       <div className="settings-header">
         <div className="tap-title">설정</div>
         <div style={{ width: '663px' }}></div>
-        <SettingNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
+        <SettingNavigation activeTab={activeTab} setActiveTab={setActiveTab} isSubscribed={isSubscribed} />
       </div>
 
       {renderContent()}

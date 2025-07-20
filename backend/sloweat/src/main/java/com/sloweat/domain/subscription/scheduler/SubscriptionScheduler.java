@@ -17,10 +17,9 @@ public class SubscriptionScheduler {
     /**
      * 매일 오전 9시에 자동 갱신 처리
      */
-   // @Scheduled(cron = "0 0 9 * * *")
-
-    //  테스트를 위해 매 10분마다 실행 (00, 10, 20, 30, 40, 50분)
-    @Scheduled(cron = "0 0/10 * * * *")
+   @Scheduled(cron = "0 0 9 * * *")
+   //  테스트를 위해 매 10분마다 실행 (00, 10, 20, 30, 40, 50분)
+   //@Scheduled(cron = "0 0/10 * * * *")
     public void processAutoRenewal() {
         log.info("자동 갱신 시작 ~~~");
         try {
