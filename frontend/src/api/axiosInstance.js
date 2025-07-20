@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { logout } from './user/auth';
 
 const axiosInstance = axios.create({
     baseURL: process.env.REACT_APP_API_BASE_URL,
@@ -37,6 +38,9 @@ axiosInstance.interceptors.response.use(
 
       try {
         //새 토큰 요청하는 로직 실행
+        
+        console.log('[새로운 토큰 발급 요청]');
+        
         const res = await axios.post(
           process.env.REACT_APP_API_BASE_URL + 'api/auth/reissue',
           {},
@@ -45,10 +49,11 @@ axiosInstance.interceptors.response.use(
 
         //새 토큰 저장
         const newToken = res.headers['authorization']?.replace('Bearer ', '');
+
+        console.log('[새로운 토큰 발급]',newToken);
+
         if (newToken) {
           localStorage.setItem('accessToken', newToken);
-
-          delete originalRequest.headers?.authorization;
 
           //수정된 원본 요청으로 API 호출 재시도
           originalRequest.headers = {
@@ -60,9 +65,14 @@ axiosInstance.interceptors.response.use(
           return axiosInstance(originalRequest);
         }
       } catch (err) {
-        localStorage.removeItem('accessToken');
         alert('다시 로그인 하시길 바랍니다.')
-        window.location.href = '/login';
+        try{
+          await logout();
+        }catch(err){
+          console.error('logout 요청 실패');
+        }
+        localStorage.removeItem('accessToken');
+        window.location.href='/login';
       }
     }
 
