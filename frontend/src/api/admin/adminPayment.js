@@ -20,5 +20,5 @@ export const rejectRefundBySubscriptionId = async (subscriptionId) => {
 
 // 환불 승인 처리 API
 export const approveRefundBySubscriptionId = async (subscriptionId) => {
-  await axiosInstance.patch(`/api/payments/${subscriptionId}/refund/approve`);
+  await axiosInstance.patch(`api/payments/${subscriptionId}/refund/approve`);
 };
