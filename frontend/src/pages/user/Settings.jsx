@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { subscriptionApi } from '../../api/subscription/subscriptionApi';
 import './Settings.css';
 import SettingNavigation from '../../components/user/SettingNavigation';
@@ -8,6 +9,7 @@ import ProfileSubscriptionGuest from '../../components/user/ProfileSubscriptionG
 import ProfileSubscriptionMember from '../../components/user/ProfileSubscriptionMember';
 
 const Settings = () => {
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const [subscriptionInfo, setSubscriptionInfo] = useState(null);
@@ -30,9 +32,15 @@ const Settings = () => {
 
         setUserInfo(profileData);
         setIsSubscribed(profileData.subscribed);
-
+        
+        //개인정보 수정 직후에는 account 탭 유지
+        const tabParam = searchParams.get('tab');
+        if(tabParam){
+          setActiveTab(tabParam);
+        }
+        
         // 2. 구독자인 경우 구독 상세 정보도 조회
-        if (profileData.subscribed) {
+        else if (profileData.subscribed) {
           try {
             const subscriptionResponse = await subscriptionApi.getSubscription();
             console.log('구독 API 응답:', subscriptionResponse);
@@ -108,7 +116,7 @@ const Settings = () => {
       case 'account':
         return (
           <div style={{ width: '675px' }}>
-            <PersonalInfoEdit userInfo={userInfo} setUserInfo={setUserInfo} />
+            <PersonalInfoEdit/>
             <AccountWithdrawal />
           </div>
         );
@@ -132,7 +140,7 @@ const Settings = () => {
       default:
         return (
           <div style={{ width: '675px' }}>
-            <PersonalInfoEdit userInfo={userInfo} setUserInfo={setUserInfo} />
+            <PersonalInfoEdit/>
             <AccountWithdrawal />
           </div>
         );
