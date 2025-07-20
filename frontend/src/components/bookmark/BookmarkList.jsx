@@ -50,7 +50,7 @@ export default function BookmarkList() {
             recipe={recipe}
             isDetail={false}
             openBookmarkModal={openBookmarkModal}
-            setRecipeId={setRecipeId}
+            setSelectedRecipeId={setRecipeId}
           />
         ))}
       </div>
