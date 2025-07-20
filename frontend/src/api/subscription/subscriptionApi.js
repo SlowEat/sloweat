@@ -32,6 +32,14 @@ export const subscriptionApi = {
         return response.data;
     },
 
+     // 결제 수단 변경
+        changePaymentMethod: async (subscriptionId, newCustomerUid) => {
+            const response = await axiosInstance.patch(`/api/subscription/${subscriptionId}/payment-method`, {
+                newCustomerUid: newCustomerUid
+            });
+            return response.data;
+        },
+
     // 사용자의 구독 조회
     getUserActiveSubscription: async (userId) => {
         try {

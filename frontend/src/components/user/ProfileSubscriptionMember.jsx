@@ -2,14 +2,19 @@
 import React, { useState, useEffect } from "react";
 import { useSubscription } from "../../api/subscription/useSubscription";
 import { paymentApi } from "../../api/payment/paymentApi";
-import RefundModal from "./RefundModal"; // RefundModal import 추가
+import { subscriptionApi } from "../../api/subscription/subscriptionApi";
+import RefundModal from "./RefundModal";
+import PaymentMethodChangeModal from './PaymentMethodChangeModal'
 import "../../styles/user/ProfileSubscription.css";
+
 
 const ProfileSubscriptionMember = ({ userId }) => {
   const [paymentHistory, setPaymentHistory] = useState([]);
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [refundLoading, setRefundLoading] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState(null);
+  const [isPaymentChangeModalOpen, setIsPaymentChangeModalOpen] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
 
   // RefundModal 관련 상태 추가
   const [isRefundModalOpen, setIsRefundModalOpen] = useState(false);
@@ -102,10 +107,66 @@ const ProfileSubscriptionMember = ({ userId }) => {
     setRefundTargetPaymentId(null);
   };
 
-  // 결제 수단 변경 (추후 구현)
-  const handleChangePaymentMethod = () => {
-    alert('결제 수단 변경 기능은 준비 중입니다.');
-  };
+  // 결제 수단 변경
+  // 사용자 정보 조회 (결제 수단 변경에 필요)
+      useEffect(() => {
+          const fetchUserInfo = async () => {
+              try {
+                  const userData = await subscriptionApi.getSubscriptionUser();
+                  setUserInfo(userData);
+              } catch (err) {
+                  console.error('사용자 정보 조회 실패:', err);
+              }
+          };
+
+          if (userId) {
+              fetchUserInfo();
+          }
+      }, [userId]);
+
+      // 결제 수단 변경 버튼 클릭
+      const handleChangePaymentMethod = () => {
+          if (!userInfo) {
+              alert('사용자 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+              return;
+          }
+          setIsPaymentChangeModalOpen(true);
+      };
+
+      // 결제 수단 변경 성공 처리
+      const handlePaymentMethodChangeSuccess = async (newCustomerUid) => {
+          try {
+              console.log('결제 수단 변경 요청:', {
+                  subscriptionId: subscription.subscriptionId,
+                  newCustomerUid: newCustomerUid
+              });
+
+              // 백엔드 API 호출
+              const updatedSubscription = await subscriptionApi.changePaymentMethod(
+                  subscription.subscriptionId,
+                  newCustomerUid
+              );
+
+              console.log('결제 수단 변경 성공:', updatedSubscription);
+
+              // 구독 정보 및 결제 내역 새로고침
+              await refreshSubscription();
+              const updatedPayments = await paymentApi.getPaymentsByUser(userId);
+              setPaymentHistory(updatedPayments);
+
+              alert('결제 수단이 성공적으로 변경되었습니다!');
+
+          } catch (err) {
+              console.error('결제 수단 변경 API 호출 실패:', err);
+              throw new Error(err.response?.data?.message || '결제 수단 변경에 실패했습니다.');
+          }
+      };
+
+      // 결제 수단 변경 모달 닫기
+      const handlePaymentChangeModalClose = () => {
+          setIsPaymentChangeModalOpen(false);
+      };
+
 
   // 날짜 포맷팅
   const formatDate = (dateString) => {
@@ -258,6 +319,15 @@ const ProfileSubscriptionMember = ({ userId }) => {
         onClose={handleRefundModalClose}
         onSubmit={handleRefundSubmit}
       />
+
+      {/* PaymentMethodChangeModal 추가 */}
+       <PaymentMethodChangeModal
+         isOpen={isPaymentChangeModalOpen}
+         onClose={handlePaymentChangeModalClose}
+         onSuccess={handlePaymentMethodChangeSuccess}
+         userInfo={userInfo}
+         urrentSubscription={subscription}
+       />
     </div>
   );
 };

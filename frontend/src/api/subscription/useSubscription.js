@@ -98,6 +98,28 @@ export const useSubscription = (userId, autoFetch = true) => {
             }
         }, [userId, autoFetch]);
 
+     // 결제 수단 변경
+        const changePaymentMethod = async (newCustomerUid) => {
+            if (!subscription) {
+                throw new Error('활성 구독이 없습니다.');
+            }
+
+            try {
+                setLoading(true);
+                setError(null);
+                const updatedSubscription = await subscriptionApi.changePaymentMethod(
+                    subscription.subscriptionId,
+                    newCustomerUid
+                );
+                setSubscription(updatedSubscription);
+                return updatedSubscription;
+            } catch (err) {
+                setError(err.message);
+                throw err;
+            } finally {
+                setLoading(false);
+            }
+        };
     return {
         subscription,
         loading,
@@ -111,5 +133,6 @@ export const useSubscription = (userId, autoFetch = true) => {
         refreshSubscription: fetchSubscription,
         getNextBillingDate,
         getStatusLabel,
+        changePaymentMethod,
     };
 };
