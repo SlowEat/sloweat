@@ -21,11 +21,11 @@ export default function PostDetail() {
       try {
         const response = await axiosInstance.get(`/api/recipes/${id}`);
         setRecipeData(response.data.data);
-        setLoading(false);
       } catch (err) {
         console.error('상세 조회 실패:', err);
         setError(true);
-        setLoading(false);
+      } finally {
+        setLoading(false); // ✅ 중복 제거하고 명확하게 처리
       }
     };
 
@@ -43,6 +43,7 @@ export default function PostDetail() {
     try {
       await axiosInstance.delete(`/api/recipes/${id}`);
       alert('게시글이 삭제되었습니다.');
+      // ✅ 삭제 후 목록 페이지 이동 — 목록 페이지에서 최신 목록 조회 로직이 있으면 자동 리프레시됨
       navigate('/posts/entirelist');
     } catch (error) {
       console.error('삭제 실패:', error);
@@ -70,7 +71,7 @@ export default function PostDetail() {
         <Recipe isDetail={true} data={recipeData} userId={userId} />
       </div>
 
-      {/* 수정/삭제 */}
+      {/* 수정/삭제 버튼 */}
       <div style={{ marginTop: '20px' }}>
         <button className="recipe-submit-btn" onClick={handleEdit}>수정하기</button>
         <button

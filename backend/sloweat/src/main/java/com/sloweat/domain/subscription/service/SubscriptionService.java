@@ -1,13 +1,16 @@
 package com.sloweat.domain.subscription.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.sloweat.domain.auth.dto.CustomUserDetails;
 import com.sloweat.domain.payment.entity.Payment;
 import com.sloweat.domain.payment.repository.PaymentRepository;
 import com.sloweat.domain.payment.service.IamportService;
 import com.sloweat.domain.subscription.dto.SubscriptionRequest;
 import com.sloweat.domain.subscription.dto.SubscriptionResponse;
+import com.sloweat.domain.subscription.dto.SubscriptionUserResponse;
 import com.sloweat.domain.subscription.entity.Subscription;
 import com.sloweat.domain.subscription.repository.SubscriptionRepository;
+import com.sloweat.domain.user.dto.MyProfileResponseDTO;
 import com.sloweat.domain.user.entity.User;
 import com.sloweat.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -85,10 +89,10 @@ public class SubscriptionService {
     /**
      * 구독 상세 조회
      */
-    public SubscriptionResponse getSubscription(Integer subscriptionId) {
-        Subscription subscription = subscriptionRepository.findById(subscriptionId)
+    public SubscriptionResponse getSubscription(CustomUserDetails customUserDetails) {
+        Subscription subscription = subscriptionRepository
+                .findByUserUserIdAndStatus(customUserDetails.getUserId(), Subscription.Status.ACTIVE)
                 .orElseThrow(() -> new RuntimeException("Subscription not found"));
-
         return SubscriptionResponse.from(subscription);
     }
 
@@ -107,7 +111,7 @@ public class SubscriptionService {
         // 정기결제 요청
         JsonNode paymentResponse = iamportService.requestSubscriptionPayment(
                 subscription.getCustomerUid(),
-                10000, // 구독료 (고정값 또는 설정에서 가져오기)
+                100, // 구독료 (고정값 또는 설정에서 가져오기)
                 "SlowEat 구독 갱신"
         );
 
@@ -120,7 +124,7 @@ public class SubscriptionService {
         subscription = subscriptionRepository.save(subscription);
 
         // 결제 기록 생성
-        createPaymentRecord(subscription, paymentResponse, 10000);
+        createPaymentRecord(subscription, paymentResponse, 100);
 
         return SubscriptionResponse.from(subscription);
     }
@@ -149,9 +153,26 @@ public class SubscriptionService {
 
         return SubscriptionResponse.from(subscription);
     }
+    /**
+     * 유저정보 반환
+     */
+    public SubscriptionUserResponse getSubscriptionUser(CustomUserDetails customUserDetails) {
+
+        Integer userId = customUserDetails.getUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+
+        String id =  user.getLocalEmail();
+        return  SubscriptionUserResponse.builder()
+                .userId(userId)
+                .nickname(user.getNickname())
+                .id(id)
+                .subscribed(subscriptionRepository.existsByUserUserIdAndStatus(userId, Subscription.Status.ACTIVE))
+                .build();
+    }
 
     /**
-     * 자동 갱신 처리 (스케줄러에서 호출)
+     * 자동 갱신 처리 (스케줄러에서  호출)
      */
     @Transactional
     public void processAutoRenewal() {
@@ -164,7 +185,7 @@ public class SubscriptionService {
                 // 정기결제 요청
                 JsonNode paymentResponse = iamportService.requestSubscriptionPayment(
                         subscription.getCustomerUid(),
-                        10000,
+                        100,
                         "SlowEat 구독 자동갱신"
                 );
 
@@ -221,9 +242,11 @@ public class SubscriptionService {
                 .status(Payment.Status.PAID)
                 .method(Payment.Method.CARD)
                 .payDate(LocalDateTime.now())
-                .refundStatus(Payment.RefundStatus.APPROVE)
+                .refundStatus(Payment.RefundStatus.NONE)
                 .refundReason("")
                 .createdAt(LocalDateTime.now())
+                .cardCompany(response.get("card_name").asText())
+                .cardNumberMasked(response.get("card_number").asText())
                 .build();
 
         paymentRepository.save(payment);

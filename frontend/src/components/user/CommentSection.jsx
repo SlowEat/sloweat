@@ -4,7 +4,7 @@ import CommentItem from "./CommentItem";
 import axiosInstance from "../../api/axiosInstance";
 import "../../styles/user/CommentSection.css";
 
-const CommentSection = ({ recipeId, userId }) => {
+const CommentSection = ({ recipeId, userId, postAuthorId }) => {
   const [comments, setComments] = useState([]);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -17,7 +17,22 @@ const CommentSection = ({ recipeId, userId }) => {
       const res = await axiosInstance.get(
         `/api/recipes/${recipeId}/comments?page=${page}&size=${pageSize}`
       );
-      setComments(res.data.content);
+      const flatComments = res.data.content;
+
+      const commentMap = {};
+      flatComments.forEach((c) => {
+        commentMap[c.commentId] = { ...c, children: [] };
+      });
+      const nested = [];
+      flatComments.forEach((c) => {
+        if (c.parentId && commentMap[c.parentId]) {
+          commentMap[c.parentId].children.push(commentMap[c.commentId]);
+        } else {
+          nested.push(commentMap[c.commentId]);
+        }
+      });
+
+      setComments(nested);
       setTotalPages(res.data.totalPages);
       setCurrentPage(res.data.number);
     } catch (err) {
@@ -36,7 +51,7 @@ const CommentSection = ({ recipeId, userId }) => {
   return (
     <section className="comment-section">
       <header className="comment-section-header">
-        <h2 className="comment-section-title">댓글 ({comments.length})</h2>
+        <h2 className="comment-section-title">댓글</h2>
         {!isCreating && (
           <button
             className="comment-create-button"
@@ -66,6 +81,7 @@ const CommentSection = ({ recipeId, userId }) => {
             comment={comment}
             recipeId={recipeId}
             userId={userId}
+            postAuthorId={postAuthorId}
             onAfterChange={() => fetchComments(currentPage)}
           />
         ))}

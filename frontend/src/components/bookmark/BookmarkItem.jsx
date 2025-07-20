@@ -39,7 +39,6 @@ function Recipe({ isDetail = false, isMyPost = true, recipe, openBookmarkModal, 
   };
 
   const handleBookmark = (bookmarked, bookmarkId, recipeId) => {
-
     if(bookmarked){
       const confirmed = window.confirm("북마크를 해제 하시겠습니까?");
       if (confirmed) {
@@ -95,8 +94,8 @@ function Recipe({ isDetail = false, isMyPost = true, recipe, openBookmarkModal, 
               <div className="recipe-card-profile-info">
                 <div className="recipe-card-chef-name-row">
                   <h1 className="recipe-card-chef-name">{recipe?.chefName || '익명 셰프'}</h1>
-                    {/* 본인 게시글에는 팔로우 버튼 숨김 */}
 
+                    {/* 본인 게시글에는 팔로우 버튼 숨김 */}
                     <button
                       className={`follower-card-button ${isFollowing ? 'following' : ''}`}
                       onClick={handleFollowToggle}

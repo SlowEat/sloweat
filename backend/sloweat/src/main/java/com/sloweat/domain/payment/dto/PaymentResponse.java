@@ -28,6 +28,8 @@ public class PaymentResponse {
     private String refundReason;
     private LocalDateTime refundDate;
     private LocalDateTime createdAt;
+    private String cardCompany;
+    private String cardNumberMasked;
 
     public static PaymentResponse from(Payment payment) {
         return PaymentResponse.builder()
@@ -46,6 +48,8 @@ public class PaymentResponse {
                 .refundReason(payment.getRefundReason())
                 .refundDate(payment.getRefundDate())
                 .createdAt(payment.getCreatedAt())
+                .cardCompany(payment.getCardCompany())
+                .cardNumberMasked(payment.getCardNumberMasked())
                 .build();
     }
 }

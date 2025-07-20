@@ -24,9 +24,6 @@ public class RecipeService {
     private final RecipeLikeRepository recipeLikeRepository;
     private final UserRepository userRepository;
 
-    /**
-     * 📝 게시글 등록
-     */
     public int saveRecipe(Integer userId, RecipeRequestDto dto) {
         Recipe recipe = new Recipe();
 
@@ -36,6 +33,8 @@ public class RecipeService {
         recipe.setIsSubscribed(dto.isSubscribed());
         recipe.setCreatedAt(LocalDateTime.now());
         recipe.setUpdatedAt(LocalDateTime.now());
+        recipe.setViews(0);
+        recipe.setLikes(0);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다: ID = " + userId));
@@ -65,9 +64,6 @@ public class RecipeService {
         return savedRecipe.getRecipeId();
     }
 
-    /**
-     * ✏️ 게시글 수정
-     */
     @Transactional
     public void updateRecipe(int recipeId, Integer userId, RecipeRequestDto dto) {
         Recipe recipe = recipeRepository.findById(recipeId)
@@ -106,9 +102,6 @@ public class RecipeService {
         }
     }
 
-    /**
-     * 🗑️ 게시글 삭제
-     */
     @Transactional
     public void deleteRecipe(int recipeId, Integer userId) {
         Recipe recipe = recipeRepository.findById(recipeId)
@@ -132,6 +125,9 @@ public class RecipeService {
         boolean alreadyLiked = recipeLikeRepository.existsByRecipeAndUser(recipe, user);
         if (alreadyLiked) return;
 
+        recipe.setLikes(recipe.getLikes() + 1);
+        recipeRepository.save(recipe);
+
         RecipeLike like = new RecipeLike();
         like.setRecipe(recipe);
         like.setUser(user);
@@ -147,7 +143,26 @@ public class RecipeService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: ID = " + userId));
 
+        recipe.setLikes(Math.max(0, recipe.getLikes() - 1));
+        recipeRepository.save(recipe);
+
         recipeLikeRepository.deleteByRecipeAndUser(recipe, user);
+    }
+
+    @Transactional
+    public RecipeResponseDto getRecipeDetailWithViewIncrease(Integer id) {
+        Recipe recipe = recipeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("레시피를 찾을 수 없습니다: ID = " + id));
+
+        recipe.setViews(recipe.getViews() + 1);
+        recipeRepository.save(recipe);
+
+        List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
+        List<String> tagNames = recipeTags.stream()
+                .map(rt -> rt.getTag().getTagName())
+                .toList();
+
+        return toDto(recipe, tagNames, "https://image.server.com/photo1.jpg");
     }
 
     public RecipeResponseDto getRecipeDetail(Integer id) {
@@ -162,41 +177,55 @@ public class RecipeService {
         return toDto(recipe, tagNames, "https://image.server.com/photo1.jpg");
     }
 
-    public List<RecipeResponseDto> getAllRecipes() {
-        List<Recipe> recipes = recipeRepository.findAll();
+    public List<RecipeResponseDto> getAllRecipesBySort(String sort) {
+        List<Recipe> sortedRecipes = "popular".equalsIgnoreCase(sort)
+                ? recipeRepository.findAllByOrderByViewsDesc()
+                : recipeRepository.findAllByOrderByCreatedAtDesc();
 
-        return recipes.stream().map(recipe -> {
-            List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
-            List<String> tagNames = recipeTags.stream()
-                    .map(rt -> rt.getTag().getTagName())
-                    .toList();
-            return toDto(recipe, tagNames, "https://image.server.com/list-default.jpg");
-        }).toList();
+        return toDtoList(sortedRecipes, "https://image.server.com/list-default.jpg");
+    }
+
+    public List<RecipeResponseDto> searchByKeyword(String keyword, String sort) {
+        List<Recipe> recipes = "popular".equalsIgnoreCase(sort)
+                ? recipeRepository.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByViewsDesc(keyword, keyword)
+                : recipeRepository.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByCreatedAtDesc(keyword, keyword);
+
+        return toDtoList(recipes, "https://image.server.com/search-result.jpg");
+    }
+
+    public List<RecipeResponseDto> searchByTags(String type, String situation, String ingredient, String method, String sort) {
+        List<Recipe> recipes = recipeRepository.findByAllTagConditions(type, situation, ingredient, method);
+
+        if ("popular".equalsIgnoreCase(sort)) {
+            recipes.sort((r1, r2) -> Integer.compare(r2.getViews(), r1.getViews()));
+        } else {
+            recipes.sort((r1, r2) -> r2.getCreatedAt().compareTo(r1.getCreatedAt()));
+        }
+
+        return toDtoList(recipes, "https://image.server.com/search-filtered.jpg");
     }
 
     public List<RecipeResponseDto> searchByKeyword(String keyword) {
         List<Recipe> recipes = recipeRepository
                 .findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(keyword, keyword);
 
-        return recipes.stream().map(recipe -> {
-            List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
-            List<String> tagNames = recipeTags.stream()
-                    .map(rt -> rt.getTag().getTagName())
-                    .toList();
-            return toDto(recipe, tagNames, "https://image.server.com/search-result.jpg");
-        }).toList();
+        return toDtoList(recipes, "https://image.server.com/search-result.jpg");
     }
 
     public List<RecipeResponseDto> searchByTags(String type, String situation, String ingredient, String method) {
         List<Recipe> recipes = recipeRepository
                 .findByAllTagConditions(type, situation, ingredient, method);
 
+        return toDtoList(recipes, "https://image.server.com/search-filtered.jpg");
+    }
+
+    private List<RecipeResponseDto> toDtoList(List<Recipe> recipes, String photoUrl) {
         return recipes.stream().map(recipe -> {
             List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
             List<String> tagNames = recipeTags.stream()
                     .map(rt -> rt.getTag().getTagName())
                     .toList();
-            return toDto(recipe, tagNames, "https://image.server.com/search-filtered.jpg");
+            return toDto(recipe, tagNames, photoUrl);
         }).toList();
     }
 

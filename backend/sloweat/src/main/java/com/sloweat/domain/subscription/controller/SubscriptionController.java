@@ -1,10 +1,13 @@
 package com.sloweat.domain.subscription.controller;
 
+import com.sloweat.domain.auth.dto.CustomUserDetails;
 import com.sloweat.domain.subscription.dto.SubscriptionRequest;
 import com.sloweat.domain.subscription.dto.SubscriptionResponse;
+import com.sloweat.domain.subscription.dto.SubscriptionUserResponse;
 import com.sloweat.domain.subscription.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,12 +32,21 @@ public class SubscriptionController {
     /**
      * 구독 상세 조회
      */
-    @GetMapping("/subscription/{id}")
-    public ResponseEntity<SubscriptionResponse> getSubscription(@PathVariable Integer id) {
-        SubscriptionResponse response = subscriptionService.getSubscription(id);
+    @GetMapping("/subscription/active")
+    public ResponseEntity<SubscriptionResponse> getSubscription(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        SubscriptionResponse response = subscriptionService.getSubscription(customUserDetails);
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * 유저 정보 반환
+     */
+    @GetMapping("/subscription/me")
+    public ResponseEntity <SubscriptionUserResponse>getSubscriptionUser(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+        SubscriptionUserResponse response = subscriptionService.getSubscriptionUser(customUserDetails);
+        return ResponseEntity.ok(response);
+
+    }
     /**
      * 구독 갱신
      */
@@ -52,4 +64,6 @@ public class SubscriptionController {
         SubscriptionResponse response = subscriptionService.cancelSubscription(id);
         return ResponseEntity.ok(response);
     }
+
+
 }

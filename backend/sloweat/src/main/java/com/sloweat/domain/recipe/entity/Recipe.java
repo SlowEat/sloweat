@@ -33,10 +33,10 @@ public class Recipe {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private Integer views = 0;
-    private Integer likes = 0;
+    private Integer views;
+    private Integer likes;
 
-    private Boolean isSubscribed = false;
+    private Boolean isSubscribed;
 
     @Builder.Default
     @Enumerated(EnumType.STRING)
@@ -44,7 +44,6 @@ public class Recipe {
     private Status status = Status.NONE;
 
     public enum Status {
-        // None("신고 없음"),
         NONE("신고 없음"),
         REQUEST("대기"),
         APPROVE("처리"),
@@ -52,11 +51,27 @@ public class Recipe {
 
         private final String label;
 
-        Status(String label) {this.label = label;}
+        Status(String label) {
+            this.label = label;
+        }
 
         public String getLabel() {
             return label;
         }
+
+        @Override
+        public String toString() {
+            return label;
+        }
+    }
+
+    /**
+     * ✅ JPA 저장 시 null 방지용 기본값 초기화
+     */
+    @PrePersist
+    protected void onCreate() {
+        if (views == null) views = 0;
+        if (likes == null) likes = 0;
+        if (isSubscribed == null) isSubscribed = false;
     }
 }
-
