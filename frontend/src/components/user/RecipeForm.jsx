@@ -54,7 +54,6 @@ const RecipeForm = () => {
     }
 
     const requestData = {
-      userId: 1,
       title: formData.title,
       content: formData.content,
       cookingTime: parseInt(formData.duration),
@@ -70,7 +69,7 @@ const RecipeForm = () => {
       console.log('작성 성공 응답:', response.data);
       alert('글이 성공적으로 등록되었습니다!');
 
-      const newRecipeId = response.data.id;
+      const newRecipeId = response.data.data;
       navigate(`/postdetail/${newRecipeId}`);
     } catch (error) {
       console.error('작성 실패:', error);

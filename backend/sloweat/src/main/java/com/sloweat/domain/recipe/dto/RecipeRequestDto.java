@@ -5,7 +5,6 @@ import lombok.Data;
 @Data
 public class RecipeRequestDto {
 
-    private int userId;             // 작성자 ID
     private String title;           // 제목
     private String content;         // 내용
     private int cookingTime;        // 요리 시간
@@ -16,6 +15,6 @@ public class RecipeRequestDto {
      */
     private String type;            // 예: "한식"
     private String situation;       // 예: "혼밥"
-    private String ingredient;        // 예: "계란"
+    private String ingredient;      // 예: "계란"
     private String method;          // 예: "볶기"
 }

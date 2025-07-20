@@ -24,7 +24,10 @@ public class RecipeService {
     private final RecipeLikeRepository recipeLikeRepository;
     private final UserRepository userRepository;
 
-    public int saveRecipe(RecipeRequestDto dto) {
+    /**
+     * 📝 게시글 등록
+     */
+    public int saveRecipe(Integer userId, RecipeRequestDto dto) {
         Recipe recipe = new Recipe();
 
         recipe.setTitle(dto.getTitle());
@@ -34,8 +37,8 @@ public class RecipeService {
         recipe.setCreatedAt(LocalDateTime.now());
         recipe.setUpdatedAt(LocalDateTime.now());
 
-        User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다: ID = " + dto.getUserId()));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다: ID = " + userId));
         recipe.setUser(user);
 
         Recipe savedRecipe = recipeRepository.save(recipe);
@@ -62,10 +65,17 @@ public class RecipeService {
         return savedRecipe.getRecipeId();
     }
 
+    /**
+     * ✏️ 게시글 수정
+     */
     @Transactional
-    public void updateRecipe(int id, RecipeRequestDto dto) {
-        Recipe recipe = recipeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 레시피입니다: ID = " + id));
+    public void updateRecipe(int recipeId, Integer userId, RecipeRequestDto dto) {
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 레시피입니다: ID = " + recipeId));
+
+        if (!recipe.getUser().getUserId().equals(userId)) {
+            throw new SecurityException("작성자만 수정할 수 있습니다.");
+        }
 
         recipe.setTitle(dto.getTitle());
         recipe.setContent(dto.getContent());
@@ -74,7 +84,6 @@ public class RecipeService {
         recipe.setUpdatedAt(LocalDateTime.now());
 
         recipeRepository.save(recipe);
-
         recipeTagRepository.deleteByRecipe(recipe);
 
         List<Tag> updatedTags = List.of(
@@ -95,6 +104,21 @@ public class RecipeService {
             newTag.setCreatedAt(LocalDateTime.now());
             recipeTagRepository.save(newTag);
         }
+    }
+
+    /**
+     * 🗑️ 게시글 삭제
+     */
+    @Transactional
+    public void deleteRecipe(int recipeId, Integer userId) {
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new IllegalArgumentException("삭제할 레시피가 존재하지 않습니다: ID = " + recipeId));
+
+        if (!recipe.getUser().getUserId().equals(userId)) {
+            throw new SecurityException("작성자만 삭제할 수 있습니다.");
+        }
+
+        recipeRepository.deleteById(recipeId);
     }
 
     @Transactional
@@ -124,13 +148,6 @@ public class RecipeService {
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: ID = " + userId));
 
         recipeLikeRepository.deleteByRecipeAndUser(recipe, user);
-    }
-
-    public void deleteRecipe(int id) {
-        if (!recipeRepository.existsById(id)) {
-            throw new IllegalArgumentException("삭제할 레시피가 존재하지 않습니다: ID = " + id);
-        }
-        recipeRepository.deleteById(id);
     }
 
     public RecipeResponseDto getRecipeDetail(Integer id) {

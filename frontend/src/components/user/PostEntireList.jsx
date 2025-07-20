@@ -10,7 +10,7 @@ export default function PostEntireList() {
   useEffect(() => {
     axiosInstance.get('/api/recipes/all')
       .then(res => {
-        setRecipes(res.data);
+        setRecipes(res.data.data);
         setLoading(false);
       })
       .catch(err => {

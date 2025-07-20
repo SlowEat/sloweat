@@ -42,7 +42,22 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
     );
 
     /**
-     * ✅ 특정 유저가 작성한 레시피 개수 조회
+     * ✅ 특정 유저가 작성한 레시피 목록 조회
+     */
+    List<Recipe> findByUser(User user);
+
+    /**
+     * 🏆 좋아요 많은 순 정렬
+     */
+    List<Recipe> findAllByOrderByLikesDesc();
+
+    /**
+     * 🕓 최신순 정렬
+     */
+    List<Recipe> findAllByOrderByCreatedAtDesc();
+
+    /**
+     * 📊 특정 유저가 작성한 레시피 개수 조회
      */
     long countByUser(User user);
 }
