@@ -70,8 +70,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String userId = customUserDetails.getUserId().toString();
 
         //직전 refresh 토큰 삭제
-        if(refreshRepository.existsByRefreshToken(localEmail)){
-            refreshRepository.deleteByRefreshToken(localEmail);
+        if(refreshRepository.existsByUsername(localEmail)){
+            refreshRepository.deleteByUsername(localEmail);
         }
 
         //토큰 생성
