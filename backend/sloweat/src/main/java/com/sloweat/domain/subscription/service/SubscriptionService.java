@@ -5,12 +5,12 @@ import com.sloweat.domain.auth.dto.CustomUserDetails;
 import com.sloweat.domain.payment.entity.Payment;
 import com.sloweat.domain.payment.repository.PaymentRepository;
 import com.sloweat.domain.payment.service.IamportService;
+import com.sloweat.domain.subscription.dto.PaymentMethodRequest;
 import com.sloweat.domain.subscription.dto.SubscriptionRequest;
 import com.sloweat.domain.subscription.dto.SubscriptionResponse;
 import com.sloweat.domain.subscription.dto.SubscriptionUserResponse;
 import com.sloweat.domain.subscription.entity.Subscription;
 import com.sloweat.domain.subscription.repository.SubscriptionRepository;
-import com.sloweat.domain.user.dto.MyProfileResponseDTO;
 import com.sloweat.domain.user.entity.User;
 import com.sloweat.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -250,5 +250,86 @@ public class SubscriptionService {
                 .build();
 
         paymentRepository.save(payment);
+    }
+
+    /**
+     * 결제수단 변경
+     */
+    @Transactional
+    public SubscriptionResponse changePaymentMethod(Integer subscriptionId, PaymentMethodRequest request) {
+        // 구독 정보 조회
+        Subscription subscription = subscriptionRepository.findById(subscriptionId)
+                .orElseThrow(() -> new RuntimeException("Subscription not found"));
+
+        if (subscription.getStatus() != Subscription.Status.ACTIVE) {
+            throw new RuntimeException("Only active subscriptions can change payment method");
+        }
+
+        // 새 빌링키 유효성 확인 및 카드 정보 조회
+        JsonNode newBillingKeyResponse = iamportService.getBillingKeyWithCardInfo(request.getNewCustomerUid());
+        if (newBillingKeyResponse.get("code").asInt() != 0) {
+            throw new RuntimeException("Invalid new billing key: " + newBillingKeyResponse.get("message").asText());
+        }
+
+        // 기존 빌링키 백업
+        String oldCustomerUid = subscription.getCustomerUid();
+
+        try {
+            // 새 빌링키로 테스트 결제 (1원 결제 후 취소)
+            JsonNode testPaymentResponse = iamportService.requestSubscriptionPayment(
+                    request.getNewCustomerUid(),
+                    1,
+                    "SlowEat 결제수단 변경 테스트"
+            );
+
+            if (testPaymentResponse.get("code").asInt() != 0) {
+                throw new RuntimeException("New payment method test failed: " + testPaymentResponse.get("message").asText());
+            }
+
+            // 테스트 결제 즉시 취소
+            String testImpUid = testPaymentResponse.get("response").get("imp_uid").asText();
+            iamportService.cancelPayment(testImpUid, 1, "결제수단 변경 테스트 취소");
+
+            // 구독 정보 업데이트 (새 빌링키로 변경)
+            subscription.setCustomerUid(request.getNewCustomerUid());
+            subscription = subscriptionRepository.save(subscription);
+
+            // 기존 빌링키 삭제 (선택적)
+            if (oldCustomerUid != null && !oldCustomerUid.equals(request.getNewCustomerUid())) {
+                JsonNode deleteResponse = iamportService.deleteBillingKey(oldCustomerUid);
+                if (deleteResponse.get("code").asInt() != 0) {
+                    log.warn("Failed to delete old billing key {}: {}", oldCustomerUid, deleteResponse.get("message").asText());
+                } else {
+                    log.info("Successfully deleted old billing key: {}", oldCustomerUid);
+                }
+            }
+
+            // 새 카드 정보 추출
+            JsonNode cardInfo = newBillingKeyResponse.get("response");
+            String newCardCompany = cardInfo.has("card_name") ? cardInfo.get("card_name").asText() : null;
+            String newCardNumber = cardInfo.has("card_number") ? cardInfo.get("card_number").asText() : null;
+
+            // 해당 구독의 최근 결제 기록 업데이트
+            List<Payment> recentPayments = paymentRepository
+                    .findBySubscriptionSubscriptionIdOrderByCreatedAtDesc(subscriptionId);
+
+            if (!recentPayments.isEmpty() && newCardCompany != null && newCardNumber != null) {
+                // 가장 최근 결제 기록만 업데이트
+                Payment latestPayment = recentPayments.get(0);
+                latestPayment.updateCardInfo(newCardCompany, newCardNumber);
+                paymentRepository.save(latestPayment);
+
+                log.info("Updated card info for latest payment record: {}", latestPayment.getPaymentId());
+            }
+
+            log.info("Payment method changed successfully for subscription {}: {} -> {}",
+                    subscriptionId, oldCustomerUid, request.getNewCustomerUid());
+
+            return SubscriptionResponse.from(subscription);
+
+        } catch (Exception e) {
+            log.error("Failed to change payment method for subscription {}", subscriptionId, e);
+            throw new RuntimeException("Payment method change failed: " + e.getMessage());
+        }
     }
 }

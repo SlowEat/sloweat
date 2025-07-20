@@ -1,6 +1,7 @@
 package com.sloweat.domain.subscription.controller;
 
 import com.sloweat.domain.auth.dto.CustomUserDetails;
+import com.sloweat.domain.subscription.dto.PaymentMethodRequest;
 import com.sloweat.domain.subscription.dto.SubscriptionRequest;
 import com.sloweat.domain.subscription.dto.SubscriptionResponse;
 import com.sloweat.domain.subscription.dto.SubscriptionUserResponse;
@@ -64,6 +65,18 @@ public class SubscriptionController {
         SubscriptionResponse response = subscriptionService.cancelSubscription(id);
         return ResponseEntity.ok(response);
     }
+
+    /**
+     * 결제수단 변경
+     */
+    @PatchMapping("/subscription/{subscriptionId}/payment-method")
+    public ResponseEntity<SubscriptionResponse> changePaymentMethod(
+            @PathVariable Integer subscriptionId,
+            @RequestBody PaymentMethodRequest request) {
+        SubscriptionResponse response = subscriptionService.changePaymentMethod(subscriptionId, request);
+        return ResponseEntity.ok(response);
+    }
+
 
 
 }

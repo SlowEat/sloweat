@@ -102,4 +102,9 @@ public class Payment {
             return label;
         }
     }
+
+    public void updateCardInfo(String cardCompany, String cardNumberMasked) {
+        this.cardCompany = cardCompany;
+        this.cardNumberMasked = cardNumberMasked;
+    }
 }
