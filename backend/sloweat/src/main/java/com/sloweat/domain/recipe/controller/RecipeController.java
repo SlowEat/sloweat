@@ -3,6 +3,7 @@ package com.sloweat.domain.recipe.controller;
 import com.sloweat.common.response.ApiResponse;
 import com.sloweat.domain.recipe.dto.RecipeRequestDto;
 import com.sloweat.domain.recipe.dto.RecipeResponseDto;
+import com.sloweat.domain.recipe.dto.ReportRequestDto; // ✅ 신고 DTO import
 import com.sloweat.domain.recipe.service.RecipeService;
 import com.sloweat.domain.auth.dto.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +71,7 @@ public class RecipeController {
             @RequestParam String situation,
             @RequestParam String ingredient,
             @RequestParam String method,
-            @RequestParam(required = false, defaultValue = "latest") String sort // ✅ 추가됨
+            @RequestParam(required = false, defaultValue = "latest") String sort
     ) {
         List<RecipeResponseDto> results = recipeService.searchByTags(type, situation, ingredient, method, sort);
         return ResponseEntity.ok(new ApiResponse<>(true, "필터 검색 성공", results));
@@ -79,7 +80,7 @@ public class RecipeController {
     @GetMapping("/search-keyword")
     public ResponseEntity<ApiResponse<List<RecipeResponseDto>>> searchByKeyword(
             @RequestParam String keyword,
-            @RequestParam(required = false, defaultValue = "latest") String sort // ✅ 추가됨
+            @RequestParam(required = false, defaultValue = "latest") String sort
     ) {
         List<RecipeResponseDto> results = recipeService.searchByKeyword(keyword, sort);
         return ResponseEntity.ok(new ApiResponse<>(true, "검색어 기반 검색 성공", results));
@@ -103,5 +104,15 @@ public class RecipeController {
         Integer userId = userDetails.getUserId();
         recipeService.unlikeRecipe(id, userId);
         return ResponseEntity.ok(new ApiResponse<>(true, "좋아요 취소 성공", null));
+    }
+
+    // ✅ 신고 처리 기능 추가
+    @PostMapping("/{id}/report")
+    public ResponseEntity<ApiResponse<Void>> reportRecipe(
+            @PathVariable Integer id,
+            @RequestBody ReportRequestDto reportRequestDto
+    ) {
+        recipeService.reportRecipe(id, reportRequestDto.getReason());
+        return ResponseEntity.ok(new ApiResponse<>(true, "신고 완료", null));
     }
 }

@@ -35,8 +35,9 @@ public class Recipe {
 
     private Integer views;
     private Integer likes;
-
     private Boolean isSubscribed;
+
+    private Integer reportCount; // ✅ 신고 횟수 필드 추가
 
     @Builder.Default
     @Enumerated(EnumType.STRING)
@@ -73,5 +74,6 @@ public class Recipe {
         if (views == null) views = 0;
         if (likes == null) likes = 0;
         if (isSubscribed == null) isSubscribed = false;
+        if (reportCount == null) reportCount = 0; // ✅ 신고 초기값 설정
     }
 }
