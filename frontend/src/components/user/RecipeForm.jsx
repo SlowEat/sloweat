@@ -1,29 +1,29 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../../api/axiosInstance';
-import '../../styles/user/RecipeForm.css';
-import '../../styles/user/Filter.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../api/axiosInstance";
+import "../../styles/user/RecipeForm.css";
+import "../../styles/user/Filter.css";
 
 const RecipeForm = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    title: '크림 파스타 레시피',
-    content: '1. 마늘과 양파를 볶는다.\n2. 생크림과 우유를 넣고 끓인다.\n3. 삶은 파스타를 넣고 섞는다.',
+    title: "",
+    content: "",
     photo: null,
-    duration: '20',
-    isPremium: true,
+    duration: "",
+    isPremium: false,
     tags: {
-      situation: '야식',
-      type: '양식',
-      ingredient: '파스타',
-      method: '끓이기'
-    }
+      situation: "", // 선택 안 된 상태
+      type: "", // 선택 안 된 상태
+      ingredient: "", // 선택 안 된 상태
+      method: "", // 선택 안 된 상태
+    },
   });
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value });
+    setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
   };
 
   const handleFileChange = (e) => {
@@ -38,8 +38,8 @@ const RecipeForm = () => {
       ...prev,
       tags: {
         ...prev.tags,
-        [tagCategory]: value
-      }
+        [tagCategory]: value,
+      },
     }));
   };
 
@@ -49,7 +49,7 @@ const RecipeForm = () => {
     const { situation, type, ingredient, method } = formData.tags;
 
     if (!situation || !type || !ingredient || !method) {
-      alert('태그를 모두 선택해주세요! (종류, 상황, 재료, 방법)');
+      alert("태그를 모두 선택해주세요! (종류, 상황, 재료, 방법)");
       return;
     }
 
@@ -61,19 +61,19 @@ const RecipeForm = () => {
       type,
       situation,
       ingredient,
-      method
+      method,
     };
 
     try {
-      const response = await axiosInstance.post('/api/recipes', requestData);
-      console.log('작성 성공 응답:', response.data);
-      alert('글이 성공적으로 등록되었습니다!');
+      const response = await axiosInstance.post("/api/recipes", requestData);
+      console.log("작성 성공 응답:", response.data);
+      alert("글이 성공적으로 등록되었습니다!");
 
       const newRecipeId = response.data.data;
       navigate(`/postdetail/${newRecipeId}`);
     } catch (error) {
-      console.error('작성 실패:', error);
-      alert('작성 중 오류가 발생했습니다.');
+      console.error("작성 실패:", error);
+      alert("작성 중 오류가 발생했습니다.");
     }
   };
 
@@ -108,19 +108,8 @@ const RecipeForm = () => {
           <div className="filter-group">
             <select
               className="select-box filter-select"
-              value={formData.tags.situation}
-              onChange={(e) => handleTagChange(e, 'situation')}
-            >
-              <option value="">상황</option>
-              <option value="혼밥">혼밥</option>
-              <option value="파티">파티</option>
-              <option value="야식">야식</option>
-            </select>
-
-            <select
-              className="select-box filter-select"
               value={formData.tags.type}
-              onChange={(e) => handleTagChange(e, 'type')}
+              onChange={(e) => handleTagChange(e, "type")}
             >
               <option value="">종류</option>
               <option value="한식">한식</option>
@@ -130,8 +119,19 @@ const RecipeForm = () => {
 
             <select
               className="select-box filter-select"
+              value={formData.tags.situation}
+              onChange={(e) => handleTagChange(e, "situation")}
+            >
+              <option value="">상황</option>
+              <option value="혼밥">혼밥</option>
+              <option value="파티">파티</option>
+              <option value="야식">야식</option>
+            </select>
+
+            <select
+              className="select-box filter-select"
               value={formData.tags.ingredient}
-              onChange={(e) => handleTagChange(e, 'ingredient')}
+              onChange={(e) => handleTagChange(e, "ingredient")}
             >
               <option value="">재료</option>
               <option value="파스타">파스타</option>
@@ -142,7 +142,7 @@ const RecipeForm = () => {
             <select
               className="select-box filter-select"
               value={formData.tags.method}
-              onChange={(e) => handleTagChange(e, 'method')}
+              onChange={(e) => handleTagChange(e, "method")}
             >
               <option value="">방법</option>
               <option value="굽기">굽기</option>
@@ -174,7 +174,9 @@ const RecipeForm = () => {
           <label htmlFor="isPremium">프리미엄 전용</label>
         </div>
 
-        <button type="submit" className="recipe-submit-btn">게시하기</button>
+        <button type="submit" className="recipe-submit-btn">
+          게시하기
+        </button>
       </form>
     </main>
   );

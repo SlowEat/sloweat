@@ -28,7 +28,7 @@
 .search-button {
   height: 36px;
   padding: 0 20px;
-  background-color: #4CAF50;
+  background-color: #10b981;
   color: white;
   border: none;
   border-radius: 8px;
@@ -38,7 +38,7 @@
 }
 
 .search-button:hover {
-  background-color: #45A049;
+  background-color: #07a470;
 }
 
 .sort-select {
