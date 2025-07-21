@@ -28,7 +28,6 @@ public class RecipeService {
     private final UserRepository userRepository;
     private final FollowService followService;
 
-    // ✅ 저장
     public int saveRecipe(Integer userId, RecipeRequestDto dto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다: ID = " + userId));
@@ -50,14 +49,10 @@ public class RecipeService {
         Recipe savedRecipe = recipeRepository.save(recipe);
 
         List<Tag> tags = List.of(
-                tagRepository.findByTagTypeAndTagName(TagType.TYPE, dto.getType())
-                        .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 종류 태그")),
-                tagRepository.findByTagTypeAndTagName(TagType.SITUATION, dto.getSituation())
-                        .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 상황 태그")),
-                tagRepository.findByTagTypeAndTagName(TagType.INGREDIENT, dto.getIngredient())
-                        .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 재료 태그")),
-                tagRepository.findByTagTypeAndTagName(TagType.METHOD, dto.getMethod())
-                        .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 방법 태그"))
+                tagRepository.findByTagTypeAndTagName(TagType.TYPE, dto.getType()).orElseThrow(),
+                tagRepository.findByTagTypeAndTagName(TagType.SITUATION, dto.getSituation()).orElseThrow(),
+                tagRepository.findByTagTypeAndTagName(TagType.INGREDIENT, dto.getIngredient()).orElseThrow(),
+                tagRepository.findByTagTypeAndTagName(TagType.METHOD, dto.getMethod()).orElseThrow()
         );
 
         for (Tag tag : tags) {
@@ -71,7 +66,6 @@ public class RecipeService {
         return savedRecipe.getRecipeId();
     }
 
-    // ✅ 상세 조회 + 조회수 증가
     @Transactional
     public RecipeResponseDto getRecipeDetailWithViewIncrease(Integer id) {
         Recipe recipe = recipeRepository.findById(id)
@@ -92,7 +86,6 @@ public class RecipeService {
         return toDto(recipe, recipeTags, "https://image.server.com/photo1.jpg");
     }
 
-    // ✅ 신고 처리
     @Transactional
     public void reportRecipe(int recipeId, String reason) {
         Recipe recipe = recipeRepository.findById(recipeId)
@@ -105,7 +98,6 @@ public class RecipeService {
         recipeRepository.save(recipe);
     }
 
-    // ✅ 수정
     @Transactional
     public void updateRecipe(int recipeId, Integer userId, RecipeRequestDto dto) {
         Recipe recipe = recipeRepository.findById(recipeId)
@@ -125,14 +117,10 @@ public class RecipeService {
         recipeTagRepository.deleteByRecipe(recipe);
 
         List<Tag> updatedTags = List.of(
-                tagRepository.findByTagTypeAndTagName(TagType.TYPE, dto.getType())
-                        .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 종류 태그")),
-                tagRepository.findByTagTypeAndTagName(TagType.SITUATION, dto.getSituation())
-                        .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 상황 태그")),
-                tagRepository.findByTagTypeAndTagName(TagType.INGREDIENT, dto.getIngredient())
-                        .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 재료 태그")),
-                tagRepository.findByTagTypeAndTagName(TagType.METHOD, dto.getMethod())
-                        .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 방법 태그"))
+                tagRepository.findByTagTypeAndTagName(TagType.TYPE, dto.getType()).orElseThrow(),
+                tagRepository.findByTagTypeAndTagName(TagType.SITUATION, dto.getSituation()).orElseThrow(),
+                tagRepository.findByTagTypeAndTagName(TagType.INGREDIENT, dto.getIngredient()).orElseThrow(),
+                tagRepository.findByTagTypeAndTagName(TagType.METHOD, dto.getMethod()).orElseThrow()
         );
 
         for (Tag tag : updatedTags) {
@@ -143,7 +131,7 @@ public class RecipeService {
             recipeTagRepository.save(newTag);
         }
     }
-    // ✅ 삭제
+
     @Transactional
     public void deleteRecipe(int recipeId, Integer userId) {
         Recipe recipe = recipeRepository.findById(recipeId)
@@ -156,13 +144,10 @@ public class RecipeService {
         recipeRepository.deleteById(recipeId);
     }
 
-    // ✅ 좋아요 등록
     @Transactional
     public void likeRecipe(int recipeId, int userId) {
-        Recipe recipe = recipeRepository.findById(recipeId)
-                .orElseThrow(() -> new IllegalArgumentException("레시피를 찾을 수 없습니다."));
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        Recipe recipe = recipeRepository.findById(recipeId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow();
 
         if (recipeLikeRepository.existsByRecipeAndUser(recipe, user)) return;
 
@@ -176,20 +161,16 @@ public class RecipeService {
         recipeLikeRepository.save(like);
     }
 
-    // ✅ 좋아요 취소
     @Transactional
     public void unlikeRecipe(int recipeId, int userId) {
-        Recipe recipe = recipeRepository.findById(recipeId)
-                .orElseThrow(() -> new IllegalArgumentException("레시피를 찾을 수 없습니다."));
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        Recipe recipe = recipeRepository.findById(recipeId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow();
 
         recipe.setLikes(Math.max(0, recipe.getLikes() - 1));
         recipeRepository.save(recipe);
         recipeLikeRepository.deleteByRecipeAndUser(recipe, user);
     }
 
-    // ✅ 페이지네이션 목록 조회
     @Transactional(readOnly = true)
     public Page<RecipeResponseDto> getAllRecipesWithPagination(String sort, Pageable pageable) {
         Sort sorting = "popular".equalsIgnoreCase(sort)
@@ -200,13 +181,11 @@ public class RecipeService {
 
         return recipePage.map(recipe -> {
             List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
-            User user = userRepository.findById(recipe.getUser().getUserId())
-                    .orElseThrow(() -> new EntityNotFoundException("유저가 존재하지 않습니다."));
-            return ViewHomeDto(user ,recipe, recipeTags, "https://image.server.com/list-default.jpg");
+            User user = userRepository.findById(recipe.getUser().getUserId()).orElseThrow();
+            return ViewHomeDto(user, recipe, recipeTags, "https://image.server.com/list-default.jpg");
         });
     }
 
-    // ✅ 필터 검색
     public List<RecipeResponseDto> searchByTags(String type, String situation, String ingredient, String method, String sort) {
         List<Recipe> recipes = recipeRepository.findByAllTagConditions(type, situation, ingredient, method);
         if ("popular".equalsIgnoreCase(sort)) {
@@ -217,10 +196,6 @@ public class RecipeService {
         return toDtoList(recipes, "https://image.server.com/search-filtered.jpg");
     }
 
-    public List<RecipeResponseDto> searchByTags(String type, String situation, String ingredient, String method) {
-        return searchByTags(type, situation, ingredient, method, "latest");
-    }
-
     public List<RecipeResponseDto> searchByKeyword(String keyword, String sort) {
         List<Recipe> recipes = "popular".equalsIgnoreCase(sort)
                 ? recipeRepository.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByViewsDesc(keyword, keyword)
@@ -229,24 +204,19 @@ public class RecipeService {
         return toDtoList(recipes, "https://image.server.com/search-result.jpg");
     }
 
-    public List<RecipeResponseDto> searchByKeyword(String keyword) {
-        return searchByKeyword(keyword, "latest");
-    }
-
     @Transactional(readOnly = true)
     public Page<RecipeResponseDto> getFollowingsRecipes(Integer userId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Recipe> recipePage = recipeRepository.findFollowingUsersRecipes(userId, pageable);
 
         return recipePage.map(recipe -> {
-            User user = userRepository.findById(recipe.getUser().getUserId())
-                    .orElseThrow(() -> new EntityNotFoundException("유저가 존재하지 않습니다."));
+            User user = userRepository.findById(recipe.getUser().getUserId()).orElseThrow();
             List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
             return ViewHomeDto(user, recipe, recipeTags, "https://image.server.com/follow.jpg");
         });
     }
 
-    // ✅ DTO 변환 헬퍼
+    // ✅ DTO 변환
     private List<RecipeResponseDto> toDtoList(List<Recipe> recipes, String photoUrl) {
         return recipes.stream().map(recipe -> {
             List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
@@ -254,6 +224,7 @@ public class RecipeService {
         }).toList();
     }
 
+    // ✅ 핵심 수정: 작성자 정보 포함
     private RecipeResponseDto toDto(Recipe recipe, List<RecipeTag> recipeTags, String photoUrl) {
         RecipeResponseDto dto = new RecipeResponseDto();
         dto.setRecipeId(recipe.getRecipeId());
@@ -269,7 +240,6 @@ public class RecipeService {
         dto.setTags(recipeTags.stream().map(rt -> rt.getTag().getTagName()).toList());
         dto.setPhotoUrls(List.of(photoUrl));
 
-        // ✅ 여기서 명시적 태그 필드 설정
         for (RecipeTag rt : recipeTags) {
             switch (rt.getTag().getTagType()) {
                 case TYPE -> dto.setType(rt.getTag().getTagName());
@@ -277,6 +247,13 @@ public class RecipeService {
                 case INGREDIENT -> dto.setIngredient(rt.getTag().getTagName());
                 case METHOD -> dto.setMethod(rt.getTag().getTagName());
             }
+        }
+
+        // ✅ 작성자 정보 설정 추가
+        User user = recipe.getUser();
+        if (user != null) {
+            dto.setChefName(user.getNickname());
+            dto.setUsername(user.getLocalEmail() != null ? user.getLocalEmail() : user.getKakaoEmail());
         }
 
         return dto;
@@ -289,6 +266,3 @@ public class RecipeService {
         return dto;
     }
 }
-
-
-
