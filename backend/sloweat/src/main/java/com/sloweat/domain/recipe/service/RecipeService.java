@@ -295,7 +295,7 @@ public class RecipeService {
     }
 
     // 북마크, 좋아요, 팔로우, 내가 쓴 글 여부 체크
-    private RecipeResponseDto toDto2(Recipe recipe, List<RecipeTag> recipeTags, String photoUrl, Boolean isLiked, Boolean isBookmarked, Boolean isMyPost, Boolean isFollowing, Integer bookmarkId) {
+    private RecipeResponseDto toDto2(Recipe recipe, List<RecipeTag> recipeTags, String photoUrl, Boolean isLiked, Boolean isBookmarked, Boolean isMyPost, Boolean isFollowing, Integer bookmarkId, User userInfo) {
         RecipeResponseDto dto = new RecipeResponseDto();
         dto.setUserId(recipe.getUser().getUserId());
         dto.setRecipeId(recipe.getRecipeId());
@@ -315,6 +315,7 @@ public class RecipeService {
         dto.setIsBookmarked(isBookmarked);
         dto.setIsFollowing(isFollowing);
         dto.setBookmarkId(bookmarkId);
+        dto.setProfileImgPath(userInfo.getProfileImgPath());
 
         for (RecipeTag rt : recipeTags) {
             switch (rt.getTag().getTagType()) {
@@ -345,7 +346,7 @@ public class RecipeService {
                                           Boolean isMyPost,
                                           Boolean isFollowing,
                                           Integer bookmarkId) {
-        RecipeResponseDto dto = toDto2(recipe, tags, photoUrl, isLiked, isBookmarked, isMyPost, isFollowing, bookmarkId);
+        RecipeResponseDto dto = toDto2(recipe, tags, photoUrl, isLiked, isBookmarked, isMyPost, isFollowing, bookmarkId, user);
         dto.setChefName(user.getNickname());
         dto.setUsername(user.getLocalEmail() != null ? user.getLocalEmail() : user.getKakaoEmail());
         return dto;

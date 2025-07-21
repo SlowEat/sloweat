@@ -9,6 +9,7 @@ import java.util.List;
 public class RecipeResponseDto {
 
     private Integer userId;
+    private String profileImgPath;
     private Integer recipeId;
     private String title;
     private String content;
