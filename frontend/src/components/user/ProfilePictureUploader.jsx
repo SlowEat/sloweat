@@ -1,21 +1,49 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
+import api from "../../api/axiosInstance";
+import {getMyProfile} from "../../api/user/profile";
 
 const ProfilePictureUploader = () => {
-  const [profileImage, setProfileImage] = useState("https://mblogthumb-phinf.pstatic.net/MjAyMDExMDFfMTgy/MDAxNjA0MjI4ODc1NDMw.Ex906Mv9nnPEZGCh4SREknadZvzMO8LyDzGOHMKPdwAg.ZAmE6pU5lhEdeOUsPdxg8-gOuZrq_ipJ5VhqaViubI4g.JPEG.gambasg/%EC%9C%A0%ED%8A%9C%EB%B8%8C_%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84_%ED%95%98%EB%8A%98%EC%83%89.jpg?type=w800");
+  const serverPath = `${process.env.REACT_APP_API_BASE_URL}images/profile/`;
+  const [profileImage, setProfileImage] = useState();
   const fileInputRef = React.useRef(null);
 
   const handleImageChange = () => {
     fileInputRef.current.click();
   };
 
-  const handleFileChange = (event) => {
+  // 프로필 정보 조회
+  const getProfile = async () => {
+    const profile = await getMyProfile();
+    setProfileImage(serverPath + profile.data.profileImgPath);
+  }
+
+  useEffect(() => {
+    getProfile();
+  });
+
+
+  // 사진 변경 저장
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setProfileImage(e.target.result);
-      };
-      reader.readAsDataURL(file);
+    if (!file) { return }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await api.post('/api/users/me/upload/profile-img', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      alert('프로필 사진이 변경되었습니다.');
+      const filename = response.data.filename;
+      setProfileImage(serverPath + filename);
+
+    } catch (error) {
+      console.error('이미지 업로드 실패:', error);
+      alert('이미지 업로드 중 오류가 발생했습니다.');
     }
   };
 
