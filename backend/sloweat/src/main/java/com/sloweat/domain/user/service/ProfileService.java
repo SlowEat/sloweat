@@ -98,8 +98,7 @@ public class ProfileService {
 
             User user = userRepository.findById(loginUserId).orElseThrow();
 
-            // TO-DO
-            if(user.getProfileImgPath() != null || !user.getProfileImgPath().equals("")){
+            if(user.getProfileImgPath() != null && !user.getProfileImgPath().equals("")){
                 // 기존에 저장된 profile 파일 삭제
                 Path oldProfileFilePath = Paths.get(uploadDir, user.getProfileImgPath());
                 Files.deleteIfExists(oldProfileFilePath);
