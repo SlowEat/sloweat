@@ -209,12 +209,14 @@ public class RecipeService {
         Page<Recipe> recipePage = recipeRepository.findAll(sortedPageable);
 
         return recipePage.map(recipe -> {
+            User userInfo = userRepository.findById(recipe.getUser().getUserId())
+                    .orElseThrow(() -> new EntityNotFoundException("유저가 존재 하지 않습니다."));
             List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
             List<String> tagNames = recipeTags.stream()
                     .map(rt -> rt.getTag().getTagName())
                     .toList();
 
-            return toDto(recipe, tagNames, "https://image.server.com/list-default.jpg");
+            return ViewHomeDto(userInfo ,recipe, tagNames, "https://image.server.com/list-default.jpg");
         });
     }
 
@@ -267,7 +269,7 @@ public class RecipeService {
 
             // 4. 레시피 엔티티와 태그 이름을 이용해 DTO를 생성하여 반환합니다.
             //    (toDto() 또는 유사한 로직을 직접 구현하거나, DTO 생성자/정적 팩토리 메서드를 사용)
-            return FollowDto(userInfo,recipe,tagNames,"https://image.server.com/search-filtered.jpg");
+            return ViewHomeDto(userInfo,recipe,tagNames,"https://image.server.com/search-filtered.jpg");
         });
     }
 
@@ -297,7 +299,7 @@ public class RecipeService {
         return dto;
     }
 
-    private RecipeResponseDto FollowDto(User user, Recipe recipe, List<String> tags, String photoUrl) {
+    private RecipeResponseDto ViewHomeDto(User user, Recipe recipe, List<String> tags, String photoUrl) {
         RecipeResponseDto dto = new RecipeResponseDto();
         dto.setRecipeId(recipe.getRecipeId());
         dto.setTitle(recipe.getTitle());
