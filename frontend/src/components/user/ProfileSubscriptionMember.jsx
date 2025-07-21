@@ -64,10 +64,7 @@ const ProfileSubscriptionMember = ({ userId }) => {
     try {
       await cancelSubscription();
       alert('구독이 취소되었습니다.');
-      //await refreshSubscription();
-      setTimeout(() => {
-              window.location.reload();
-            }, 1000);
+      await refreshSubscription();
     } catch (err) {
       console.error('구독 취소 실패:', err);
       alert('구독 취소에 실패했습니다: ' + err.message);

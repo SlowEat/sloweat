@@ -11,9 +11,11 @@ import java.util.Optional;
 
 public interface SubscriptionRepository extends JpaRepository<Subscription, Integer> {
 
-    Optional<Subscription> findByUserUserIdAndStatus(Integer userId, Subscription.Status status);
-
+    //Optional<Subscription> findByUserUserIdAndStatus(Integer userId, Subscription.Status status);
+    Optional<Subscription> findByUserUserIdAndStatusIn(Integer userId, List<Subscription.Status> statuses);
     boolean existsByUserUserIdAndStatus(Integer userId, Subscription.Status status);
+
+    boolean existsByUserUserIdAndStatusIn(Integer userId, List<Subscription.Status> statuses);
 
     Optional<Subscription> findByCustomerUid(String customerUid);
 
