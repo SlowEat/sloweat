@@ -64,46 +64,11 @@ public class ReissueService {
         String role = jwtUtil.getRole(refreshToken);
         String userId = jwtUtil.getUserId(refreshToken);
 
-
         String newAccess = jwtUtil.createJwt("access", localEmail, role, userId, accessTokenValidity);
-        String newRefresh = jwtUtil.createJwt("refresh", localEmail, role, userId, refreshTokenValidity);
 
-        //5. DB 갱신
-        refreshRepository.deleteByRefreshToken(refreshToken);
-        addRefreshEntity(localEmail, newRefresh, refreshTokenValidity);
-
-        //6. 응답 설정
+        //5. 응답 설정
         response.setHeader("Authorization", "Bearer " + newAccess);
-        response.addCookie(createCookie("refresh",newRefresh));
 
         return ResponseEntity.ok().body("access token reissued");
-    }
-
-    //refresh 토큰 DB 저장
-    private void addRefreshEntity(String localEmail,String refresh,Long expiredMs){
-
-        //현재 시간 + 만료 일자
-        Date date = new Date(System.currentTimeMillis()+expiredMs);
-
-        // 기존 username 관련 refresh 전부 삭제
-        refreshRepository.deleteByUsername(localEmail);
-
-        Refresh refreshEntity = Refresh.builder()
-                .username(localEmail)
-                .refreshToken(refresh)
-                .expiration(date.toString())
-                .build();
-
-        refreshRepository.save(refreshEntity);
-    }
-
-    //refresh 토큰 cookie 저장
-    private Cookie createCookie(String key, String value){
-        Cookie cookie = new Cookie(key,value);
-        cookie.setMaxAge((int)(refreshTokenValidity / 1000));
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-
-        return cookie;
     }
 }

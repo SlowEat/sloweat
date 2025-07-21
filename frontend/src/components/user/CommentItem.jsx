@@ -3,7 +3,7 @@ import axiosInstance from "../../api/axiosInstance";
 import CommentForm from "./CommentForm";
 import "../../styles/user/CommentItem.css";
 
-const CommentItem = ({ comment, recipeId, userId, postAuthorId, onAfterChange }) => {
+const CommentItem = ({ comment, recipeId, postAuthorId, onAfterChange }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [liked, setLiked] = useState(comment.liked || false);
@@ -13,9 +13,7 @@ const CommentItem = ({ comment, recipeId, userId, postAuthorId, onAfterChange })
   const handleDelete = async () => {
     if (window.confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
       try {
-        await axiosInstance.delete(`/api/recipes/comments/${comment.commentId}`, {
-          params: { userId },
-        });
+        await axiosInstance.delete(`/api/recipes/comments/${comment.commentId}`);
         onAfterChange();
       } catch (err) {
         console.error("댓글 삭제 실패", err);
@@ -26,9 +24,7 @@ const CommentItem = ({ comment, recipeId, userId, postAuthorId, onAfterChange })
   const handleReport = async () => {
     if (window.confirm("이 댓글을 신고하시겠습니까?")) {
       try {
-        await axiosInstance.post(`/api/recipes/comments/${comment.commentId}/report`, {
-          userId,
-        });
+        await axiosInstance.post(`/api/recipes/comments/${comment.commentId}/report`);
         alert("댓글이 신고되었습니다.");
       } catch (err) {
         console.error("댓글 신고 실패", err);
@@ -39,7 +35,6 @@ const CommentItem = ({ comment, recipeId, userId, postAuthorId, onAfterChange })
   const handleSaveEdit = async (newText) => {
     try {
       await axiosInstance.patch(`/api/recipes/comments/${comment.commentId}`, {
-        userId,
         content: newText,
       });
       setIsEditing(false);
@@ -94,7 +89,6 @@ const CommentItem = ({ comment, recipeId, userId, postAuthorId, onAfterChange })
                   isEditing
                   initialText={comment.content}
                   recipeId={recipeId}
-                  userId={userId}
                   parentId={comment.parentId}
                   onCancel={() => setIsEditing(false)}
                   onSuccess={handleSaveEdit}
@@ -110,8 +104,10 @@ const CommentItem = ({ comment, recipeId, userId, postAuthorId, onAfterChange })
 
           {!isEditing && (
             <div className="comment-actions">
-              <button onClick={toggleLike}>{liked ? "❤️" : "🤍"} {likeCount}</button>
-              {userId === comment.userId ? (
+              <button onClick={toggleLike}>
+                {liked ? "❤️" : "🤍"} {likeCount}
+              </button>
+              {comment.isMine ? (
                 <>
                   <button onClick={() => setIsEditing(true)}>수정</button>
                   <button onClick={handleDelete}>삭제</button>
@@ -119,7 +115,10 @@ const CommentItem = ({ comment, recipeId, userId, postAuthorId, onAfterChange })
               ) : (
                 <button onClick={handleReport}>신고</button>
               )}
-              <button className="comment-reply-button" onClick={() => setIsReplying(!isReplying)}>
+              <button
+                className="comment-reply-button"
+                onClick={() => setIsReplying(!isReplying)}
+              >
                 답글
               </button>
             </div>
@@ -129,7 +128,6 @@ const CommentItem = ({ comment, recipeId, userId, postAuthorId, onAfterChange })
             <div className="comment-reply-wrapper">
               <CommentForm
                 recipeId={recipeId}
-                userId={userId}
                 parentId={comment.commentId}
                 onSuccess={() => {
                   onAfterChange();
@@ -149,7 +147,6 @@ const CommentItem = ({ comment, recipeId, userId, postAuthorId, onAfterChange })
               key={child.commentId}
               comment={child}
               recipeId={recipeId}
-              userId={userId}
               postAuthorId={postAuthorId}
               onAfterChange={onAfterChange}
             />

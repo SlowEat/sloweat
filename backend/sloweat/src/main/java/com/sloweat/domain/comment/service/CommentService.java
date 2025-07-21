@@ -19,13 +19,14 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class CommentService {
+
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final RecipeRepository recipeRepository;
 
     @Transactional
-    public CommentResponse createComment(Integer recipeId, CommentRequest request) {
-        User user = userRepository.findById(request.getUserId())
+    public CommentResponse createComment(Integer recipeId, Integer userId, CommentRequest request) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new IllegalArgumentException("레시피 없음"));
@@ -48,6 +49,7 @@ public class CommentService {
         return toResponse(saved);
     }
 
+    @Transactional(readOnly = true)
     public Page<CommentResponse> getComments(Integer recipeId, Pageable pageable) {
         Page<Comment> comments = commentRepository.findByRecipe_RecipeIdAndIsDeletedFalse(recipeId, pageable);
         return comments.map(this::toResponse);

@@ -4,7 +4,7 @@ import CommentItem from "./CommentItem";
 import axiosInstance from "../../api/axiosInstance";
 import "../../styles/user/CommentSection.css";
 
-const CommentSection = ({ recipeId, userId, postAuthorId }) => {
+const CommentSection = ({ recipeId, postAuthorId }) => {
   const [comments, setComments] = useState([]);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -65,7 +65,6 @@ const CommentSection = ({ recipeId, userId, postAuthorId }) => {
       {isCreating && (
         <CommentForm
           recipeId={recipeId}
-          userId={userId}
           onSuccess={() => {
             fetchComments(0);
             setIsCreating(false);
@@ -80,7 +79,6 @@ const CommentSection = ({ recipeId, userId, postAuthorId }) => {
             key={comment.commentId}
             comment={comment}
             recipeId={recipeId}
-            userId={userId}
             postAuthorId={postAuthorId}
             onAfterChange={() => fetchComments(currentPage)}
           />

@@ -2,29 +2,41 @@ import {useState, useEffect} from 'react';
 import ProfilePictureUploader from './ProfilePictureUploader';
 import { checkNickname } from '../../api/user/auth';
 import { editMyProfile } from '../../api/user/profile';
+import { getMyProfile } from '../../api/user/profile';
 import PasswordChangeModal from '../../components/user/PasswordChangeModal';
 
-const PersonalInfoEdit = ({profile : initialProfile}) => {
+const PersonalInfoEdit = () => {
 
+  const [initialProfile, setInitialProfile] = useState({});
   const [profile, setProfile] = useState({});
   const [errors, setErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
   const [isPasswordModalOpen,setIsPasswordModalOpen] = useState(false);
+
   const isSameNickname = profile.nickname === initialProfile?.nickname;
   const isSameIntroduce = profile.introduce === initialProfile?.introduce;
   const isChanged = !isSameNickname || !isSameIntroduce;
 
   //proile 초기 렌더링
   useEffect(() => {
-    if (initialProfile) {
-      setProfile(initialProfile);
-      setErrors({});
-      setIsFormValid(false); 
-      setIsNicknameChecked(false);
-      setIsPasswordModalOpen(false);
-    }
-    }, [initialProfile]);
+    const fetchProfile = async () => {
+      try {
+        const res = await getMyProfile();
+        setProfile(res.data);
+        setInitialProfile(res.data); 
+        setErrors({});
+        setIsFormValid(false);
+        setIsNicknameChecked(false);
+        setIsPasswordModalOpen(false);
+      } catch (err) {
+        console.error('프로필 불러오기 실패', err);
+        alert('프로필 정보를 불러오는 데 실패했습니다.');
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   //개인정보 유효성 검사
   useEffect(() => {
@@ -70,7 +82,7 @@ const PersonalInfoEdit = ({profile : initialProfile}) => {
 
       await editMyProfile(requestDTO);
       alert('수정되었습니다');
-      window.location.reload();
+      window.location.href = '/settings?tab=account'; //새로고침 후 account 탭으로 이동할 수 있음
 
 
     }catch(err){
