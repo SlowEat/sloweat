@@ -76,6 +76,14 @@
   border-color: #fee2e2;
 }
 
+.collection-card-button.edit-button:hover{
+  background-color: #e0f2f1;
+}
+
+.collection-card-button.delete-button:hover{
+  background-color: #fee2e2;
+}
+
 .button-icon {
   width: 11px;
   height: 11px;
