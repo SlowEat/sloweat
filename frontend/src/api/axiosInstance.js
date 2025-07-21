@@ -13,7 +13,7 @@ axiosInstance.interceptors.request.use(
 
     //토큰이 존재하면 요청 헤더에 accessToken 추가
     if (token) {
-      config.headers['authorization'] = `Bearer ${token}`;
+      config.headers['Authorization'] = `Bearer ${token}`;
     }
     return config;
   },

@@ -10,32 +10,31 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
 @Service
 @RequiredArgsConstructor
 public class CommentReportService {
+
     private final CommentReportRepository commentReportRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
 
     @Transactional
-    public void reportComment(Integer commentId, Integer userId, String reason) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("댓글 없음"));
+    public void reportComment(Integer commentId, Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
-        commentReportRepository.findByCommentAndUser(comment, user)
-                .ifPresent(r -> {throw new IllegalStateException("이미 신고함");});
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("댓글 없음"));
+
+        boolean alreadyReported = commentReportRepository.existsByCommentAndUser(comment, user);
+        if (alreadyReported) {
+            throw new IllegalStateException("이미 신고한 댓글입니다.");
+        }
+
         CommentReport report = CommentReport.builder()
                 .comment(comment)
                 .user(user)
-                .reason(reason)
-                .createdAt(LocalDateTime.now())
                 .build();
-        commentReportRepository.save(report);
 
-        comment.setStatus(Comment.Status.REQUEST);
-        commentRepository.save(comment);
+        commentReportRepository.save(report);
     }
 }
