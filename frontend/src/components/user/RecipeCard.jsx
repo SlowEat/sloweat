@@ -97,7 +97,7 @@ function Recipe({ isDetail = false, isMyPost = false, data, refreshRecipe }) {
                 <img
                   onClick={handleProfileClick}
                   className="recipe-card-profile-image"
-                  src={data?.chefProfileUrl || 'https://c.animaapp.com/RwKPZPrR/img/---@2x.png'}
+                  src={data?.chefProfileUrl || 'https://img.freepik.com/free-photo/confident-asian-woman-face-portrait-smiling_53876-144815.jpg?semt=ais_hybrid&w=740'}
                   alt="프로필 이미지"
                 />
                 <div className="recipe-card-profile-info">
