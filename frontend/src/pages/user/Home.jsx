@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import { getAllPosts, getFollowingPosts } from "../../api/recipe/recipe";
 import { subscriptionApi } from "../../api/subscription/subscriptionApi"; // 구독 API import 추가
 import '../../layouts/user/MainLayout.css';
@@ -9,7 +10,7 @@ import PremiumContentOverlay from "../../components/user/PremiumContentOverlay";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState(0);
-
+  const navigate = useNavigate();
   // 사용자 구독 상태
   const [userSubscribed, setUserSubscribed] = useState(false);
   const [subscriptionLoading, setSubscriptionLoading] = useState(true);
@@ -112,10 +113,10 @@ export default function Home() {
 
   // 구독 페이지로 이동
   const handleSubscribe = () => {
-    // 구독 페이지로 이동하는 로직을 여기에 추가하세요
-    // 예: navigate('/subscription') 또는 window.location.href = '/subscription'
+
+    navigate('/settings', { state: { tab: 'subscription' } });
     console.log('구독 페이지로 이동');
-    // window.location.href = '/subscription'; // 실제 구독 페이지 경로로 변경해주세요
+
   };
 
   return (

@@ -12,7 +12,7 @@ const PremiumContentOverlay = ({ children, isSubscribed = false, onSubscribe }) 
 
   const handleConfirmSubscribe = () => {
     setShowConfirm(false);
-    if (!onSubscribe) {
+    if (onSubscribe) {
       onSubscribe();
     }
   };
