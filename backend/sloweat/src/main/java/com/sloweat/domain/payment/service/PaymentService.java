@@ -106,27 +106,4 @@ public class PaymentService {
         return PaymentResponse.from(payment);
     }
 
-    /**
-     * 환불 거부 처리 (관리자용)
-     */
-    @Transactional
-    public PaymentResponse rejectRefund(Integer paymentId, String reason) {
-        Payment payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new RuntimeException("Payment not found"));
-
-        if (payment.getRefundStatus() != Payment.RefundStatus.REQUEST) {
-            throw new RuntimeException("No refund request found");
-        }
-
-        // 환불 거부 처리
-        payment.setRefundStatus(Payment.RefundStatus.REJECT);
-        payment.setRefundReason(reason);
-        payment = paymentRepository.save(payment);
-
-        return PaymentResponse.from(payment);
-    }
-
-
-
-
 }

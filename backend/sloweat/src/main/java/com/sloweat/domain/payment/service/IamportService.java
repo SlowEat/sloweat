@@ -107,7 +107,6 @@ public class IamportService {
                 headers.setBearerAuth(getAccessToken());
 
                 HttpEntity<?> entity = new HttpEntity<>(requestBody, headers);
-
                 ResponseEntity<String> response = restTemplate.exchange(url, method, entity, String.class);
                 JsonNode jsonNode = objectMapper.readTree(response.getBody());
 
@@ -182,7 +181,14 @@ public class IamportService {
             body.put("reason", reason);
         }
 
-        return callApiWithTokenRetry(url, HttpMethod.POST, body);
+        try {
+            // JSON 문자열로 직렬화
+            String json = objectMapper.writeValueAsString(body);
+            // 실제 API 호출
+            return callApiWithTokenRetryAsJson(url, HttpMethod.POST, json);
+        } catch (Exception e) {
+            throw new RuntimeException("Refund failed: " + e.getMessage(), e);
+        }
     }
 
     /**
@@ -199,5 +205,46 @@ public class IamportService {
     public JsonNode getBillingKeyWithCardInfo(String customerUid) {
         String url = iamportConfig.getApiUrl() + "/subscribe/customers/" + customerUid;
         return callApiWithTokenRetry(url, HttpMethod.GET, null);
+    }
+    /**
+     * Json 문자열 직접 POST
+     */
+    private JsonNode callApiWithTokenRetryAsJson(String url, HttpMethod method, String jsonBody) {
+        int maxRetries = 1;
+        int retryCount = 0;
+
+        while (retryCount <= maxRetries) {
+            try {
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
+                headers.setBearerAuth(getAccessToken());
+
+                HttpEntity<String> entity = new HttpEntity<>(jsonBody, headers);
+
+                ResponseEntity<String> response = restTemplate.exchange(url, method, entity, String.class);
+                JsonNode jsonNode = objectMapper.readTree(response.getBody());
+
+                // 토큰 만료 시 재시도
+                if (jsonNode.has("code") && jsonNode.get("code").asInt() == -401) {
+                    log.warn("Access token expired, retrying...");
+                    accessToken = getAccessToken(true);
+                    retryCount++;
+                    continue;
+                }
+
+                return jsonNode;
+
+            } catch (Exception e) {
+                if (e.getMessage().contains("401") && retryCount < maxRetries) {
+                    log.warn("401 에러 발생 → 토큰 재발급 시도");
+                    accessToken = getAccessToken(true);
+                    retryCount++;
+                    continue;
+                }
+                throw new RuntimeException("API call failed after retries", e);
+            }
+        }
+
+        throw new RuntimeException("Maximum retry attempts reached");
     }
 }
