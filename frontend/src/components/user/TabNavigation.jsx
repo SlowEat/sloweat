@@ -2,9 +2,8 @@ import "../../styles/user/TabNavigation.css";
 
 const TabNavigation = ({ activeTab, setActiveTab }) => {
   const tabs = [
-    { id: 0, label: "팔로잉" },
-    { id: 1, label: "전체 인기" },
-    { id: 2, label: "주간 인기" }
+    { id: 0, label: "전체 피드" },
+    { id: 1, label: "팔로잉" }
   ];
 
   return (
