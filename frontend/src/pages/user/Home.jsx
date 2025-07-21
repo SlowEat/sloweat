@@ -176,7 +176,7 @@ function AllTab({ posts, hasMore, onLoadMore, onSubscribe, userSubscribed, subsc
       {posts.map(post => {
         // 사용자가 구독했으면 모든 게시물 보여주기
         // 사용자가 구독하지 않았으면, post.subscribed가 false인 게시물만 블러 처리
-        const shouldShowContent = userSubscribed || post.subscribed !== false;
+        const shouldShowContent = userSubscribed || post.subscribed !== true;
 
         return (
           <PremiumContentOverlay
@@ -228,7 +228,7 @@ function FollowingTab({ posts, hasMore, onLoadMore, onSubscribe, userSubscribed,
       {posts.map(post => {
         // 사용자가 구독했으면 모든 게시물 보여주기
         // 사용자가 구독하지 않았으면, post.subscribed가 false인 게시물만 블러 처리
-        const shouldShowContent = userSubscribed || post.subscribed !== false;
+        const shouldShowContent = userSubscribed || post.subscribed !== true;
 
         return (
           <PremiumContentOverlay
