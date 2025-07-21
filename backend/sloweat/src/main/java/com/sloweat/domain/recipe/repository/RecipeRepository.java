@@ -2,6 +2,8 @@ package com.sloweat.domain.recipe.repository;
 
 import com.sloweat.domain.recipe.entity.Recipe;
 import com.sloweat.domain.user.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -55,4 +57,9 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
 
     // 📊 특정 유저가 작성한 레시피 개수
     long countByUser(User user);
+    // 내가 팔로우한 유저의 게시글 가져오기
+    @Query("SELECT r FROM Recipe r WHERE r.user IN (" +
+            "SELECT f.following FROM Follow f WHERE f.follower.userId = :userId)" +
+            "ORDER BY r.createdAt DESC")
+    Page<Recipe> findFollowingUsersRecipes(@Param("userId") Integer userId, Pageable pageable);
 }

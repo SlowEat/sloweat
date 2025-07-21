@@ -121,4 +121,26 @@ public class RecipeController {
         recipeService.reportRecipe(id, reportRequestDto.getReason());
         return ResponseEntity.ok(new ApiResponse<>(true, "신고 완료", null));
     }
+
+    /**
+     * 특정 사용자가 팔로우하는 사람들의 레시피 목록을 페이지 단위로 조회합니다.
+     * GET /api/recipes/following/{userId}
+     * @param page   요청할 페이지 번호 (기본값: 0)
+     * @param size   한 페이지에 보여줄 항목 수 (기본값: 10)
+     */
+    @GetMapping("/following")
+    public ResponseEntity<ApiResponse<Page<RecipeResponseDto>>> getFollowingUsersRecipes(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        Integer userId = userDetails.getUserId();
+        // 서비스 레이어의 메서드를 호출하여 페이지네이션된 레시피 목록을 가져옵니다.
+        Page<RecipeResponseDto> recipePage = recipeService.getFollowingsRecipes(userId, page, size);
+
+        // HTTP 상태 코드 200 OK와 함께 결과를 반환합니다.
+        return ResponseEntity.ok(new ApiResponse<>(true, "팔로잉 게시물 조회  성공", recipePage));
+    }
 }
+
+

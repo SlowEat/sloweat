@@ -1,5 +1,8 @@
 package com.sloweat.domain.recipe.service;
 
+import com.sloweat.domain.auth.dto.CustomUserDetails;
+import com.sloweat.domain.follow.dto.FollowResponseDto;
+import com.sloweat.domain.follow.service.FollowService;
 import com.sloweat.domain.recipe.dto.RecipeRequestDto;
 import com.sloweat.domain.recipe.dto.RecipeResponseDto;
 import com.sloweat.domain.recipe.entity.*;
@@ -7,13 +10,15 @@ import com.sloweat.domain.recipe.entity.Tag.TagType;
 import com.sloweat.domain.recipe.repository.*;
 import com.sloweat.domain.user.entity.User;
 import com.sloweat.domain.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +29,7 @@ public class RecipeService {
     private final RecipeTagRepository recipeTagRepository;
     private final RecipeLikeRepository recipeLikeRepository;
     private final UserRepository userRepository;
+    private final FollowService followService;
 
     // ✅ 저장
     public int saveRecipe(Integer userId, RecipeRequestDto dto) {
@@ -193,6 +199,7 @@ public class RecipeService {
     }
 
     // ✅ 페이지네이션 목록 조회
+    @Transactional(readOnly = true)
     public Page<RecipeResponseDto> getAllRecipesWithPagination(String sort, Pageable pageable) {
         Sort sorting = "popular".equalsIgnoreCase(sort)
                 ? Sort.by(Sort.Direction.DESC, "views")
@@ -242,6 +249,27 @@ public class RecipeService {
         List<Recipe> recipes = recipeRepository.findByAllTagConditions(type, situation, ingredient, method);
         return toDtoList(recipes, "https://image.server.com/search-filtered.jpg");
     }
+//페이지네이션 설정을 적용하여 팔로잉하는 사용자들의 레시피를 가져옵니다.
+    @Transactional(readOnly = true)
+    public Page<RecipeResponseDto> getFollowingsRecipes(Integer userId, int page, int size) {
+        // 1. 페이지네이션 설정을 적용하여 팔로잉하는 사용자들의 레시피를 가져옵니다.
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Recipe> recipePage = recipeRepository.findFollowingUsersRecipes(userId, pageable);
+        // 2. Page<Recipe>를 순회하며 각 레시피에 대한 DTO를 생성합니다.
+        return recipePage.map(recipe -> {
+            // 3. 각 레시피에 연결된 태그 목록을 조회합니다.
+            User userInfo = userRepository.findById(recipe.getUser().getUserId())
+                    .orElseThrow(() -> new EntityNotFoundException("유저가 존재 하지 않습니다."));
+            List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
+            List<String> tagNames = recipeTags.stream()
+                    .map(rt -> rt.getTag().getTagName())
+                    .toList();
+
+            // 4. 레시피 엔티티와 태그 이름을 이용해 DTO를 생성하여 반환합니다.
+            //    (toDto() 또는 유사한 로직을 직접 구현하거나, DTO 생성자/정적 팩토리 메서드를 사용)
+            return FollowDto(userInfo,recipe,tagNames,"https://image.server.com/search-filtered.jpg");
+        });
+    }
 
     // ✅ DTO 변환 헬퍼
     private List<RecipeResponseDto> toDtoList(List<Recipe> recipes, String photoUrl) {
@@ -266,6 +294,31 @@ public class RecipeService {
         dto.setReportCount(recipe.getReportCount());
         dto.setTags(tags);
         dto.setPhotoUrls(List.of(photoUrl));
+        return dto;
+    }
+
+    private RecipeResponseDto FollowDto(User user, Recipe recipe, List<String> tags, String photoUrl) {
+        RecipeResponseDto dto = new RecipeResponseDto();
+        dto.setRecipeId(recipe.getRecipeId());
+        dto.setTitle(recipe.getTitle());
+        dto.setContent(recipe.getContent());
+        dto.setCookingTime(recipe.getCookingTime());
+        dto.setSubscribed(recipe.getIsSubscribed());
+        dto.setCreatedAt(recipe.getCreatedAt());
+        dto.setViews(recipe.getViews());
+        dto.setLikes(recipe.getLikes());
+        dto.setStatus(recipe.getStatus().getLabel());
+        dto.setReportCount(recipe.getReportCount());
+        dto.setTags(tags);
+        dto.setPhotoUrls(List.of(photoUrl));
+        dto.setChefName(user.getNickname());
+
+        if (user.getLocalEmail() != null ){
+            dto.setUsername(user.getLocalEmail());
+        } else{
+            dto.setUsername(user.getKakaoEmail());
+        }
+
         return dto;
     }
 }

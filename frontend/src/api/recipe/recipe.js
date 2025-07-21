@@ -2,9 +2,14 @@
 import axiosInstance from '../axiosInstance';
 
 
-// [HOME 탭] - 전체 불러오기(최신순)
-export const getAllPosts = async () =>{
-   const res = axiosInstance.get('api/recipes/all');
-   return (await res).data.data;
-}
+// 전체 게시글 (페이지네이션 적용)
+export const getAllPosts = async (page) => {
+  const res = await axiosInstance.get(`api/recipes/all?page=${page}&size=10`);
+  return res.data.data; // 페이징 정보(content, last 등)를 담고 있는 data 객체 반환
+};
 
+// 팔로잉 게시글 (페이지네이션 적용)
+export const getFollowingPosts = async (page) => {
+  const res = await axiosInstance.get(`api/recipes/following?page=${page}&size=10`);
+  return res.data.data; // 페이징 정보(content, last 등)를 담고 있는 data 객체 반환
+};
