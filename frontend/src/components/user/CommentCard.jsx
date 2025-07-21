@@ -1,10 +1,17 @@
 import React from 'react'
 import '../../styles/user/CommentCard.css'
 import {formatDateTime} from "../../utils/dateTimeUtils";
+import {useNavigate} from "react-router-dom";
 
 const CommentCard = ({comment}) => {
+  const navigate = useNavigate();
+
+  const handleCommentClick = () => {
+    navigate(`/postdetail/${comment.recipeId}`);
+  };
+
   return (
-    <article className="comment-card">
+    <article className="comment-card" onClick={handleCommentClick} style={{cursor: 'pointer'}}>
       <div className="comment-card-container">
         <button className="comment-card-more-button" aria-label="더 보기">
           <img
