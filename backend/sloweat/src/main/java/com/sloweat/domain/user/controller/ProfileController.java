@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,5 +34,17 @@ public class ProfileController {
         return ResponseEntity.ok().build();
     }
 
+    //프로필 사진 업로드
+    @PostMapping("/upload/profile-img")
+    public ResponseEntity<Map<String, String>> uploadProfileImg(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                                @RequestParam("file") MultipartFile file) {
 
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Integer loginUserId = customUserDetails.getUserId();
+        String filename = profileService.uploadProfileImg(file, loginUserId);
+
+        return ResponseEntity.ok(Map.of("filename", filename));
+    }
 }
