@@ -35,7 +35,7 @@ export default function Tab() {
             {/* 구독 유도 광고 (비구독자 전용) */}
             {profile?.subscribed===false && <SubscribeBanner></SubscribeBanner>}
             {/* 탭 바 */}
-            <SideBar></SideBar>
+            <SideBar subscribed={profile?.subscribed}></SideBar>
             {/* 프로필 카드*/}
             <ProfileCard profile={profile}></ProfileCard>
     </div>

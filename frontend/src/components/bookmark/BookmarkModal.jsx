@@ -1,32 +1,25 @@
-import React, {useEffect, useState} from "react";
-import "../../styles/user/BookmarkCollectionModal.css";
+import React, { useEffect, useState } from "react";
 import "./BookmarkModal.css";
 import BookmarkNewCollectionModal from "./BookmarkNewCollectionModal";
 import api from "../../api/axiosInstance";
 
-
-const BookmarkModal = ({isOpen, onClose, recipeId}) => {
+const BookmarkModal = ({ isOpen, onClose, recipeId }) => {
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const openCollectionModal = () => setIsCollectionModalOpen(true);
   const closeCollectionModal = () => setIsCollectionModalOpen(false);
 
   const [selectedCollectionId, setSelectedCollectionId] = useState(null);
-
-  //컬렉션 목록 데이터
   const [collections, setCollections] = useState([]);
 
-  //컬렉션 목록 조회
   const fetchCollections = async () => {
     try {
-      const response = await api.get('api/bookmark-collections');
+      const response = await api.get("api/bookmark-collections");
       setCollections(response.data);
     } catch (error) {
-      console.error('북마크 컬렉션 불러오기 실패:', error);
-    } finally {
+      console.error("북마크 컬렉션 불러오기 실패:", error);
     }
   };
 
-  //북마크 저장
   const handleSave = async () => {
     if (!selectedCollectionId) {
       alert("컬렉션을 선택하세요");
@@ -52,63 +45,75 @@ const BookmarkModal = ({isOpen, onClose, recipeId}) => {
 
   if (!isOpen) return null;
 
-
   return (
-    <div className="screen bookmark-modal-overlay">
-      <div className="div">
-        <div className="view">
-          <div className="overlap">
-            <div className="overlap-group">
-              <div className="text-wrapper">북마크 컬렉션에 저장</div>
-              {/* 북마크 아이콘 이모지 */}
-              <span className="frame" role="img" aria-label="북마크" style={{ fontSize: 28, marginLeft: 12 }}>🔖</span>
-            </div>
-            <div className="overlap-group-wrapper">
+    <main className="bookmark-collection-modal-overlay">
+      <section className="bookmark-collection-modal-view">
+        <div className="bookmark-collection-modal-inner">
+          <h1 className="bookmark-collection-modal-title">북마크 컬렉션에 저장</h1>
 
+          <button
+            className="bookmark-collection-modal-close-button"
+            aria-label="닫기"
+            onClick={onClose}
+          >
+            <img
+              src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgtaWNvbiBsdWNpZGUteCI+PHBhdGggZD0iTTE4IDYgNiAxOCIvPjxwYXRoIGQ9Im02IDYgMTIgMTIiLz48L3N2Zz4="
+              alt="닫기버튼"
+            />
+          </button>
+
+          <div className="bookmark-collection-modal-list">
             {collections.map((collection) => (
-              <div className="overlap-group-2" onClick={() => setSelectedCollectionId(collection.collectionId)} style={{ cursor: 'pointer' }}>
-                <div className="rectangle" />
-                <div className="overlap-2">
-                  <div className="text-wrapper-2">{collection.collectionName}</div>
-                  <div className="text-wrapper-3">{collection.bookmarkCount}개 항목</div>
+              <label
+                key={collection.collectionId}
+                className="bookmark-collection-modal-item"
+              >
+                <input
+                  type="radio"
+                  name="collection"
+                  value={collection.collectionId}
+                  checked={selectedCollectionId === collection.collectionId}
+                  onChange={() => setSelectedCollectionId(collection.collectionId)}
+                />
+                <div className="bookmark-collection-modal-info">
+                  <div className="bookmark-collection-modal-name">{collection.collectionName}</div>
+                  <div className="bookmark-collection-modal-count">{collection.bookmarkCount}개 항목</div>
                 </div>
-                <div className="rectangle-2">
-                  <input type="radio"
-                         name="collection"
-                         value={collection.collectionId}
-                         checked={selectedCollectionId === collection.collectionId}
-                         onChange={() => setSelectedCollectionId(collection.collectionId)}
-                  />
-                </div>
-              </div>
+              </label>
             ))}
-
-            </div>
-            <div className="view-2" onClick={openCollectionModal}>
-              <div className="overlap-3" style={{ display: "flex", alignItems: "center" }}>
-                {/* 새 컬렉션 아이콘 이모지 */}
-                <div className="text-wrapper-4" >새 컬렉션 만들기</div>
-              </div>
-            </div>
-            <div className="overlap-4">
-              <div className="view-3" onClick={onClose}>
-                <div className="overlap-5">
-                  <div className="text-wrapper-5">취소</div>
-                </div>
-              </div>
-              <div className="view-4" onClick={handleSave}>
-                <div className="overlap-6">
-                  <div className="text-wrapper-6">저장하기</div>
-                </div>
-              </div>
-            </div>
-
-            {/*새 컬렉션 만들기 모달 팝업*/}
-            <BookmarkNewCollectionModal isOpen={isCollectionModalOpen} onClose={closeCollectionModal} onCreateSuccess={fetchCollections}/>
           </div>
+
+          <button
+            className="bookmark-collection-modal-add-btn"
+            onClick={openCollectionModal}
+          >
+            + 새 컬렉션 만들기
+          </button>
+
+          <div className="bookmark-collection-modal-btn-group">
+            <button
+              className="bookmark-collection-modal-cancel-btn"
+              onClick={onClose}
+            >
+              취소
+            </button>
+            <button
+              className="bookmark-collection-modal-save-btn"
+              onClick={handleSave}
+              disabled={!selectedCollectionId}
+            >
+              저장하기
+            </button>
+          </div>
+
+          <BookmarkNewCollectionModal
+            isOpen={isCollectionModalOpen}
+            onClose={closeCollectionModal}
+            onCreateSuccess={fetchCollections}
+          />
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };
 
