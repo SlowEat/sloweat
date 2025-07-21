@@ -5,7 +5,7 @@ const PremiumContentOverlay = ({ children, isSubscribed = false, onSubscribe }) 
   const [showConfirm, setShowConfirm] = useState(false);
 
   const handleOverlayClick = () => {
-    if (isSubscribed) {
+    if (!isSubscribed) {
       setShowConfirm(true);
     }
   };
@@ -21,8 +21,8 @@ const PremiumContentOverlay = ({ children, isSubscribed = false, onSubscribe }) 
     setShowConfirm(false);
   };
 
-  // isSubscribed가 true면 그대로 보여주기
-  if (!isSubscribed) {
+
+  if (isSubscribed) {
     return children;
   }
 
