@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import axiosInstance from '../../api/axiosInstance';
 import '../../styles/user/RecipeForm.css';
 import '../../styles/user/Filter.css';
 
-
 const RecipeEditForm = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
 
   const [formData, setFormData] = useState({
@@ -36,8 +36,8 @@ const RecipeEditForm = () => {
           isPremium: recipe.subscribed,
           photo: null,
           tags: {
-            situation: recipe.situation || '',
             type: recipe.type || '',
+            situation: recipe.situation || '',
             ingredient: recipe.ingredient || '',
             method: recipe.method || ''
           }
@@ -97,7 +97,10 @@ const RecipeEditForm = () => {
     try {
       await axiosInstance.put(`/api/recipes/${id}`, requestData);
       alert('수정이 완료되었습니다!');
-      navigate(`/postdetail/${id}`);
+      navigate(`/postdetail/${id}`, {
+        replace: true,
+        state: location.state,
+      });
     } catch (error) {
       console.error('수정 실패:', error);
       alert('게시글 수정 중 오류가 발생했습니다.');
@@ -107,8 +110,6 @@ const RecipeEditForm = () => {
   return (
     <main className="recipe-form-container">
       <form onSubmit={handleSubmit} className="recipe-form">
-        <h2>게시글 수정</h2>
-
         <div className="recipe-form-group">
           <label>제목 *</label>
           <input type="text" name="title" required value={formData.title} onChange={handleInputChange} />
@@ -129,28 +130,28 @@ const RecipeEditForm = () => {
         <div className="recipe-form-group">
           <label>태그</label>
           <div className="filter-group">
-            <select className = "select-box filter-select" value={formData.tags.situation} onChange={(e) => handleTagChange(e, 'situation')}>
+            <select className="select-box filter-select" value={formData.tags.situation} onChange={(e) => handleTagChange(e, 'situation')}>
               <option value="">상황</option>
               <option value="혼밥">혼밥</option>
               <option value="파티">파티</option>
               <option value="야식">야식</option>
             </select>
 
-            <select className = "select-box filter-select" value={formData.tags.type} onChange={(e) => handleTagChange(e, 'type')}>
+            <select className="select-box filter-select" value={formData.tags.type} onChange={(e) => handleTagChange(e, 'type')}>
               <option value="">종류</option>
               <option value="한식">한식</option>
               <option value="양식">양식</option>
               <option value="중식">중식</option>
             </select>
 
-            <select className = "select-box filter-select" value={formData.tags.ingredient} onChange={(e) => handleTagChange(e, 'ingredient')}>
+            <select className="select-box filter-select" value={formData.tags.ingredient} onChange={(e) => handleTagChange(e, 'ingredient')}>
               <option value="">재료</option>
               <option value="파스타">파스타</option>
               <option value="닭고기">닭고기</option>
               <option value="계란">계란</option>
             </select>
 
-            <select className = "select-box filter-select" value={formData.tags.method} onChange={(e) => handleTagChange(e, 'method')}>
+            <select className="select-box filter-select" value={formData.tags.method} onChange={(e) => handleTagChange(e, 'method')}>
               <option value="">방법</option>
               <option value="굽기">굽기</option>
               <option value="끓이기">끓이기</option>
