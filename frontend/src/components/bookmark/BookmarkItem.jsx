@@ -12,7 +12,6 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
   const [isMyPost, setIsMyPost] = useState(recipe.isMyPost);
   const [likeCount, setLikeCount] = useState(recipe?.likes || 0);
 
-
   const navigate = useNavigate();
 
   const handleLike = async (e) => {
@@ -71,14 +70,24 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
     navigate('/userpage');
   };
 
-  const handleEdit = () => {
+  const handleEdit = (e) => {
+    e.stopPropagation();
     alert('수정 페이지로 이동합니다.');
-    navigate(`/postform/${recipe?.id}`);
+    navigate(`/posts/edit/${recipe.recipeId}`);
   };
 
-  const handleDelete = () => {
-    if (window.confirm('삭제하시겠습니까?')) {
-      alert('삭제되었습니다.');
+  const handleDelete = async (e) => {
+    e.stopPropagation();
+    const confirm = window.confirm('이 게시글을 정말 삭제하시겠어요?');
+    if (!confirm) return;
+
+    try {
+      await axiosInstance.delete(`/api/recipes/${recipe.recipeId}`);
+      alert('게시글이 삭제되었습니다.');
+      window.location.reload('/mypage');
+    } catch (error) {
+      console.error('삭제 실패:', error);
+      alert('삭제 중 오류가 발생했습니다.');
     }
   };
 
@@ -127,11 +136,11 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
                 <div className="recipe-card-dropdown">
                   {isMyPost ? (
                     <>
-                      <button className="recipe-card-dropdown-button" onClick={handleEdit}>수정</button>
-                      <button className="recipe-card-dropdown-button" onClick={handleDelete}>삭제</button>
+                      <button className="recipe-card-dropdown-button" onClick={(e)=>handleEdit(e)}>수정</button>
+                      <button className="recipe-card-dropdown-button" onClick={(e)=>handleDelete(e)}>삭제</button>
                     </>
                   ) : (
-                    <button className="recipe-card-dropdown-button" style={{ color: '#ef4444' }} onClick={handleReport}>신고하기</button>
+                    <button className="recipe-card-dropdown-button" style={{ color: '#ef4444' }} onClick={(e)=>handleReport(e)}>신고하기</button>
                   )}
                 </div>
               </div>
