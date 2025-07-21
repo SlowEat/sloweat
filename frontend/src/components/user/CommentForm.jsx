@@ -26,12 +26,18 @@ const CommentForm = ({
     if (!text.trim()) return;
 
     try {
-      await axiosInstance.post(`/api/recipes/${recipeId}/comments`, {
-        content: text.trim(),
-        parentId: parentId,
-      });
-      setText("");
-      if (onSuccess) onSuccess();
+      if (isEditing) {
+        // 수정일 경우
+        if (onSuccess) onSuccess(text.trim());
+      } else {
+        // 등록일 경우
+        await axiosInstance.post(`/api/recipes/${recipeId}/comments`, {
+          content: text.trim(),
+          parentId: parentId,
+        });
+        setText("");
+        if (onSuccess) onSuccess();
+      }
     } catch (err) {
       console.error("댓글 등록 실패", err);
     }

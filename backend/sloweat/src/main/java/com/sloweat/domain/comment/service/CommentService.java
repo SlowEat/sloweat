@@ -36,16 +36,21 @@ public class CommentService {
             parent = commentRepository.findById(request.getParentId())
                     .orElseThrow(() -> new IllegalArgumentException("부모댓글 없음"));
         }
+
+        LocalDateTime now = LocalDateTime.now();
+
         Comment comment = Comment.builder()
                 .user(user)
                 .recipe(recipe)
                 .parent(parent)
                 .content(request.getContent())
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .createdAt(now)
+                .updatedAt(now)
                 .likeCount(0)
                 .isDeleted(false)
+                .status(Comment.Status.NONE)
                 .build();
+
         Comment saved = commentRepository.save(comment);
         return toResponse(saved);
     }
@@ -63,8 +68,11 @@ public class CommentService {
         if (!comment.getUser().getUserId().equals(userId)) {
             throw new IllegalArgumentException("작성자만 수정 가능");
         }
+
         comment.setContent(content);
         comment.setUpdatedAt(LocalDateTime.now());
+        comment.setStatus(Comment.Status.APPROVE);
+
         Comment saved = commentRepository.save(comment);
         return toResponse(saved);
     }
@@ -92,6 +100,7 @@ public class CommentService {
                 .parentId(comment.getParent() != null ? comment.getParent().getCommentId() : null)
                 .likeCount(comment.getLikeCount())
                 .createdAt(comment.getCreatedAt())
+                .updatedAt(comment.getUpdatedAt())
                 .isDeleted(comment.getIsDeleted())
                 .status(comment.getStatus().name())
                 .isMine(isMine)

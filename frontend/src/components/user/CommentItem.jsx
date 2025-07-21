@@ -5,7 +5,6 @@ import "../../styles/user/CommentItem.css";
 
 const CommentItem = ({ comment, recipeId, postAuthorId, onAfterChange }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [showMessage, setShowMessage] = useState(false);
   const [liked, setLiked] = useState(comment.liked || false);
   const [likeCount, setLikeCount] = useState(comment.likeCount || 0);
   const [isReplying, setIsReplying] = useState(false);
@@ -38,8 +37,6 @@ const CommentItem = ({ comment, recipeId, postAuthorId, onAfterChange }) => {
         content: newText,
       });
       setIsEditing(false);
-      setShowMessage(true);
-      setTimeout(() => setShowMessage(false), 2000);
       onAfterChange();
     } catch (err) {
       console.error("댓글 수정 실패", err);
@@ -61,6 +58,8 @@ const CommentItem = ({ comment, recipeId, postAuthorId, onAfterChange }) => {
     }
   };
 
+  const isEdited = new Date(comment.updatedAt).getTime() !== new Date(comment.createdAt).getTime();
+
   return (
     <div className={`comment-item-wrapper ${comment.parentId ? "reply" : ""}`}>
       <article className="comment-card">
@@ -70,16 +69,16 @@ const CommentItem = ({ comment, recipeId, postAuthorId, onAfterChange }) => {
             {comment.userId === postAuthorId && (
               <span className="comment-author-badge">작성자</span>
             )}
-            <span className="comment-user-meta">
-              @{comment.userId} ·{" "}
-              {new Date(comment.createdAt).toLocaleString("ko-KR", {
+            <div className="comment-user-meta">
+              @{comment.userId} · {new Date(comment.createdAt).toLocaleString("ko-KR", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
                 hour: "2-digit",
                 minute: "2-digit",
               })}
-            </span>
+              {isEdited && <span className="comment-edited-label">(수정됨)</span>}
+            </div>
           </div>
         </div>
 
@@ -94,10 +93,7 @@ const CommentItem = ({ comment, recipeId, postAuthorId, onAfterChange }) => {
               onSuccess={handleSaveEdit}
             />
           ) : (
-            <>
-              <p>{comment.content}</p>
-              {showMessage && <div className="edited-message">수정되었습니다.</div>}
-            </>
+            <p>{comment.content}</p>
           )}
         </div>
 
