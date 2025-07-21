@@ -7,19 +7,19 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/recipes/comments")
+@RequestMapping("/api/recipes")
 @RequiredArgsConstructor
 public class CommentLikeController {
 
     private final CommentLikeService commentLikeService;
 
-    @PostMapping("/{commentId}/like")
+    @PostMapping("/comments/{commentId}/like")
     public void likeComment(@PathVariable Integer commentId,
                             @AuthenticationPrincipal CustomUserDetails userDetails) {
         commentLikeService.likeComment(commentId, userDetails.getUserId());
     }
 
-    @DeleteMapping("/{commentId}/like")
+    @DeleteMapping("/comments/{commentId}/like")
     public void unlikeComment(@PathVariable Integer commentId,
                               @AuthenticationPrincipal CustomUserDetails userDetails) {
         commentLikeService.unlikeComment(commentId, userDetails.getUserId());

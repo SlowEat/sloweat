@@ -1,6 +1,5 @@
 .recipe-card-box {
   width: 673px;
-  min-height: 224px;
   margin: 20px auto;
   background: #ffffff;
   border-radius: 12px;
@@ -141,7 +140,7 @@
 
 .recipe-card-cooking-time {
   cursor: default;
-  min-width: 75px;
+  min-width: 60px;
 }
 
 .recipe-card-likes {
@@ -178,22 +177,21 @@
   color: #6b7280;
 }
 
-.recipe-card-bookmark-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 6px;
-  border-radius: 6px;
-  transition: background-color 0.2s;
+.recipe-card-bookmark-button{
+  padding : 0px 1px 0px 1px;
 }
 
-.recipe-card-bookmark-button:hover {
-  background-color: #f3f4f6;
+.recipe-card-bookmark-button:hover{
+  background-color: #e0f2f1;
+  border-radius : 50px;
 }
 
-.recipe-card-bookmark-button.active svg path {
-  fill: #10b981;
-  stroke: #10b981;
+.recipe-card-bookmark-icon{
+  margin-top : 5px;
+}
+
+.recipe-card-bookmark-icon:hover{
+  color: #10b981;
 }
 
 /* 더보기 */
@@ -232,4 +230,8 @@
 
 .recipe-card-report:hover .recipe-card-dropdown {
   display: block;
+}
+
+.recipe-card-clock-icon{
+  height : 20px;
 }

@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class CommentReportService {
@@ -19,9 +21,10 @@ public class CommentReportService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void reportComment(Integer commentId, Integer userId) {
+    public void reportComment(Integer commentId, Integer userId, String reason) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글 없음"));
 
@@ -33,6 +36,8 @@ public class CommentReportService {
         CommentReport report = CommentReport.builder()
                 .comment(comment)
                 .user(user)
+                .reason(reason)
+                .createdAt(LocalDateTime.now())
                 .build();
 
         commentReportRepository.save(report);

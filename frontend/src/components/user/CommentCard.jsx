@@ -1,9 +1,17 @@
 import React from 'react'
 import '../../styles/user/CommentCard.css'
+import {formatDateTime} from "../../utils/dateTimeUtils";
+import {useNavigate} from "react-router-dom";
 
-const CommentCard = () => {
+const CommentCard = ({comment}) => {
+  const navigate = useNavigate();
+
+  const handleCommentClick = () => {
+    navigate(`/postdetail/${comment.recipeId}`);
+  };
+
   return (
-    <article className="comment-card">
+    <article className="mypage-comment-card" onClick={handleCommentClick} style={{cursor: 'pointer'}}>
       <div className="comment-card-container">
         <button className="comment-card-more-button" aria-label="더 보기">
           <img
@@ -16,18 +24,18 @@ const CommentCard = () => {
         <div className="comment-card-body">
           <img
             className="comment-card-profile-image"
-            src="https://randomuser.me/api/portraits/women/44.jpg"
-            alt="김요리 프로필 이미지"
+            src="https://i.namu.wiki/i/M0j6sykCciGaZJ8yW0CMumUigNAFS8Z-dJA9h_GKYSmqqYSQyqJq8D8xSg3qAz2htlsPQfyHZZMmAbPV-Ml9UA.webp"
+            alt="프로필 이미지"
           />
           <div className="comment-card-user-info">
             <div className="comment-card-user-meta">
-              <h2 className="comment-card-username">김요리</h2>
-              <span className="comment-card-user-handle">@kimcook</span>
+              <h2 className="comment-card-username">{comment.nickname}</h2>
+              <span className="comment-card-user-handle">{comment.localEmail}</span>
               <span className="comment-card-separator">·</span>
-              <time className="comment-card-time" dateTime="PT2H">2시간 전</time>
+              <time className="comment-card-time" dateTime="PT2H">{formatDateTime(comment.createdAt)}</time>
             </div>
             <p className="comment-card-text">
-              이 레시피 너무 좋아요! 다음에도 또 공유해주세요 😋
+              {comment.content}
             </p>
           </div>
         </div>
