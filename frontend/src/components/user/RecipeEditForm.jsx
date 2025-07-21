@@ -107,7 +107,6 @@ const RecipeEditForm = () => {
   return (
     <main className="recipe-form-container">
       <form onSubmit={handleSubmit} className="recipe-form">
-        <h2>게시글 수정</h2>
 
         <div className="recipe-form-group">
           <label>제목 *</label>
