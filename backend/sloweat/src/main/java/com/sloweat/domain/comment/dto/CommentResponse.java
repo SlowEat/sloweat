@@ -17,15 +17,15 @@ public class CommentResponse {
     private Integer parentId;
     private Integer likeCount;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private Boolean isDeleted;
     private String status;
-
     private Boolean isMine;
 
     @Builder
     public CommentResponse(Integer commentId, String content, Integer userId, String username,
                            Integer parentId, Integer likeCount, LocalDateTime createdAt,
-                           Boolean isDeleted, String status, Boolean isMine) {
+                           LocalDateTime updatedAt, Boolean isDeleted, String status, Boolean isMine) {
         this.commentId = commentId;
         this.content = content;
         this.userId = userId;
@@ -33,6 +33,7 @@ public class CommentResponse {
         this.parentId = parentId;
         this.likeCount = likeCount;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
         this.isDeleted = isDeleted;
         this.status = status;
         this.isMine = isMine;
