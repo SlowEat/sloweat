@@ -14,14 +14,12 @@ export default function PostDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  const userId = 1;
-
   const refreshRecipe = async () => {
     setError(false);
     setLoading(true);
     try {
       const response = await axiosInstance.get(`/api/recipes/${id}`);
-      setRecipeData(response.data.data);
+      setRecipeData(response.data.data); // ✅ DTO에 작성자 정보와 팔로우 여부 포함되어 있다고 가정
     } catch (err) {
       console.error('상세 조회 실패:', err);
       setError(true);
@@ -76,33 +74,25 @@ export default function PostDetail() {
   return (
     <div className="main-layout-content">
       {/* 상단 제목 영역 */}
-      <div
-        className="postDetail-header"
-        style={{
-          marginBottom: '1rem'
-        }}
-      >
+      <div className="postDetail-header" style={{ marginBottom: '1rem' }}>
         <h1 className="tap-title" style={{ margin: 0 }}>게시글</h1>
       </div>
 
       {/* 상세 카드 */}
       <Recipe
         isDetail={true}
-        data={recipeData}
-        userId={userId}
+        data={recipeData} // ✅ 작성자 정보 및 팔로우 상태 포함
         refreshRecipe={refreshRecipe}
       />
 
-      {/* 수정/삭제/뒤로가기 버튼을 같은 줄에 배치 */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          gap: '10px',
-          marginTop: '20px'
-        }}
-      >
+      {/* 버튼 영역 */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        gap: '10px',
+        marginTop: '20px'
+      }}>
         <button
           style={{
             padding: '6px 12px',

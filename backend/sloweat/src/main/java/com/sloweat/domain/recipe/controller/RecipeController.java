@@ -34,10 +34,14 @@ public class RecipeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<RecipeResponseDto>> getRecipeDetail(@PathVariable Integer id) {
-        RecipeResponseDto responseDto = recipeService.getRecipeDetailWithViewIncrease(id);
+    public ResponseEntity<ApiResponse<RecipeResponseDto>> getRecipeDetail(
+            @PathVariable Integer id,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        RecipeResponseDto responseDto = recipeService.getRecipeDetailWithViewIncrease(id, userDetails.getUserId());
         return ResponseEntity.ok(new ApiResponse<>(true, "조회 성공", responseDto));
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> updateRecipe(
@@ -65,12 +69,17 @@ public class RecipeController {
     public ResponseEntity<ApiResponse<Page<RecipeResponseDto>>> getAllRecipesWithPagination(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false, defaultValue = "latest") String sort
+            @RequestParam(required = false, defaultValue = "latest") String sort,
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<RecipeResponseDto> recipePage = recipeService.getAllRecipesWithPagination(sort, pageable);
+        Integer currentUserId = userDetails.getUserId(); // ✅ 로그인 유저 ID 추출
+        Page<RecipeResponseDto> recipePage =
+                recipeService.getAllRecipesWithPagination(sort, pageable, currentUserId);
+
         return ResponseEntity.ok(new ApiResponse<>(true, "전체 조회 성공", recipePage));
     }
+
 
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<RecipeResponseDto>>> searchRecipes(
@@ -78,20 +87,31 @@ public class RecipeController {
             @RequestParam String situation,
             @RequestParam String ingredient,
             @RequestParam String method,
-            @RequestParam(required = false, defaultValue = "latest") String sort
+            @RequestParam(required = false, defaultValue = "latest") String sort,
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        List<RecipeResponseDto> results = recipeService.searchByTags(type, situation, ingredient, method, sort);
+        Integer currentUserId = userDetails.getUserId(); // ✅ 로그인한 유저 ID 추출
+        List<RecipeResponseDto> results =
+                recipeService.searchByTags(type, situation, ingredient, method, sort, currentUserId);
+
         return ResponseEntity.ok(new ApiResponse<>(true, "필터 검색 성공", results));
     }
+
 
     @GetMapping("/search-keyword")
     public ResponseEntity<ApiResponse<List<RecipeResponseDto>>> searchByKeyword(
             @RequestParam String keyword,
-            @RequestParam(required = false, defaultValue = "latest") String sort
+            @RequestParam(required = false, defaultValue = "latest") String sort,
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        List<RecipeResponseDto> results = recipeService.searchByKeyword(keyword, sort);
+        Integer currentUserId = userDetails.getUserId(); // ✅ 로그인한 유저 ID 추출
+
+        List<RecipeResponseDto> results =
+                recipeService.searchByKeyword(keyword, sort, currentUserId); // 🔁 수정된 호출부
+
         return ResponseEntity.ok(new ApiResponse<>(true, "검색어 기반 검색 성공", results));
     }
+
 
     @PostMapping("/{id}/like")
     public ResponseEntity<ApiResponse<Void>> likeRecipe(

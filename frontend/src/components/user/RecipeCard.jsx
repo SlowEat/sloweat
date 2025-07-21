@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../api/axiosInstance';
-import ContentReportForm from './ContentReportForm'; // 모달 컴포넌트 import
+// import followApi from '../../api/followApi'; // ✅ 팔로우 API 모듈 import
+// import { follow, unfollow } from '../../api/followApi';
+import * as followApi from '../../api/followApi';
+import ContentReportForm from './ContentReportForm';
 import '../../styles/user/RecipeCard.css';
 
 function Recipe({ isDetail = false, isMyPost = false, data, refreshRecipe }) {
   const [liked, setLiked] = useState(data?.isLiked ?? false);
   const [likeCount, setLikeCount] = useState(data?.likes ?? 0);
   const [bookmarked, setBookmarked] = useState(false);
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [isReportOpen, setIsReportOpen] = useState(false); // 신고 모달 상태 추가
+  const [isFollowing, setIsFollowing] = useState(data?.isFollowing ?? false); // ✅ 수정됨
+  const [isReportOpen, setIsReportOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -21,7 +24,6 @@ function Recipe({ isDetail = false, isMyPost = false, data, refreshRecipe }) {
 
   const handleLike = async (e) => {
     e.stopPropagation();
-
     try {
       if (liked) {
         await axiosInstance.delete(`/api/recipes/${data.recipeId}/like`);
@@ -44,24 +46,37 @@ function Recipe({ isDetail = false, isMyPost = false, data, refreshRecipe }) {
 
   const handleReport = (e) => {
     e.stopPropagation();
-    setIsReportOpen(true); // ✅ 신고 모달 열기
+    setIsReportOpen(true);
   };
 
   const submitReport = async (reason) => {
     try {
       await axiosInstance.post(`/api/recipes/${data.recipeId}/report`, { reason });
       alert('신고가 성공적으로 접수되었습니다.');
-      setIsReportOpen(false); // ✅ 모달 닫기
-      if (refreshRecipe) await refreshRecipe(); // ✅ 신고 후 상태 갱신
+      setIsReportOpen(false);
+      if (refreshRecipe) await refreshRecipe();
     } catch (error) {
       console.error('신고 실패:', error);
       alert('신고 중 오류가 발생했습니다.');
     }
   };
 
-  const handleFollowToggle = (e) => {
+  const handleFollowToggle = async (e) => {
     e.stopPropagation();
-    setIsFollowing((prev) => !prev);
+    try {
+      const targetUserId = data?.authorId ?? data?.userId ?? data?.chefId;
+      if (!targetUserId) throw new Error('작성자 ID 없음');
+
+      if (isFollowing) {
+        await followApi.unfollow(targetUserId);
+      } else {
+        await followApi.follow(targetUserId);
+      }
+      setIsFollowing((prev) => !prev);
+    } catch (error) {
+      console.error('팔로우 처리 실패:', error);
+      alert('팔로우 요청 중 오류가 발생했습니다.');
+    }
   };
 
   const handleProfileClick = (e) => {
@@ -75,7 +90,6 @@ function Recipe({ isDetail = false, isMyPost = false, data, refreshRecipe }) {
 
   const handleDelete = async () => {
     if (!window.confirm('삭제하시겠습니까?')) return;
-
     try {
       await axiosInstance.delete(`/api/recipes/${data.recipeId}`);
       alert('삭제가 완료되었습니다!');
@@ -189,7 +203,7 @@ function Recipe({ isDetail = false, isMyPost = false, data, refreshRecipe }) {
         </div>
       </div>
 
-      {/* ✅ 신고 모달 연결 */}
+      {/* 신고 모달 */}
       <ContentReportForm
         isOpen={isReportOpen}
         onClose={() => setIsReportOpen(false)}

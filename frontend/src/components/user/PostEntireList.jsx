@@ -16,20 +16,22 @@ export default function PostEntireList() {
   const endPage = Math.min(startPage + PAGE_GROUP_SIZE - 1, totalPages - 1);
 
   useEffect(() => {
-    fetchRecipes(currentPage, sortType);
+    const currentUserId = 1; // ✅ 실제 로그인 유저 ID를 받아와야 함
+    fetchRecipes(currentPage, sortType, currentUserId);
   }, [currentPage, sortType]);
 
-  const fetchRecipes = (page, sort) => {
+  const fetchRecipes = (page, sort, userId) => {
     setLoading(true);
     axiosInstance.get(`/api/recipes/all`, {
       params: {
         page: page,
         size: 10,
-        sort: sort
+        sort: sort,
+        userId: userId // ✅ 사용자 ID 포함
       }
     })
       .then(res => {
-        setRecipes(res.data.data.content);
+        setRecipes(res.data.data.content); // ✅ 응답 DTO에서 작성자 정보와 팔로잉 상태 포함
         setTotalPages(res.data.data.totalPages);
         setLoading(false);
       })
@@ -41,7 +43,7 @@ export default function PostEntireList() {
 
   const handleSortChange = (e) => {
     setSortType(e.target.value);
-    setCurrentPage(0); // 정렬 변경 시 1페이지로 이동
+    setCurrentPage(0);
   };
 
   const handleCardClick = (recipeId) => {
@@ -98,7 +100,7 @@ export default function PostEntireList() {
             style={{ cursor: 'pointer' }}
             onClick={() => handleCardClick(recipe.recipeId)}
           >
-            <RecipeCard data={recipe} isDetail={false} />
+            <RecipeCard data={recipe} isDetail={true} />
           </div>
         ))}
       </div>
