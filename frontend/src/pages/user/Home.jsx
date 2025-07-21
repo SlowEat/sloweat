@@ -1,12 +1,19 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import { getAllPosts, getFollowingPosts } from "../../api/recipe/recipe";
+import { subscriptionApi } from "../../api/subscription/subscriptionApi"; // 구독 API import 추가
 import '../../layouts/user/MainLayout.css';
 import TabNavigation from "../../components/user/TabNavigation";
 import NoMatch from "../../components/user/NoMatch";
-import Recipe from "../../components/user/RecipeCard";
+import Recipe from "../../components/bookmark/BookmarkItem";
+import PremiumContentOverlay from "../../components/user/PremiumContentOverlay";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState(0);
+  const navigate = useNavigate();
+  // 사용자 구독 상태
+  const [userSubscribed, setUserSubscribed] = useState(false);
+  const [subscriptionLoading, setSubscriptionLoading] = useState(true);
 
   // 전체 게시물 상태 관리
   const [allPosts, setAllPosts] = useState([]);
@@ -17,6 +24,21 @@ export default function Home() {
   const [followingPosts, setFollowingPosts] = useState([]);
   const [followingPostsPage, setFollowingPostsPage] = useState(0);
   const [hasMoreFollowingPosts, setHasMoreFollowingPosts] = useState(true);
+
+  // 사용자 구독 상태 확인
+  const fetchUserSubscription = async () => {
+    try {
+      setSubscriptionLoading(true);
+      const profileResponse = await subscriptionApi.getSubscriptionUser();
+      setUserSubscribed(profileResponse.subscribed || false);
+      console.log('✅ 사용자 구독 상태:', profileResponse.subscribed);
+    } catch (err) {
+      console.error('🔥 구독 상태 확인 실패:', err);
+      setUserSubscribed(false); // 에러 시 구독하지 않은 것으로 처리
+    } finally {
+      setSubscriptionLoading(false);
+    }
+  };
 
   // 전체 게시물 불러오기
   const fetchAllPosts = async (page) => {
@@ -64,6 +86,11 @@ export default function Home() {
     }
   };
 
+  // 컴포넌트 마운트 시 구독 상태 확인
+  useEffect(() => {
+    fetchUserSubscription();
+  }, []);
+
   // 탭 변경 시 초기 페이지 로드
   useEffect(() => {
     if (activeTab === 0 && allPosts.length === 0) {
@@ -84,6 +111,14 @@ export default function Home() {
     }
   };
 
+  // 구독 페이지로 이동
+  const handleSubscribe = () => {
+
+    navigate('/settings', { state: { tab: 'subscription' } });
+    console.log('구독 페이지로 이동');
+
+  };
+
   return (
     <div className="main-layout-content">
       <div className="home-headser">
@@ -97,6 +132,9 @@ export default function Home() {
             posts={allPosts}
             hasMore={hasMoreAllPosts}
             onLoadMore={handleLoadMore}
+            onSubscribe={handleSubscribe}
+            userSubscribed={userSubscribed}
+            subscriptionLoading={subscriptionLoading}
           />
         )}
         {activeTab === 1 && (
@@ -104,6 +142,9 @@ export default function Home() {
             posts={followingPosts}
             hasMore={hasMoreFollowingPosts}
             onLoadMore={handleLoadMore}
+            onSubscribe={handleSubscribe}
+            userSubscribed={userSubscribed}
+            subscriptionLoading={subscriptionLoading}
           />
         )}
       </div>
@@ -112,7 +153,15 @@ export default function Home() {
 }
 
 // 전체 게시물 탭
-function AllTab({ posts, hasMore, onLoadMore }) {
+function AllTab({ posts, hasMore, onLoadMore, onSubscribe, userSubscribed, subscriptionLoading }) {
+  if (subscriptionLoading) {
+    return (
+      <div style={{ textAlign: 'center', margin: '20px' }}>
+        <p>구독 상태를 확인하는 중...</p>
+      </div>
+    );
+  }
+
   if (posts.length === 0 && !hasMore) {
     return (
       <NoMatch
@@ -124,9 +173,21 @@ function AllTab({ posts, hasMore, onLoadMore }) {
 
   return (
     <div>
-      {posts.map(post => (
-        <Recipe key={post.recipeId} data={post} />
-      ))}
+      {posts.map(post => {
+        // 사용자가 구독했으면 모든 게시물 보여주기
+        // 사용자가 구독하지 않았으면, post.subscribed가 false인 게시물만 블러 처리
+        const shouldShowContent = userSubscribed || post.subscribed !== false;
+
+        return (
+          <PremiumContentOverlay
+            key={post.recipeId}
+            isSubscribed={shouldShowContent}
+            onSubscribe={onSubscribe}
+          >
+            <Recipe recipe={post} />
+          </PremiumContentOverlay>
+        );
+      })}
       {hasMore && (
         <div style={{ textAlign: 'center', margin: '20px' }}>
           <button onClick={onLoadMore} style={{ padding: '10px 20px', fontSize: '16px', cursor: 'pointer' }}>
@@ -144,7 +205,15 @@ function AllTab({ posts, hasMore, onLoadMore }) {
 }
 
 // 팔로잉 게시물 탭
-function FollowingTab({ posts, hasMore, onLoadMore }) {
+function FollowingTab({ posts, hasMore, onLoadMore, onSubscribe, userSubscribed, subscriptionLoading }) {
+  if (subscriptionLoading) {
+    return (
+      <div style={{ textAlign: 'center', margin: '20px' }}>
+        <p>구독 상태를 확인하는 중...</p>
+      </div>
+    );
+  }
+
   if (posts.length === 0 && !hasMore) {
     return (
       <NoMatch
@@ -156,9 +225,21 @@ function FollowingTab({ posts, hasMore, onLoadMore }) {
 
   return (
     <div>
-      {posts.map(post => (
-        <Recipe key={post.recipeId} data={post} />
-      ))}
+      {posts.map(post => {
+        // 사용자가 구독했으면 모든 게시물 보여주기
+        // 사용자가 구독하지 않았으면, post.subscribed가 false인 게시물만 블러 처리
+        const shouldShowContent = userSubscribed || post.subscribed !== false;
+
+        return (
+          <PremiumContentOverlay
+            key={post.recipeId}
+            isSubscribed={shouldShowContent}
+            onSubscribe={onSubscribe}
+          >
+            <Recipe recipe={post} />
+          </PremiumContentOverlay>
+        );
+      })}
       {hasMore && (
         <div style={{ textAlign: 'center', margin: '20px' }}>
           <button onClick={onLoadMore} style={{ padding: '10px 20px', fontSize: '16px', cursor: 'pointer' }}>
