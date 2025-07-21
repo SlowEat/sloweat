@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../api/axiosInstance';
 import '../../styles/user/SearchBar.css';
 
@@ -27,6 +27,13 @@ function SearchBar({ onSearch }) {
     }
   };
 
+  // ✅ 정렬 옵션이 변경되면 자동으로 검색 요청
+  useEffect(() => {
+    if (keyword.trim()) {
+      handleSearch();
+    }
+  }, [sortOption]);
+
   return (
     <div className="searchbar-container" style={{
       display: 'flex',
@@ -43,7 +50,7 @@ function SearchBar({ onSearch }) {
         onChange={(e) => setKeyword(e.target.value)}
         style={{
           flex: 1,
-          height: '40px', // ✅ 높이 줄임
+          height: '40px',
           padding: '0 12px',
           fontSize: '15px',
           borderRadius: '6px',
@@ -56,7 +63,7 @@ function SearchBar({ onSearch }) {
         className="search-button"
         onClick={handleSearch}
         style={{
-          height: '40px',         // ✅ 검색버튼 높이 통일
+          height: '40px',
           padding: '0 14px',
           fontSize: '15px',
           borderRadius: '6px',
@@ -74,7 +81,7 @@ function SearchBar({ onSearch }) {
         value={sortOption}
         onChange={(e) => setSortOption(e.target.value)}
         style={{
-          height: '40px',         // ✅ 높이 통일
+          height: '40px',
           fontSize: '15px',
           padding: '0 10px',
           borderRadius: '6px',

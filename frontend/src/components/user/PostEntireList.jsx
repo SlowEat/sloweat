@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../api/axiosInstance';
+// import '../../styles/user/PostEntireList.css'; // 필요시 다시 사용
 import RecipeCard from '../../components/user/RecipeCard';
-// import '../../styles/user/PostEntireList.css'; // CSS 미사용
 
 export default function PostEntireList() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sortType, setSortType] = useState('latest');
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchRecipes(sortType);
@@ -29,6 +31,12 @@ export default function PostEntireList() {
     setSortType(e.target.value);
   };
 
+  const handleCardClick = (recipeId) => {
+    navigate(`/postdetail/${recipeId}`, {
+      state: { from: 'entire' } // ✅ 상세 페이지에 출발 정보 전달
+    });
+  };
+
   if (loading) {
     return <div className="main-layout-content">목록을 불러오는 중...</div>;
   }
@@ -39,12 +47,11 @@ export default function PostEntireList() {
 
   return (
     <div className="main-layout-content">
-      {/* 왼쪽 박스 내부: 제목과 드롭다운 충분한 간격으로 나란히 배치 */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        gap: '4rem',  // ✅ 공백 넉넉히 주기
+        gap: '4rem',
         marginBottom: '1.5rem'
       }}>
         <h2 style={{
@@ -72,11 +79,13 @@ export default function PostEntireList() {
       {/* 게시글 리스트 */}
       <div className="recipe-list-container">
         {recipes.map(recipe => (
-          <RecipeCard
+          <div
             key={recipe.recipeId}
-            data={recipe}
-            isDetail={false}
-          />
+            style={{ cursor: 'pointer' }}
+            onClick={() => handleCardClick(recipe.recipeId)}
+          >
+            <RecipeCard data={recipe} isDetail={false} />
+          </div>
         ))}
       </div>
     </div>

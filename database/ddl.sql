@@ -325,3 +325,5 @@ INSERT INTO tag (tag_id, tag_name, tag_type) VALUES
 (10, '굽기', 'method'),
 (11, '끓이기', 'method'),
 (12, '볶기', 'method');
+
+ALTER TABLE recipe ADD COLUMN report_count INT NOT NULL DEFAULT 0;

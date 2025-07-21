@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axiosInstance from '../../api/axiosInstance';
-
 import '../../layouts/user/MainLayout.css';
 import Recipe from '../../components/user/RecipeCard';
 import CommentSection from '../../components/user/CommentSection';
@@ -9,14 +8,14 @@ import CommentSection from '../../components/user/CommentSection';
 export default function PostDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [recipeData, setRecipeData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  const userId = 1; // 로그인 유저 ID (임시)
+  const userId = 1;
 
-  // ✅ 재조회 함수: 신고 후 등 상태 업데이트에 사용
   const refreshRecipe = async () => {
     setError(false);
     setLoading(true);
@@ -24,30 +23,42 @@ export default function PostDetail() {
       const response = await axiosInstance.get(`/api/recipes/${id}`);
       setRecipeData(response.data.data);
     } catch (err) {
-      console.error('신고 후 조회 실패:', err);
+      console.error('상세 조회 실패:', err);
       setError(true);
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ 초기 데이터 조회
   useEffect(() => {
     refreshRecipe();
   }, [id]);
+
+  const handleBack = () => {
+    const from = location.state?.from;
+    const searchResults = location.state?.searchResults;
+
+    if (from === 'search' && Array.isArray(searchResults)) {
+      navigate('/search', { state: { searchResults } });
+    } else if (from === 'entire') {
+      navigate('/posts/entirelist');
+    } else {
+      navigate(-1);
+    }
+  };
 
   const handleEdit = () => {
     navigate(`/posts/edit/${id}`);
   };
 
   const handleDelete = async () => {
-    const confirmDelete = window.confirm('이 게시글을 정말 삭제하시겠어요?');
-    if (!confirmDelete) return;
+    const confirm = window.confirm('이 게시글을 정말 삭제하시겠어요?');
+    if (!confirm) return;
 
     try {
       await axiosInstance.delete(`/api/recipes/${id}`);
       alert('게시글이 삭제되었습니다.');
-      navigate('/posts/entirelist'); // 목록 페이지로 이동
+      navigate('/posts/entirelist');
     } catch (error) {
       console.error('삭제 실패:', error);
       alert('삭제 중 오류가 발생했습니다.');
@@ -64,22 +75,52 @@ export default function PostDetail() {
 
   return (
     <div className="main-layout-content">
-      <div className="postDetail-header">
-        <h1 className="tap-title">게시글</h1>
-        <div style={{ width: '663px' }}></div>
+      {/* 상단 제목 영역 */}
+      <div
+        className="postDetail-header"
+        style={{
+          marginBottom: '1rem'
+        }}
+      >
+        <h1 className="tap-title" style={{ margin: 0 }}>게시글</h1>
       </div>
 
       {/* 상세 카드 */}
-      <div>
-        <Recipe isDetail={true} data={recipeData} userId={userId} refreshRecipe={refreshRecipe} /> {/* ✅ 함수 전달 */}
-      </div>
+      <Recipe
+        isDetail={true}
+        data={recipeData}
+        userId={userId}
+        refreshRecipe={refreshRecipe}
+      />
 
-      {/* 수정/삭제 버튼 */}
-      <div style={{ marginTop: '20px' }}>
+      {/* 수정/삭제/뒤로가기 버튼을 같은 줄에 배치 */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-start',
+          alignItems: 'center',
+          gap: '10px',
+          marginTop: '20px'
+        }}
+      >
+        <button
+          style={{
+            padding: '6px 12px',
+            fontSize: '14px',
+            borderRadius: '4px',
+            backgroundColor: '#ddd',
+            border: 'none',
+            cursor: 'pointer'
+          }}
+          onClick={handleBack}
+        >
+          ← 뒤로가기
+        </button>
+
         <button className="recipe-submit-btn" onClick={handleEdit}>수정하기</button>
         <button
           className="recipe-submit-btn"
-          style={{ marginLeft: '10px', backgroundColor: '#ff5252' }}
+          style={{ backgroundColor: '#ff5252' }}
           onClick={handleDelete}
         >
           삭제하기
