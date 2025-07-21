@@ -95,3 +95,12 @@
 .comment-children {
   margin-top: 12px;
 }
+
+.comment-edited-label {
+  font-size: 0.75rem;
+  color: #999;
+  margin-left: 6px;
+  margin-top: 2px;
+  display: inline-block;
+}
+
