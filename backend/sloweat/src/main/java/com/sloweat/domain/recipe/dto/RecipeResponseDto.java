@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 public class RecipeResponseDto {
 
+    private Integer userId;
     private Integer recipeId;
     private String title;
     private String content;
@@ -29,6 +30,11 @@ public class RecipeResponseDto {
     private boolean isMyRecipe;
     private boolean isLiked;
 
+    //상태 여부 확인
+    private boolean isBookmarked;
+    private boolean isMyPost;
+    private boolean isFollowing;
+
     // ✅ 태그 리스트 (그대로 유지)
     private List<String> tags;
 
@@ -40,4 +46,22 @@ public class RecipeResponseDto {
     private String situation;
     private String ingredient;
     private String method;
+    private Integer bookmarkId;
+
+    public void setIsLiked(Boolean isLiked) {
+        this.isLiked = isLiked;
+    }
+
+    public void setIsMyPost(Boolean isMyPost) {
+        this.isMyPost = isMyPost;
+    }
+
+    public void setIsBookmarked(Boolean isBookmarked) {
+        this.isBookmarked = isBookmarked;
+    }
+
+    public void setIsFollowing(Boolean isFollowing) {
+        this.isFollowing = isFollowing;
+    }
+
 }

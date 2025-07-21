@@ -64,10 +64,11 @@ public class RecipeController {
     public ResponseEntity<ApiResponse<Page<RecipeResponseDto>>> getAllRecipesWithPagination(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false, defaultValue = "latest") String sort
+            @RequestParam(required = false, defaultValue = "latest") String sort,
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<RecipeResponseDto> recipePage = recipeService.getAllRecipesWithPagination(sort, pageable);
+        Page<RecipeResponseDto> recipePage = recipeService.getAllRecipesWithPagination(sort, pageable, userDetails.getUserId());
         return ResponseEntity.ok(new ApiResponse<>(true, "전체 조회 성공", recipePage));
     }
 
