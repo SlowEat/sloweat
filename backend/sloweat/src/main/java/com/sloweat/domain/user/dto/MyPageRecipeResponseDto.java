@@ -16,6 +16,7 @@ public class MyPageRecipeResponseDto {
     private String nickname;
     private String localEmail;
     private String kakaoEmail;
+    private String profileImgPath;
     private String title;
     private String content;
     private Integer cookingTime;

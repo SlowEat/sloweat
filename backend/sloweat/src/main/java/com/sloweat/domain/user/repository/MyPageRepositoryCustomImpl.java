@@ -75,6 +75,7 @@ public class MyPageRepositoryCustomImpl implements MyPageRepositoryCustom {
                         d.nickname,
                         d.localEmail,
                         d.kakaoEmail,
+                        d.profileImgPath,
                         c.title,
                         c.content,
                         c.cookingTime,

@@ -62,6 +62,7 @@ public class BookmarkRepositoryCustomImpl implements BookmarkRepositoryCustom {
                         d.nickname,
                         d.localEmail,
                         d.kakaoEmail,
+                        d.profileImgPath,
                         c.title,
                         c.content,
                         c.cookingTime,

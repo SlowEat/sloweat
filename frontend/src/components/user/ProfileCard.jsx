@@ -1,9 +1,22 @@
 import { useNavigate } from 'react-router-dom';
 import '../../styles/user/ProfileCard.css';
 import {logout} from '../../api/user/auth';
+import {useEffect, useState} from "react";
+import {getMyProfile} from "../../api/user/profile";
+import {PROFILE_FILE_PATH} from "../../constants/Profile";
 
 export default function ProfileCard({ profile }) {
+  const [profileImage, setProfileImage] = useState();
   const navigate = useNavigate();
+
+   useEffect(() => {
+     const getProfileImage = async () => {
+       const res = await getMyProfile();
+       setProfileImage(PROFILE_FILE_PATH + res.data.profileImgPath);
+     }
+
+     getProfileImage();
+  });
 
   const handleLogout = async (e) => {
     e.stopPropagation();
@@ -34,7 +47,7 @@ export default function ProfileCard({ profile }) {
         <div className="profilecard-content">
           <img
             className="profilecard-image"
-            src="https://i.namu.wiki/i/M0j6sykCciGaZJ8yW0CMumUigNAFS8Z-dJA9h_GKYSmqqYSQyqJq8D8xSg3qAz2htlsPQfyHZZMmAbPV-Ml9UA.webp"
+            src={profileImage}
             alt="Profile picture of Kim Cook"
           />
           <div className="profilecard-info">

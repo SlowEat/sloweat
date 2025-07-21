@@ -4,6 +4,7 @@ import axiosInstance from '../../api/axiosInstance';
 import '../../styles/user/RecipeCard.css';
 import api from "../../api/axiosInstance";
 import useFollow from "../../utils/useFollow";
+import {DEFAULT_PROFILE_IMAGE, PROFILE_FILE_PATH} from "../../constants/Profile";
 
 function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipeId}) {
   const [liked, setLiked] = useState(recipe.isLiked);
@@ -105,7 +106,7 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
               <img
                 onClick={handleProfileClick}
                 className="recipe-card-profile-image"
-                src={recipe?.chefProfileUrl || 'https://i.namu.wiki/i/M0j6sykCciGaZJ8yW0CMumUigNAFS8Z-dJA9h_GKYSmqqYSQyqJq8D8xSg3qAz2htlsPQfyHZZMmAbPV-Ml9UA.webp'}
+                src={recipe.profileImgPath ? PROFILE_FILE_PATH + recipe.profileImgPath : DEFAULT_PROFILE_IMAGE}
                 alt="프로필 이미지"
               />
               <div className="recipe-card-profile-info">
