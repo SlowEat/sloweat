@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import api from "../../api/axiosInstance";
 import {getMyProfile} from "../../api/user/profile";
+import {DEFAULT_PROFILE_IMAGE, PROFILE_FILE_PATH} from "../../constants/Profile";
 
 const ProfilePictureUploader = () => {
-  const serverPath = `${process.env.REACT_APP_API_BASE_URL}images/profile/`;
   const [profileImage, setProfileImage] = useState();
   const fileInputRef = React.useRef(null);
 
@@ -14,7 +14,10 @@ const ProfilePictureUploader = () => {
   // 프로필 정보 조회
   const getProfile = async () => {
     const profile = await getMyProfile();
-    setProfileImage(serverPath + profile.data.profileImgPath);
+
+    if(profile.data.profileImgPath){
+      setProfileImage(PROFILE_FILE_PATH + profile.data.profileImgPath);
+    }
   }
 
   useEffect(() => {
@@ -39,7 +42,7 @@ const ProfilePictureUploader = () => {
 
       alert('프로필 사진이 변경되었습니다.');
       const filename = response.data.filename;
-      setProfileImage(serverPath + filename);
+      setProfileImage(PROFILE_FILE_PATH + filename);
 
     } catch (error) {
       console.error('이미지 업로드 실패:', error);
@@ -58,7 +61,7 @@ const ProfilePictureUploader = () => {
       <div className="settings-profile-picture-container">
         <img
           className="settings-profile-image"
-          src={profileImage}
+          src={profileImage ? profileImage : DEFAULT_PROFILE_IMAGE}
           alt="프로필"
         />
         <div className="settings-profile-picture-buttons">

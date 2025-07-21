@@ -8,7 +8,12 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "bookmark")
+@Table(
+    name = "bookmark",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"recipe_id", "user_id"})
+    }
+)
 @Getter
 @Setter
 @NoArgsConstructor
