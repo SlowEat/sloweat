@@ -33,7 +33,7 @@ function Profile(){
         <div className="mypage-profile-layout">
           <img
             className="mypage-profile-image"
-            src="https://c.animaapp.com/Zjq86JVx/img/image@2x.png"
+            src="https://i.namu.wiki/i/M0j6sykCciGaZJ8yW0CMumUigNAFS8Z-dJA9h_GKYSmqqYSQyqJq8D8xSg3qAz2htlsPQfyHZZMmAbPV-Ml9UA.webp"
             alt="사용자 프로필 사진"
           />
 

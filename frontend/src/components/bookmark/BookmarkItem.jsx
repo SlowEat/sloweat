@@ -40,7 +40,9 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
     setBookmarked((prev) => !prev);
   };
 
-  const handleBookmark = (bookmarked, bookmarkId, recipeId) => {
+  const handleBookmark = (e,bookmarked, bookmarkId, recipeId) => {
+    e.stopPropagation();
+
     if(bookmarked){
       const confirmed = window.confirm("북마크를 해제 하시겠습니까?");
       if (confirmed) {
@@ -94,7 +96,7 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
               <img
                 onClick={handleProfileClick}
                 className="recipe-card-profile-image"
-                src={recipe?.chefProfileUrl || 'https://c.animaapp.com/RwKPZPrR/img/---@2x.png'}
+                src={recipe?.chefProfileUrl || 'https://i.namu.wiki/i/M0j6sykCciGaZJ8yW0CMumUigNAFS8Z-dJA9h_GKYSmqqYSQyqJq8D8xSg3qAz2htlsPQfyHZZMmAbPV-Ml9UA.webp'}
                 alt="프로필 이미지"
               />
               <div className="recipe-card-profile-info">
@@ -119,7 +121,9 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
 
               {/* 더보기 드롭다운 */}
               <div className="recipe-card-report">
-                <img className="comment-card-more-icon" src="..." alt="더보기" />
+                <img className="comment-card-more-icon"
+                     src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2YjcyODAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1lbGxpcHNpcy1pY29uIGx1Y2lkZS1lbGxpcHNpcyI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMSIvPjxjaXJjbGUgY3g9IjE5IiBjeT0iMTIiIHI9IjEiLz48Y2lyY2xlIGN4PSI1IiBjeT0iMTIiIHI9IjEiLz48L3N2Zz4="
+                     alt="더보기" />
                 <div className="recipe-card-dropdown">
                   {isMyPost ? (
                     <>
@@ -154,8 +158,7 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
             <div className="recipe-card-action-row">
               <div className="recipe-card-left-actions">
                 <div className="recipe-card-cooking-time">
-                  <img className="clock-icon" src="..." alt="조리시간" />
-                  <span className="time">{recipe?.cookingTime}분</span>
+                  <span className="time">⏱️ {recipe?.cookingTime}분</span>
                 </div>
                 <button type="button"
                     className={`recipe-card-likes ${liked ? 'active' : ''}`}
@@ -168,13 +171,19 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
 
               <div className="recipe-card-bottom-right">
                 <div className="recipe-card-view-count">
-                  👁 <p>{recipe?.views || 0}</p>
+                  <img className="recipe-card-view-icon"
+                  src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2YjcyODAiIHN0cm9rZS13aWR0aD0iMS4yNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1leWUtaWNvbiBsdWNpZGUtZXllIj48cGF0aCBkPSJNMi4wNjIgMTIuMzQ4YTEgMSAwIDAgMSAwLS42OTYgMTAuNzUgMTAuNzUgMCAwIDEgMTkuODc2IDAgMSAxIDAgMCAxIDAgLjY5NiAxMC43NSAxMC43NSAwIDAgMS0xOS44NzYgMCIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiLz48L3N2Zz4="
+                  alt="조회수" />
+                  <p>{recipe?.views || 0}</p>
                 </div>
-                <button type="button"
-                    className={`recipe-card-bookmark-button ${bookmarked ? 'active' : ''}`}
-                    onClick={() => handleBookmark(bookmarked, recipe.bookmarkId, recipe.recipeId)}
-                >
-                  {bookmarked ? '⭐' : '📕'}
+                <button type="button" className="recipe-card-bookmark-button" onClick={(e) => handleBookmark(e,bookmarked, recipe.bookmarkId, recipe.recipeId)}>
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                       className="recipe-card-bookmark-icon"
+                       fill={bookmarked ? "#10b981" : "none"}
+                       width="22"
+                       height="22"
+                       viewBox="0 0 24 24"
+                       stroke="#10b981"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
                 </button>
               </div>
             </div>

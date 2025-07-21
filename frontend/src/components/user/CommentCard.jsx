@@ -11,7 +11,7 @@ const CommentCard = ({comment}) => {
   };
 
   return (
-    <article className="comment-card" onClick={handleCommentClick} style={{cursor: 'pointer'}}>
+    <article className="mypage-comment-card" onClick={handleCommentClick} style={{cursor: 'pointer'}}>
       <div className="comment-card-container">
         <button className="comment-card-more-button" aria-label="더 보기">
           <img
@@ -24,8 +24,8 @@ const CommentCard = ({comment}) => {
         <div className="comment-card-body">
           <img
             className="comment-card-profile-image"
-            src="https://randomuser.me/api/portraits/women/44.jpg"
-            alt="김요리 프로필 이미지"
+            src="https://i.namu.wiki/i/M0j6sykCciGaZJ8yW0CMumUigNAFS8Z-dJA9h_GKYSmqqYSQyqJq8D8xSg3qAz2htlsPQfyHZZMmAbPV-Ml9UA.webp"
+            alt="프로필 이미지"
           />
           <div className="comment-card-user-info">
             <div className="comment-card-user-meta">
