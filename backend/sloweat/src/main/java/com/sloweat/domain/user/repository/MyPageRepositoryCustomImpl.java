@@ -1,5 +1,6 @@
 package com.sloweat.domain.user.repository;
 
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
@@ -9,6 +10,7 @@ import com.sloweat.domain.bookmark.entity.QBookmark;
 import com.sloweat.domain.bookmark.entity.QBookmarkCollection;
 import com.sloweat.domain.comment.entity.QComment;
 import com.sloweat.domain.comment.entity.QCommentLike;
+import com.sloweat.domain.follow.entity.QFollow;
 import com.sloweat.domain.recipe.entity.QRecipe;
 import com.sloweat.domain.recipe.entity.QRecipeLike;
 import com.sloweat.domain.user.dto.MyPageCommentResponseDto;
@@ -31,6 +33,7 @@ public class MyPageRepositoryCustomImpl implements MyPageRepositoryCustom {
     public List<MyPageRecipeResponseDto> getMyRecipes(Integer loginUserId) {
         QRecipe c = QRecipe.recipe;
         QUser d = QUser.user;
+        QFollow e = QFollow.follow;
 
         // 좋아요 여부 (exists 서브쿼리)
         BooleanExpression isLiked = JPAExpressions
@@ -52,6 +55,19 @@ public class MyPageRepositoryCustomImpl implements MyPageRepositoryCustom {
                 )
                 .exists();
 
+        // 팔로우 여부
+        BooleanExpression isFollowing = JPAExpressions
+                .selectOne()
+                .from(e)
+                .where(
+                        e.follower.userId.eq(loginUserId),
+                        e.following.userId.eq(c.user.userId)
+                )
+                .exists();
+
+        // 내가 쓴 글 여부
+        Expression<Boolean> isMyPost = c.user.userId.eq(loginUserId);
+
         return queryFactory
                 .select(Projections.constructor(MyPageRecipeResponseDto.class,
                         d.userId,
@@ -65,7 +81,10 @@ public class MyPageRepositoryCustomImpl implements MyPageRepositoryCustom {
                         c.views,
                         c.likes,
                         isLiked,
-                        isBookmarked
+                        isBookmarked,
+                        isFollowing,
+                        isMyPost
+
                 ))
                 .from(c)
                 .join(d).on(c.user.userId.eq(d.userId))
