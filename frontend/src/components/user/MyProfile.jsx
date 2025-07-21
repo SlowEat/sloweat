@@ -14,7 +14,11 @@ function Profile(){
     try{
       const res = await getMyProfile();
       setProfile(res.data);
-      setProfileImage(PROFILE_FILE_PATH + res.data.profileImgPath);
+
+      if(res.data.profileImgPath){
+        setProfileImage(PROFILE_FILE_PATH + res.data.profileImgPath);
+      }
+
     }catch(err){
       console.error('프로필 불러오기 실패',err);
     }
@@ -36,7 +40,7 @@ function Profile(){
         <div className="mypage-profile-layout">
           <img
             className="mypage-profile-image"
-            src={profileImage ? profileImage : DEFAULT_PROFILE_IMAGE}
+            src={profileImage || DEFAULT_PROFILE_IMAGE}
             alt="사용자 프로필 사진"
           />
 
