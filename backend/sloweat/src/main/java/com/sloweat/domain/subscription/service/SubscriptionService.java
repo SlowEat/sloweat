@@ -42,9 +42,11 @@ public class SubscriptionService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // 기존 활성 구독 확인
-        Optional<Subscription> existingSubscription = subscriptionRepository
-                .findByUserUserIdAndStatus(userId, Subscription.Status.ACTIVE);
+        // 기존 구독 확인
+        Optional<Subscription> existingSubscription = subscriptionRepository.findByUserUserIdAndStatusIn(
+                userId,
+                List.of(Subscription.Status.ACTIVE, Subscription.Status.CANCEL)
+        );
 
         if (existingSubscription.isPresent()) {
             throw new RuntimeException("User already has an active subscription");
@@ -90,8 +92,9 @@ public class SubscriptionService {
      * 구독 상세 조회
      */
     public SubscriptionResponse getSubscription(CustomUserDetails customUserDetails) {
-        Subscription subscription = subscriptionRepository
-                .findByUserUserIdAndStatus(customUserDetails.getUserId(), Subscription.Status.ACTIVE)
+        Subscription subscription = subscriptionRepository.findByUserUserIdAndStatusIn(
+                customUserDetails.getUserId(),
+                List.of(Subscription.Status.ACTIVE, Subscription.Status.CANCEL))
                 .orElseThrow(() -> new RuntimeException("Subscription not found"));
         return SubscriptionResponse.from(subscription);
     }
@@ -167,7 +170,10 @@ public class SubscriptionService {
                 .userId(userId)
                 .nickname(user.getNickname())
                 .id(id)
-                .subscribed(subscriptionRepository.existsByUserUserIdAndStatus(userId, Subscription.Status.ACTIVE))
+                .subscribed(subscriptionRepository.existsByUserUserIdAndStatusIn(
+                        userId,
+                        List.of(Subscription.Status.ACTIVE, Subscription.Status.CANCEL)
+                ))
                 .build();
     }
 
