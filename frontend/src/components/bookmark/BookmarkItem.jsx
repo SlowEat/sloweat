@@ -76,9 +76,18 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
     navigate(`/posts/edit/${recipe.recipeId}`);
   };
 
-  const handleDelete = () => {
-    if (window.confirm('삭제하시겠습니까?')) {
-      alert('삭제되었습니다.');
+  const handleDelete = async (e) => {
+    e.stopPropagation();
+    const confirm = window.confirm('이 게시글을 정말 삭제하시겠어요?');
+    if (!confirm) return;
+
+    try {
+      await axiosInstance.delete(`/api/recipes/${recipe.recipeId}`);
+      alert('게시글이 삭제되었습니다.');
+      window.location.reload('/mypage');
+    } catch (error) {
+      console.error('삭제 실패:', error);
+      alert('삭제 중 오류가 발생했습니다.');
     }
   };
 
