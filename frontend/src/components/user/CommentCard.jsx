@@ -1,7 +1,8 @@
 import React from 'react'
 import '../../styles/user/CommentCard.css'
+import {formatDateTime} from "../../utils/dateTimeUtils";
 
-const CommentCard = () => {
+const CommentCard = ({comment}) => {
   return (
     <article className="comment-card">
       <div className="comment-card-container">
@@ -21,13 +22,13 @@ const CommentCard = () => {
           />
           <div className="comment-card-user-info">
             <div className="comment-card-user-meta">
-              <h2 className="comment-card-username">김요리</h2>
-              <span className="comment-card-user-handle">@kimcook</span>
+              <h2 className="comment-card-username">{comment.nickname}</h2>
+              <span className="comment-card-user-handle">{comment.localEmail}</span>
               <span className="comment-card-separator">·</span>
-              <time className="comment-card-time" dateTime="PT2H">2시간 전</time>
+              <time className="comment-card-time" dateTime="PT2H">{formatDateTime(comment.createdAt)}</time>
             </div>
             <p className="comment-card-text">
-              이 레시피 너무 좋아요! 다음에도 또 공유해주세요 😋
+              {comment.content}
             </p>
           </div>
         </div>
