@@ -30,6 +30,8 @@ const RecipeEditForm = () => {
         const response = await axiosInstance.get(`/api/recipes/${id}`);
         const recipe = response.data.data;
 
+        console.log(recipe);
+
         setFormData({
           title: recipe.title,
           content: recipe.content,
@@ -37,10 +39,10 @@ const RecipeEditForm = () => {
           isPremium: recipe.subscribed,
           photo: null,
           tags: {
-            situation: recipe.situation || '',
-            type: recipe.type || '',
-            ingredient: recipe.ingredient || '',
-            method: recipe.method || ''
+            type: recipe.tags[0] || '',
+            situation: recipe.tags[1] || '',
+            ingredient: recipe.tags[2] || '',
+            method: recipe.tags[3] || ''
           }
         });
       } catch (error) {
