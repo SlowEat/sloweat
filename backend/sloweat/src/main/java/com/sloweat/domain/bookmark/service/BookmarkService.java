@@ -55,7 +55,7 @@ public class BookmarkService {
         BookmarkCollection bookmarkCollection = bookmarkCollectionRepository.findByCollectionIdAndUser_UserId(collectionId, userId)
                 .orElseThrow(() -> new IllegalArgumentException("컬렉션이 존재하지 않거나 접근 권한이 없습니다."));
 
-        List<Bookmark> bookmarks = bookmarkRepository.findByCollectionId(collectionId);
+        //List<Bookmark> bookmarks = bookmarkRepository.findByCollectionId(collectionId);
 
         List<BookmarkResponseDto> result = bookmarkRepositoryCustom.getBookmarks(collectionId, userId);
 
