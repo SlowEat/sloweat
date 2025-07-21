@@ -9,7 +9,7 @@ function Recipe({ isDetail = false, isMyPost = false, data, refreshRecipe }) {
   const [likeCount, setLikeCount] = useState(data?.likes ?? 0);
   const [bookmarked, setBookmarked] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
-  const [isReportOpen, setIsReportOpen] = useState(false); // 신고 모달 상태 추가
+  const [isReportOpen, setIsReportOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -21,7 +21,6 @@ function Recipe({ isDetail = false, isMyPost = false, data, refreshRecipe }) {
 
   const handleLike = async (e) => {
     e.stopPropagation();
-
     try {
       if (liked) {
         await axiosInstance.delete(`/api/recipes/${data.recipeId}/like`);
@@ -44,15 +43,15 @@ function Recipe({ isDetail = false, isMyPost = false, data, refreshRecipe }) {
 
   const handleReport = (e) => {
     e.stopPropagation();
-    setIsReportOpen(true); // ✅ 신고 모달 열기
+    setIsReportOpen(true);
   };
 
   const submitReport = async (reason) => {
     try {
       await axiosInstance.post(`/api/recipes/${data.recipeId}/report`, { reason });
       alert('신고가 성공적으로 접수되었습니다.');
-      setIsReportOpen(false); // ✅ 모달 닫기
-      if (refreshRecipe) await refreshRecipe(); // ✅ 신고 후 상태 갱신
+      setIsReportOpen(false);
+      if (refreshRecipe) await refreshRecipe();
     } catch (error) {
       console.error('신고 실패:', error);
       alert('신고 중 오류가 발생했습니다.');
@@ -75,7 +74,6 @@ function Recipe({ isDetail = false, isMyPost = false, data, refreshRecipe }) {
 
   const handleDelete = async () => {
     if (!window.confirm('삭제하시겠습니까?')) return;
-
     try {
       await axiosInstance.delete(`/api/recipes/${data.recipeId}`);
       alert('삭제가 완료되었습니다!');
@@ -103,7 +101,9 @@ function Recipe({ isDetail = false, isMyPost = false, data, refreshRecipe }) {
                 <div className="recipe-card-profile-info">
                   <div className="recipe-card-chef-name-row">
                     <h1 className="recipe-card-chef-name">{data?.chefName || '익명 셰프'}</h1>
-                    {isDetail && (
+
+                    {/* ✅ 수정된 부분: 본인 글이 아닐 때만 팔로우 버튼 보여줌 */}
+                    {isDetail && !isMyPost && (
                       <button
                         className={`follower-card-button ${isFollowing ? 'following' : ''}`}
                         onClick={handleFollowToggle}
@@ -145,8 +145,7 @@ function Recipe({ isDetail = false, isMyPost = false, data, refreshRecipe }) {
                   ? data.content.split('\n').map((line, idx) => (
                       <span key={idx}>{line}<br /></span>
                     ))
-                  : '레시피 내용이 없습니다.'
-                }
+                  : '레시피 내용이 없습니다.'}
               </p>
 
               {/* 해시태그 */}
@@ -189,7 +188,7 @@ function Recipe({ isDetail = false, isMyPost = false, data, refreshRecipe }) {
         </div>
       </div>
 
-      {/* ✅ 신고 모달 연결 */}
+      {/* 신고 모달 */}
       <ContentReportForm
         isOpen={isReportOpen}
         onClose={() => setIsReportOpen(false)}
