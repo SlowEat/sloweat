@@ -38,13 +38,7 @@ const CommentForm = ({
   };
 
   return (
-    <form
-      className={`comment-form ${isEditing ? "editing" : ""}`}
-      onSubmit={handleSubmit}
-    >
-      <h3 className="comment-form-title">
-        {isEditing ? "댓글 수정" : parentId ? "답글 작성" : "댓글 작성"}
-      </h3>
+    <form className="comment-form" onSubmit={handleSubmit}>
       <textarea
         ref={textareaRef}
         className="comment-textarea"
@@ -53,28 +47,28 @@ const CommentForm = ({
         onChange={(e) => {
           if (e.target.value.length <= maxLength) setText(e.target.value);
         }}
-        rows={4}
+        rows={3}
       />
-      <div className="comment-form-info">
-        <span className="comment-form-charcount">
+      <div className="comment-form-footer">
+        <span className="comment-char-count">
           {text.length} / {maxLength}
         </span>
-      </div>
-      <div className="comment-form-actions">
-        <button
-          type="button"
-          className="comment-button comment-button-secondary"
-          onClick={onCancel}
-        >
-          {isEditing ? "취소" : "닫기"}
-        </button>
-        <button
-          type="submit"
-          className="comment-button comment-button-primary"
-          disabled={!text.trim()}
-        >
-          {isEditing ? "수정" : "등록"}
-        </button>
+        <div className="comment-button-group">
+          <button
+            type="button"
+            className="comment-button cancel"
+            onClick={onCancel}
+          >
+            {isEditing ? "취소" : "닫기"}
+          </button>
+          <button
+            type="submit"
+            className="comment-button submit"
+            disabled={!text.trim()}
+          >
+            {isEditing ? "수정" : "등록"}
+          </button>
+        </div>
       </div>
     </form>
   );

@@ -1,5 +1,6 @@
 package com.sloweat.domain.comment.service;
 
+import com.sloweat.common.util.SecurityUtil;
 import com.sloweat.domain.comment.dto.CommentRequest;
 import com.sloweat.domain.comment.dto.CommentResponse;
 import com.sloweat.domain.comment.entity.Comment;
@@ -80,6 +81,9 @@ public class CommentService {
     }
 
     private CommentResponse toResponse(Comment comment) {
+        Integer currentUserId = SecurityUtil.getCurrentUserId().orElse(null);
+        boolean isMine = currentUserId != null && currentUserId.equals(comment.getUser().getUserId());
+
         return CommentResponse.builder()
                 .commentId(comment.getCommentId())
                 .content(comment.getContent())
@@ -90,6 +94,7 @@ public class CommentService {
                 .createdAt(comment.getCreatedAt())
                 .isDeleted(comment.getIsDeleted())
                 .status(comment.getStatus().name())
+                .isMine(isMine)
                 .build();
     }
 }

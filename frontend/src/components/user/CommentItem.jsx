@@ -62,86 +62,80 @@ const CommentItem = ({ comment, recipeId, postAuthorId, onAfterChange }) => {
   };
 
   return (
-    <div className="comment-item-wrapper">
+    <div className={`comment-item-wrapper ${comment.parentId ? "reply" : ""}`}>
       <article className="comment-card">
-        <div className="comment-card-container">
-          <div className="comment-card-body">
-            <img
-              className="comment-card-profile-image"
-              src="https://c.animaapp.com/av5iO7ib/img/image-2@2x.png"
-              alt="profile"
-            />
-            <div className="comment-card-user-info">
-              <div className="comment-card-user-meta">
-                <h2 className="comment-card-username">{comment.username}</h2>
-                {comment.userId === postAuthorId && (
-                  <span className="comment-author-badge">작성자</span>
-                )}
-                <span className="comment-card-user-handle">@{comment.userId}</span>
-                <span className="comment-card-separator">·</span>
-                <time className="comment-card-time">
-                  {new Date(comment.createdAt).toLocaleString()}
-                </time>
-              </div>
-
-              {isEditing ? (
-                <CommentForm
-                  isEditing
-                  initialText={comment.content}
-                  recipeId={recipeId}
-                  parentId={comment.parentId}
-                  onCancel={() => setIsEditing(false)}
-                  onSuccess={handleSaveEdit}
-                />
-              ) : (
-                <>
-                  <p className="comment-card-text">{comment.content}</p>
-                  {showMessage && <div className="edited-message">수정되었습니다.</div>}
-                </>
-              )}
-            </div>
+        <div className="comment-header">
+          <div className="comment-user-info">
+            <strong className="comment-username">{comment.username}</strong>
+            {comment.userId === postAuthorId && (
+              <span className="comment-author-badge">작성자</span>
+            )}
+            <span className="comment-user-meta">
+              @{comment.userId} ·{" "}
+              {new Date(comment.createdAt).toLocaleString("ko-KR", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </span>
           </div>
+        </div>
 
-          {!isEditing && (
-            <div className="comment-actions">
-              <button onClick={toggleLike}>
-                {liked ? "❤️" : "🤍"} {likeCount}
-              </button>
-              {comment.isMine ? (
-                <>
-                  <button onClick={() => setIsEditing(true)}>수정</button>
-                  <button onClick={handleDelete}>삭제</button>
-                </>
-              ) : (
-                <button onClick={handleReport}>신고</button>
-              )}
-              <button
-                className="comment-reply-button"
-                onClick={() => setIsReplying(!isReplying)}
-              >
-                답글
-              </button>
-            </div>
-          )}
-
-          {isReplying && (
-            <div className="comment-reply-wrapper">
-              <CommentForm
-                recipeId={recipeId}
-                parentId={comment.commentId}
-                onSuccess={() => {
-                  onAfterChange();
-                  setIsReplying(false);
-                }}
-                onCancel={() => setIsReplying(false)}
-              />
-            </div>
+        <div className="comment-content">
+          {isEditing ? (
+            <CommentForm
+              isEditing
+              initialText={comment.content}
+              recipeId={recipeId}
+              parentId={comment.parentId}
+              onCancel={() => setIsEditing(false)}
+              onSuccess={handleSaveEdit}
+            />
+          ) : (
+            <>
+              <p>{comment.content}</p>
+              {showMessage && <div className="edited-message">수정되었습니다.</div>}
+            </>
           )}
         </div>
+
+        {!isEditing && (
+          <div className="comment-actions">
+            <span className="comment-like" onClick={toggleLike}>
+              {liked ? "❤️" : "🤍"} {likeCount}
+            </span>
+
+            {comment.isMine && (
+              <>
+                <button className="comment-action-button" onClick={() => setIsEditing(true)}>수정</button>
+                <button className="comment-action-button" onClick={handleDelete}>삭제</button>
+              </>
+            )}
+
+            <button className="comment-action-button" onClick={handleReport}>신고</button>
+            <button className="comment-action-button" onClick={() => setIsReplying(!isReplying)}>답글</button>
+          </div>
+        )}
+
+        {isReplying && (
+          <div className="comment-reply-form">
+            <CommentForm
+              recipeId={recipeId}
+              parentId={comment.commentId}
+              onSuccess={() => {
+                onAfterChange();
+                setIsReplying(false);
+              }}
+              onCancel={() => setIsReplying(false)}
+            />
+          </div>
+        )}
       </article>
 
       {comment.children && comment.children.length > 0 && (
-        <div className="comment-reply-wrapper">
+        <div className="comment-children">
           {comment.children.map((child) => (
             <CommentItem
               key={child.commentId}
