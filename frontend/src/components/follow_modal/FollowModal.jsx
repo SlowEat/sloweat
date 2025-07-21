@@ -4,7 +4,7 @@ import { FollowCard } from "./FollowCard";
 import "./FollowModal.css";
 import api from "../../api/axiosInstance";
 
-export const FollowModal = ({ isOpen, onClose, initialTab = "followers" }) => {
+export const FollowModal = ({ isOpen, onClose, initialTab = "followers",reloadProfile }) => {
   const [activeTab, setActiveTab] = useState(initialTab);
 
   //목록 데이터
@@ -60,6 +60,7 @@ export const FollowModal = ({ isOpen, onClose, initialTab = "followers" }) => {
               followerCount={f.followerCount}
               isFollowed={f.isFollowed}
               profileImg={f.profileImgPath}
+              reloadProfile={reloadProfile}
             />
           ))}
         </div>

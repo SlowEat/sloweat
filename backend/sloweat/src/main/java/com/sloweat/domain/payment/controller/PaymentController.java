@@ -50,23 +50,10 @@ public class PaymentController {
     /**
      * 환불 승인 처리 (관리자용)
      */
-    @PatchMapping("/{paymentId}/refund/approve")
-    public ResponseEntity<PaymentResponse> approveRefund(@PathVariable Integer paymentId) {
-        PaymentResponse response = paymentService.approveRefund(paymentId);
+    @PatchMapping("/{subscriptionId}/refund/approve")
+    public ResponseEntity<PaymentResponse> approveRefund(@PathVariable Integer subscriptionId) {
+        PaymentResponse response = paymentService.approveRefund(subscriptionId);
         return ResponseEntity.ok(response);
     }
-
-    /**
-     * 환불 거부 처리 (관리자용)
-     */
-    @PatchMapping("/{paymentId}/refund/reject")
-    public ResponseEntity<PaymentResponse> rejectRefund(
-            @PathVariable Integer paymentId,
-            @RequestBody PaymentRequest request) {
-        PaymentResponse response = paymentService.rejectRefund(paymentId, request.getRefundReason());
-        return ResponseEntity.ok(response);
-    }
-
-
 
 }

@@ -192,4 +192,12 @@ public class IamportService {
         String url = iamportConfig.getApiUrl() + "/payments/" + impUid;
         return callApiWithTokenRetry(url, HttpMethod.GET, null);
     }
+
+    /**
+     * 빌링키 정보 조회 (카드 정보 포함)
+     */
+    public JsonNode getBillingKeyWithCardInfo(String customerUid) {
+        String url = iamportConfig.getApiUrl() + "/subscribe/customers/" + customerUid;
+        return callApiWithTokenRetry(url, HttpMethod.GET, null);
+    }
 }

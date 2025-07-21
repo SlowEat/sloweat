@@ -8,16 +8,17 @@ function Profile(){
   const [isModalOpen, setIsModalOpen] = useState(false);     // 모달 열기
   const [activeTab, setActiveTab] = useState('followers');   // 탭 선택
 
+  const getProfile = async()=>{
+    try{
+      const res = await getMyProfile();
+      setProfile(res.data);
+    }catch(err){
+      console.error('프로필 불러오기 실패',err);
+    }
+  };
+
   useEffect(()=>{
-    const profile = async()=>{
-      try{
-        const res = await getMyProfile();
-        setProfile(res.data);
-      }catch(err){
-        console.error('프로필 불러오기 실패',err);
-      }
-    };
-    profile();
+    getProfile();
   },[]);
 
 
@@ -83,7 +84,8 @@ function Profile(){
       <FollowModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        initialTab={activeTab} 
+        initialTab={activeTab}
+        reloadProfile = {getProfile}
       />
     </div>
   );

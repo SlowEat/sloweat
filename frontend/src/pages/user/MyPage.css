@@ -1,0 +1,25 @@
+.screen .overlap {
+    left: 246px !important;
+}
+
+.screen .overlap-group-wrapper {
+    height: 320px !important;
+    overflow: scroll !important;
+}
+
+.screen .view-wrapper {
+    position: absolute;
+    width: 484px;
+    height: 205px;
+    top: 268px;
+    left: 333px;
+    background-color: #ffffff;
+}
+
+.screen .view-7 {
+    position: absolute;
+    height: 33px;
+    top: 92px;
+    left: 16px;
+    width: 100%;
+}

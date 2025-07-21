@@ -3,7 +3,6 @@ import "../../styles/user/BookmarkCollectionModal.css";
 import "./BookmarkModal.css";
 import BookmarkNewCollectionModal from "./BookmarkNewCollectionModal";
 import api from "../../api/axiosInstance";
-import {formatDateTime} from "../../utils/dateTimeUtils";
 
 
 const BookmarkModal = ({isOpen, onClose, recipeId}) => {
@@ -27,12 +26,6 @@ const BookmarkModal = ({isOpen, onClose, recipeId}) => {
     }
   };
 
-  useEffect(() => {
-    fetchCollections();
-  }, []);
-
-  if (!isOpen) return null;
-
   //북마크 저장
   const handleSave = async () => {
     if (!selectedCollectionId) {
@@ -42,7 +35,7 @@ const BookmarkModal = ({isOpen, onClose, recipeId}) => {
 
     try {
       await api.post("/api/bookmarks", {
-        recipeId: 1,
+        recipeId: recipeId,
         collectionId: selectedCollectionId,
       });
       alert("북마크가 저장되었습니다.");
@@ -52,6 +45,12 @@ const BookmarkModal = ({isOpen, onClose, recipeId}) => {
       alert("저장에 실패했습니다.");
     }
   };
+
+  useEffect(() => {
+    fetchCollections();
+  }, []);
+
+  if (!isOpen) return null;
 
 
   return (
