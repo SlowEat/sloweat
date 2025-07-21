@@ -76,16 +76,10 @@ export default function PostDetail() {
   return (
     <div className="main-layout-content">
       {/* 상단 제목 영역 */}
-      <div
-        className="postDetail-header"
-        style={{
-          marginBottom: '1rem'
-        }}
-      >
-        <h1 className="tap-title" style={{ margin: 0 }}>게시글</h1>
-      </div>
+      <div className="post-header">
+        <h1 className="tap-title">게시글</h1>
 
-      {/* 상세 카드 */}
+              {/* 상세 카드 */}
       <Recipe
         isDetail={true}
         data={recipeData}
@@ -129,6 +123,8 @@ export default function PostDetail() {
 
       {/* 댓글 영역 */}
       <CommentSection recipeId={id} />
+      </div>
+
     </div>
   );
 }

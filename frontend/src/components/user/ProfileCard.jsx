@@ -34,7 +34,7 @@ export default function ProfileCard({ profile }) {
         <div className="profilecard-content">
           <img
             className="profilecard-image"
-            src="https://c.animaapp.com/0RwLred6/img/-----@2x.png"
+            src="https://i.namu.wiki/i/M0j6sykCciGaZJ8yW0CMumUigNAFS8Z-dJA9h_GKYSmqqYSQyqJq8D8xSg3qAz2htlsPQfyHZZMmAbPV-Ml9UA.webp"
             alt="Profile picture of Kim Cook"
           />
           <div className="profilecard-info">

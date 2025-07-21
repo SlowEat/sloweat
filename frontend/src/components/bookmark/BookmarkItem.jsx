@@ -12,7 +12,6 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
   const [isMyPost, setIsMyPost] = useState(recipe.isMyPost);
   const [likeCount, setLikeCount] = useState(recipe?.likes || 0);
 
-
   const navigate = useNavigate();
 
   const handleLike = async (e) => {
@@ -71,9 +70,10 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
     navigate('/userpage');
   };
 
-  const handleEdit = () => {
+  const handleEdit = (e) => {
+    e.stopPropagation();
     alert('수정 페이지로 이동합니다.');
-    navigate(`/postform/${recipe?.id}`);
+    navigate(`/posts/edit/${recipe.recipeId}`);
   };
 
   const handleDelete = () => {
@@ -127,11 +127,11 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
                 <div className="recipe-card-dropdown">
                   {isMyPost ? (
                     <>
-                      <button className="recipe-card-dropdown-button" onClick={handleEdit}>수정</button>
-                      <button className="recipe-card-dropdown-button" onClick={handleDelete}>삭제</button>
+                      <button className="recipe-card-dropdown-button" onClick={(e)=>handleEdit(e)}>수정</button>
+                      <button className="recipe-card-dropdown-button" onClick={(e)=>handleDelete(e)}>삭제</button>
                     </>
                   ) : (
-                    <button className="recipe-card-dropdown-button" style={{ color: '#ef4444' }} onClick={handleReport}>신고하기</button>
+                    <button className="recipe-card-dropdown-button" style={{ color: '#ef4444' }} onClick={(e)=>handleReport(e)}>신고하기</button>
                   )}
                 </div>
               </div>
