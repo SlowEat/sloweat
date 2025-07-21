@@ -27,13 +27,22 @@ export default function Tab() {
 
   return (
     <div className="main-layout-tab">
-            <div className="tab-logo">
-                <Link to="/">
-                    <img src={logo} alt="로고" />
-                </Link>
-            </div>
+            {/* 비구독자 로고 */}
+            {!profile?.subscribed &&
+              <div >
+                  <Link to="/">
+                      <img className="tab-logo" src={logo} alt="로고" />
+                  </Link>
+              </div>}
+            {/* 구독자 로고 */}
+            {profile?.subscribed && 
+              <div>
+                  <Link to="/">
+                      <img className="tab-logo-membership" src={logo} alt="로고" />
+                  </Link>
+              </div>}
             {/* 구독 유도 광고 (비구독자 전용) */}
-            {profile?.subscribed===false && <SubscribeBanner></SubscribeBanner>}
+            {!profile?.subscribed && <SubscribeBanner></SubscribeBanner>}
             {/* 탭 바 */}
             <SideBar subscribed={profile?.subscribed}></SideBar>
             {/* 프로필 카드*/}
