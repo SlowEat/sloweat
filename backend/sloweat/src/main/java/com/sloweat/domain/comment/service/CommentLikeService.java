@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class CommentLikeService {
@@ -30,6 +32,8 @@ public class CommentLikeService {
             CommentLike commentLike = CommentLike.builder()
                     .comment(comment)
                     .user(user)
+                    .isLike(true)
+                    .createdAt(LocalDateTime.now())
                     .build();
             commentLikeRepository.save(commentLike);
 

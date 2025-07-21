@@ -23,10 +23,17 @@ const CommentItem = ({ comment, recipeId, postAuthorId, onAfterChange }) => {
   const handleReport = async () => {
     if (window.confirm("이 댓글을 신고하시겠습니까?")) {
       try {
-        await axiosInstance.post(`/api/recipes/comments/${comment.commentId}/report`);
+        await axiosInstance.post(`/api/recipes/comments/${comment.commentId}/report`, {
+          reason: "부적절한 내용입니다",
+        });
         alert("댓글이 신고되었습니다.");
       } catch (err) {
         console.error("댓글 신고 실패", err);
+        if (err.response?.status === 403) {
+          alert("이미 신고한 댓글입니다.");
+        } else {
+          alert("신고에 실패했습니다.");
+        }
       }
     }
   };
@@ -58,7 +65,8 @@ const CommentItem = ({ comment, recipeId, postAuthorId, onAfterChange }) => {
     }
   };
 
-  const isEdited = new Date(comment.updatedAt).getTime() !== new Date(comment.createdAt).getTime();
+  const isEdited =
+    new Date(comment.updatedAt).getTime() !== new Date(comment.createdAt).getTime();
 
   return (
     <div className={`comment-item-wrapper ${comment.parentId ? "reply" : ""}`}>
@@ -70,7 +78,8 @@ const CommentItem = ({ comment, recipeId, postAuthorId, onAfterChange }) => {
               <span className="comment-author-badge">작성자</span>
             )}
             <div className="comment-user-meta">
-              @{comment.userId} · {new Date(comment.createdAt).toLocaleString("ko-KR", {
+              @{comment.userId} ·{" "}
+              {new Date(comment.createdAt).toLocaleString("ko-KR", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -105,13 +114,24 @@ const CommentItem = ({ comment, recipeId, postAuthorId, onAfterChange }) => {
 
             {comment.isMine && (
               <>
-                <button className="comment-action-button" onClick={() => setIsEditing(true)}>수정</button>
-                <button className="comment-action-button" onClick={handleDelete}>삭제</button>
+                <button className="comment-button edit" onClick={() => setIsEditing(true)}>
+                  ✏️ 수정
+                </button>
+                <button className="comment-button delete" onClick={handleDelete}>
+                  🗑️ 삭제
+                </button>
               </>
             )}
 
-            <button className="comment-action-button" onClick={handleReport}>신고</button>
-            <button className="comment-action-button" onClick={() => setIsReplying(!isReplying)}>답글</button>
+            <button className="comment-button report" onClick={handleReport}>
+              🚩 신고
+            </button>
+            <button
+              className="comment-button reply"
+              onClick={() => setIsReplying(!isReplying)}
+            >
+              💬 답글
+            </button>
           </div>
         )}
 

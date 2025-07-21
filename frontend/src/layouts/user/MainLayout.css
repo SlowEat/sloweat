@@ -86,8 +86,16 @@ html, body {
   margin-bottom : 20px;
 }
 
+.tab-logo-membership {
+  position : absolute;
+  top : 17px;
+  left : 25px;
+  margin-top: 30px;
+  height : 80px;
+}
+
 .tab-logo {
-  margin-left : -140px;
+  margin-left : -125px;
   margin-top: 15px;
 }
 

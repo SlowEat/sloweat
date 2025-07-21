@@ -29,6 +29,6 @@ public class CommentLike {
 
     private boolean isLike = true;
 
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 }
-

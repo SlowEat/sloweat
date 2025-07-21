@@ -5,11 +5,13 @@ import '../../styles/user/RecipeCard.css';
 import api from "../../api/axiosInstance";
 import useFollow from "../../utils/useFollow";
 
-function Recipe({ isDetail = false, isMyPost = true, recipe, openBookmarkModal, setSelectedRecipeId}) {
+function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipeId}) {
   const [liked, setLiked] = useState(recipe.isLiked);
-  const [likeCount, setLikeCount] = useState(recipe?.likeCount || 0);
   const [bookmarked, setBookmarked] = useState(recipe.isBookmarked);
-  const [isFollowing, setIsFollowing] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(recipe.isFollowing);
+  const [isMyPost, setIsMyPost] = useState(recipe.isMyPost);
+  const [likeCount, setLikeCount] = useState(recipe?.likes || 0);
+
 
   const navigate = useNavigate();
 
@@ -78,11 +80,15 @@ function Recipe({ isDetail = false, isMyPost = true, recipe, openBookmarkModal, 
     }
   };
 
+  const handleRecipeClick = () => {
+    navigate(`/postdetail/${recipe.recipeId}`);
+  };
+
   return (
     <div className="recipe-card-link">
       <div className="recipe-card-box" >
         <div className="recipe-card-view">
-          <div className="recipe-card-content" style={{cursor: 'default'}}>
+          <div className="recipe-card-content" onClick={handleRecipeClick} style={{cursor: 'pointer'}}>
             {/* 프로필 헤더 */}
             <div className="recipe-card-profile-header">
               <img
@@ -95,13 +101,15 @@ function Recipe({ isDetail = false, isMyPost = true, recipe, openBookmarkModal, 
                 <div className="recipe-card-chef-name-row">
                   <h1 className="recipe-card-chef-name">{recipe?.chefName || '익명 셰프'}</h1>
 
-                    {/* 본인 게시글에는 팔로우 버튼 숨김 */}
+                  {/* 본인 게시글에는 팔로우 버튼 숨김 */}
+                  { !isMyPost &&
                     <button
                       className={`follower-card-button ${isFollowing ? 'following' : ''}`}
                       onClick={handleFollowToggle}
                     >
                       {isFollowing ? '팔로잉' : '팔로우'}
                     </button>
+                  }
 
                 </div>
                 <div className="recipe-card-meta-info">
@@ -160,7 +168,7 @@ function Recipe({ isDetail = false, isMyPost = true, recipe, openBookmarkModal, 
 
               <div className="recipe-card-bottom-right">
                 <div className="recipe-card-view-count">
-                  👁 <p>{recipe?.viewCount || 0}</p>
+                  👁 <p>{recipe?.views || 0}</p>
                 </div>
                 <button type="button"
                     className={`recipe-card-bookmark-button ${bookmarked ? 'active' : ''}`}

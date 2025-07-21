@@ -173,7 +173,7 @@ function Recipe({ isDetail = false, isMyPost = false, data, refreshRecipe }) {
                 <div className="recipe-card-bottom-right">
                   {isDetail && (
                     <div className="recipe-card-view-count">
-                      👁 <span>{data?.views ?? 0}</span>
+                      👀  <span>{data?.views ?? 0}</span>
                     </div>
                   )}
                   <button
