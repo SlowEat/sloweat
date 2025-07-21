@@ -17,7 +17,7 @@ public class RecipeResponseDto {
     private int views;
     private int likes;
 
-    // ✅ 신고 정보 추가
+    // ✅ 신고 정보
     private String status;
     private int reportCount;
 
@@ -29,7 +29,15 @@ public class RecipeResponseDto {
     private boolean isMyRecipe;
     private boolean isLiked;
 
-    // 태그 & 이미지
+    // ✅ 태그 리스트 (그대로 유지)
     private List<String> tags;
+
+    // ✅ 이미지
     private List<String> photoUrls;
+
+    // ✅ 명시적 태그 항목 필드 추가 (수정 시 초기값 세팅용)
+    private String type;
+    private String situation;
+    private String ingredient;
+    private String method;
 }
