@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
 import "../../styles/user/RecipeForm.css";
 import "../../styles/user/Filter.css";
 
 const RecipeForm = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -70,7 +71,10 @@ const RecipeForm = () => {
       alert("글이 성공적으로 등록되었습니다!");
 
       const newRecipeId = response.data.data;
-      navigate(`/postdetail/${newRecipeId}`);
+      navigate(`/postdetail/${newRecipeId}`, {
+        replace: true,              
+        state: location.state,  //이전 상태 유지
+      });
     } catch (error) {
       console.error("작성 실패:", error);
       alert("작성 중 오류가 발생했습니다.");
