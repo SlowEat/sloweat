@@ -1,5 +1,5 @@
 .subscription-upgrade {
-  max-width: 600px;
+  width: 450px;
   margin: 0 auto;
   padding: 20px 0;
 }
@@ -98,7 +98,7 @@
 }
 
 .faq-section {
-  margin-top: 32px;
+  margin-top: 50px;
 }
 
 .faq-section h3 {
@@ -393,56 +393,4 @@
   background-color: #9ca3af !important;
   color: #e5e7eb !important;
   cursor: not-allowed;
-}
-
-/* 반응형 디자인 */
-@media (max-width: 768px) {
-  .subscription-upgrade,
-  .subscription-management {
-    padding: 16px;
-  }
-
-  .plan-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
-
-  .section-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .change-payment-btn {
-    align-self: stretch;
-    text-align: center;
-  }
-
-  .subscription-info {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .payment-record {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .refund-btn,
-  .refund-unavailable {
-    align-self: stretch;
-    text-align: center;
-    margin-left: 0;
-  }
-
-  .subscription-details .price {
-    font-size: 16px;
-  }
-
-  .record-details .amount {
-    font-size: 16px;
-  }
 }

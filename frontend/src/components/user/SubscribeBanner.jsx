@@ -24,7 +24,7 @@ export default function SubscribeBanner() {
           />
           <h1 className="subscribe-banner-title">SlowEat Premium</h1>
           <p className="subscribe-banner-description">
-            ✓ 전문가/셰프 프리미엄 영상 제공<br />
+            ✓ 무제한 레시피 접근<br />
             ✓ 광고 없는 경험<br />
             ✓ 무제한 북마크 컬렉션<br />
             ✓ 전문가/셰프 프리미엄 영상 제공<br />

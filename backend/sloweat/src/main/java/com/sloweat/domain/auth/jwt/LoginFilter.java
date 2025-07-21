@@ -69,6 +69,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         //userId
         String userId = customUserDetails.getUserId().toString();
 
+        //직전 refresh 토큰 삭제
+        if(refreshRepository.existsByUsername(localEmail)){
+            refreshRepository.deleteByUsername(localEmail);
+        }
 
         //토큰 생성
         String access = jwtUtil.createJwt("access",localEmail,role,userId,accessTokenValidity);
