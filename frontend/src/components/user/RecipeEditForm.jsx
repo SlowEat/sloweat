@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams , useLocation} from 'react-router-dom';
 import axiosInstance from '../../api/axiosInstance';
 import '../../styles/user/RecipeForm.css';
 import '../../styles/user/Filter.css';
@@ -7,6 +7,7 @@ import '../../styles/user/Filter.css';
 
 const RecipeEditForm = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
 
   const [formData, setFormData] = useState({
@@ -29,6 +30,8 @@ const RecipeEditForm = () => {
         const response = await axiosInstance.get(`/api/recipes/${id}`);
         const recipe = response.data.data;
 
+        console.log(recipe);
+
         setFormData({
           title: recipe.title,
           content: recipe.content,
@@ -36,10 +39,10 @@ const RecipeEditForm = () => {
           isPremium: recipe.subscribed,
           photo: null,
           tags: {
-            situation: recipe.situation || '',
-            type: recipe.type || '',
-            ingredient: recipe.ingredient || '',
-            method: recipe.method || ''
+            type: recipe.tags[0] || '',
+            situation: recipe.tags[1] || '',
+            ingredient: recipe.tags[2] || '',
+            method: recipe.tags[3] || ''
           }
         });
       } catch (error) {
@@ -97,7 +100,10 @@ const RecipeEditForm = () => {
     try {
       await axiosInstance.put(`/api/recipes/${id}`, requestData);
       alert('수정이 완료되었습니다!');
-      navigate(`/postdetail/${id}`);
+      navigate(`/postdetail/${id}`, {
+        replace: true,              
+        state: location.state,  //이전 상태 유지
+      });
     } catch (error) {
       console.error('수정 실패:', error);
       alert('게시글 수정 중 오류가 발생했습니다.');
@@ -107,7 +113,6 @@ const RecipeEditForm = () => {
   return (
     <main className="recipe-form-container">
       <form onSubmit={handleSubmit} className="recipe-form">
-        <h2>게시글 수정</h2>
 
         <div className="recipe-form-group">
           <label>제목 *</label>
