@@ -36,8 +36,8 @@ public class CommentReportService {
         CommentReport report = CommentReport.builder()
                 .comment(comment)
                 .user(user)
-                .reason(reason)                      // ✅ 신고 사유 저장
-                .createdAt(LocalDateTime.now())      // ✅ 생성일 저장 (null 방지)
+                .reason(reason)
+                .createdAt(LocalDateTime.now())
                 .build();
 
         commentReportRepository.save(report);

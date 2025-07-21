@@ -16,7 +16,7 @@ public class CommentReportController {
 
     @PostMapping("/{commentId}/report")
     public void reportComment(@PathVariable Integer commentId,
-                              @RequestBody CommentReportRequest request,  // ✅ 요청 본문에서 reason 받기
+                              @RequestBody CommentReportRequest request,
                               @AuthenticationPrincipal CustomUserDetails userDetails) {
         commentReportService.reportComment(commentId, userDetails.getUserId(), request.getReason());
     }
