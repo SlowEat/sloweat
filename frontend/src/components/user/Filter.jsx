@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../api/axiosInstance';
 import '../../styles/user/Filter.css';
 
@@ -7,20 +7,19 @@ function Filter({ onSearch }) {
   const [situationFilter, setSituationFilter] = useState('');
   const [materialFilter, setMaterialFilter] = useState('');
   const [methodFilter, setMethodFilter] = useState('');
-  const [sortOption, setSortOption] = useState('최신순'); // ✅ 정렬 옵션 기본값
+  const [sortOption, setSortOption] = useState('최신순');
+
+  const isFilterActive = () =>
+    typeFilter && situationFilter && materialFilter && methodFilter;
 
   const handleFilterSearch = async () => {
-    if (!typeFilter || !situationFilter || !materialFilter || !methodFilter) {
+    if (!isFilterActive()) {
       alert('모든 필터를 선택해주세요!');
       return;
     }
 
     try {
-      // ✅ 정렬 옵션 백엔드 기준에 맞게 변환
-      let sortParam = 'latest';
-      if (sortOption === '인기순') sortParam = 'popular';
-      else if (sortOption === '최신순') sortParam = 'latest';
-      // 평점순 정렬은 현재 미지원 상태
+      const sortParam = sortOption === '인기순' ? 'popular' : 'latest';
 
       const response = await axiosInstance.get('/api/recipes/search', {
         params: {
@@ -28,7 +27,7 @@ function Filter({ onSearch }) {
           situation: situationFilter,
           ingredient: materialFilter,
           method: methodFilter,
-          sort: sortParam // ✅ 정렬 파라미터 포함
+          sort: sortParam
         }
       });
 
@@ -39,6 +38,13 @@ function Filter({ onSearch }) {
       onSearch([]);
     }
   };
+
+  // ✅ 정렬 옵션 변경 시 자동 재검색
+  useEffect(() => {
+    if (isFilterActive()) {
+      handleFilterSearch();
+    }
+  }, [sortOption]);
 
   return (
     <div className="filter-container">
@@ -73,14 +79,18 @@ function Filter({ onSearch }) {
       </div>
 
       <div className="filter-actions">
-        <button className="search-button" onClick={handleFilterSearch}>필터 검색</button>
+        <button className="search-button" onClick={handleFilterSearch}>
+          필터 검색
+        </button>
       </div>
 
-      {/* ✅ 정렬 드롭다운 */}
-      <select className="select-box sort-select" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+      <select
+        className="select-box sort-select"
+        value={sortOption}
+        onChange={(e) => setSortOption(e.target.value)}
+      >
         <option value="최신순">최신순</option>
         <option value="인기순">인기순</option>
-        {/* <option value="평점순">평점순</option> */}
       </select>
     </div>
   );

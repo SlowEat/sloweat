@@ -4,6 +4,7 @@ import axiosInstance from '../../api/axiosInstance';
 import '../../styles/user/RecipeForm.css';
 import '../../styles/user/Filter.css';
 
+
 const RecipeEditForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -123,24 +124,6 @@ const RecipeEditForm = () => {
             onChange={handleInputChange}
             className="recipe-textarea"
           ></textarea>
-        </div>
-
-        <div className="recipe-form-group">
-          <label htmlFor="photo-upload">사진 업로드</label>
-          <label htmlFor="photo-upload" className="recipe-file-upload">
-            사진 선택하기
-            <input
-              id="photo-upload"
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleFileChange}
-            />
-          </label>
-          <ul className="file-name-list">
-            {formData.photo &&
-              Array.from(formData.photo).map((file, idx) => <li key={idx}>{file.name}</li>)}
-          </ul>
         </div>
 
         <div className="recipe-form-group">

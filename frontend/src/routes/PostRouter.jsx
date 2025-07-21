@@ -1,14 +1,18 @@
 import { Routes, Route } from 'react-router-dom';
 import ScrollToTop from '../utils/ScrollToTop';
-import RecipeEditForm from '../components/user/RecipeEditForm';
+
+import MainLayout from '../layouts/user/MainLayout';
 import PostEntireList from '../components/user/PostEntireList';
+import PostEditPage from '../pages/user/PostEditPage';
 
 const PostRouter = () => (
   <>
     <ScrollToTop />
     <Routes>
-      <Route path="edit/:id" element={<RecipeEditForm />} />
-      <Route path="entirelist" element={<PostEntireList />} /> {/* ✅ 경로 수정됨 */}
+      <Route element={<MainLayout />}>
+        <Route path="entirelist" element={<PostEntireList />} />
+        <Route path="edit/:id" element={<PostEditPage />} />
+      </Route>
     </Routes>
   </>
 );

@@ -1,7 +1,6 @@
 import '../../layouts/user/MainLayout.css';
 import RecipeForm from '../../components/user/RecipeForm';
 
-
 export default function PostForm() {
   return (
     <div className="main-layout-content">

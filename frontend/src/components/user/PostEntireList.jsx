@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../api/axiosInstance';
+// import '../../styles/user/PostEntireList.css'; // 필요시 다시 사용
 import RecipeCard from '../../components/user/RecipeCard';
-// import '../../styles/user/PostEntireList.css';
 
 export default function PostEntireList() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [sortType, setSortType] = useState('latest'); // ✅ 정렬 상태 추가
+  const [sortType, setSortType] = useState('latest');
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchRecipes(sortType);
-  }, [sortType]); // ✅ 정렬 기준 변경 시 재요청
+  }, [sortType]);
 
   const fetchRecipes = (sort) => {
     setLoading(true);
@@ -29,6 +31,12 @@ export default function PostEntireList() {
     setSortType(e.target.value);
   };
 
+  const handleCardClick = (recipeId) => {
+    navigate(`/postdetail/${recipeId}`, {
+      state: { from: 'entire' } // ✅ 상세 페이지에 출발 정보 전달
+    });
+  };
+
   if (loading) {
     return <div className="main-layout-content">목록을 불러오는 중...</div>;
   }
@@ -39,24 +47,45 @@ export default function PostEntireList() {
 
   return (
     <div className="main-layout-content">
-      <h2>전체 게시글 목록</h2>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        gap: '4rem',
+        marginBottom: '1.5rem'
+      }}>
+        <h2 style={{
+          fontWeight: 'bold',
+          fontSize: '1.8rem',
+          margin: 0
+        }}>
+          전체 게시글 목록
+        </h2>
 
-      {/* ✅ 정렬 선택 드롭다운 */}
-      <div style={{ marginBottom: '1rem' }}>
-        <label htmlFor="sort">정렬 기준: </label>
-        <select id="sort" value={sortType} onChange={handleSortChange}>
-          <option value="latest">최신순</option>
-          <option value="popular">인기순</option>
-        </select>
+        <div>
+          <label htmlFor="sort" style={{ marginRight: '0.4rem', fontWeight: '500' }}>정렬 기준:</label>
+          <select
+            id="sort"
+            value={sortType}
+            onChange={handleSortChange}
+            style={{ padding: '0.4rem 0.6rem', fontSize: '1rem' }}
+          >
+            <option value="latest">최신순</option>
+            <option value="popular">인기순</option>
+          </select>
+        </div>
       </div>
 
+      {/* 게시글 리스트 */}
       <div className="recipe-list-container">
         {recipes.map(recipe => (
-          <RecipeCard
+          <div
             key={recipe.recipeId}
-            data={recipe}
-            isDetail={false}
-          />
+            style={{ cursor: 'pointer' }}
+            onClick={() => handleCardClick(recipe.recipeId)}
+          >
+            <RecipeCard data={recipe} isDetail={false} />
+          </div>
         ))}
       </div>
     </div>
