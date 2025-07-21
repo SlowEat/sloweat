@@ -78,12 +78,9 @@ export default function MyPage() {
 
       {/* 탭에 따라 콘텐츠 변경 - 댓글 */}
       <div>
-        {activeTab === 'comments' && (
-          <>
-            <CommentCard></CommentCard>
-            <CommentCard></CommentCard>
-          </>
-        )}
+        {activeTab === 'comments' && myComments.map(comment => (
+            <CommentCard comment={comment} />
+        ))}
       </div>
 
         {/* 북마크 추가 모달 */}
