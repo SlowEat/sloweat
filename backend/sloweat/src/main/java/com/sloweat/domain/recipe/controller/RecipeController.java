@@ -3,10 +3,13 @@ package com.sloweat.domain.recipe.controller;
 import com.sloweat.common.response.ApiResponse;
 import com.sloweat.domain.recipe.dto.RecipeRequestDto;
 import com.sloweat.domain.recipe.dto.RecipeResponseDto;
-import com.sloweat.domain.recipe.dto.ReportRequestDto; // ✅ 신고 DTO import
+import com.sloweat.domain.recipe.dto.ReportRequestDto;
 import com.sloweat.domain.recipe.service.RecipeService;
 import com.sloweat.domain.auth.dto.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -57,12 +60,16 @@ public class RecipeController {
         return ResponseEntity.ok(new ApiResponse<>(true, "삭제 성공", null));
     }
 
+    // ✅ 수정: 페이지네이션 추가
     @GetMapping("/all")
-    public ResponseEntity<ApiResponse<List<RecipeResponseDto>>> getAllRecipes(
+    public ResponseEntity<ApiResponse<Page<RecipeResponseDto>>> getAllRecipesWithPagination(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false, defaultValue = "latest") String sort
     ) {
-        List<RecipeResponseDto> recipeList = recipeService.getAllRecipesBySort(sort);
-        return ResponseEntity.ok(new ApiResponse<>(true, "전체 조회 성공", recipeList));
+        Pageable pageable = PageRequest.of(page, size);
+        Page<RecipeResponseDto> recipePage = recipeService.getAllRecipesWithPagination(sort, pageable);
+        return ResponseEntity.ok(new ApiResponse<>(true, "전체 조회 성공", recipePage));
     }
 
     @GetMapping("/search")
@@ -106,7 +113,6 @@ public class RecipeController {
         return ResponseEntity.ok(new ApiResponse<>(true, "좋아요 취소 성공", null));
     }
 
-    // ✅ 신고 처리 기능 추가
     @PostMapping("/{id}/report")
     public ResponseEntity<ApiResponse<Void>> reportRecipe(
             @PathVariable Integer id,

@@ -9,6 +9,7 @@ import com.sloweat.domain.user.entity.User;
 import com.sloweat.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -162,7 +163,6 @@ public class RecipeService {
     public void likeRecipe(int recipeId, int userId) {
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new IllegalArgumentException("레시피를 찾을 수 없습니다: ID = " + recipeId));
-
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: ID = " + userId));
 
@@ -184,7 +184,6 @@ public class RecipeService {
     public void unlikeRecipe(int recipeId, int userId) {
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new IllegalArgumentException("레시피를 찾을 수 없습니다: ID = " + recipeId));
-
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: ID = " + userId));
 
@@ -193,79 +192,80 @@ public class RecipeService {
         recipeLikeRepository.deleteByRecipeAndUser(recipe, user);
     }
 
-    // ✅ 전체 레시피 정렬 조회
-    public List<RecipeResponseDto> getAllRecipesBySort(String sort) {
-        List<Recipe> sortedRecipes = "popular".equalsIgnoreCase(sort)
-                ? recipeRepository.findAllByOrderByViewsDesc()
-                : recipeRepository.findAllByOrderByCreatedAtDesc();
+    // ✅ 페이지네이션 목록 조회
+    public Page<RecipeResponseDto> getAllRecipesWithPagination(String sort, Pageable pageable) {
+        Sort sorting = "popular".equalsIgnoreCase(sort)
+                ? Sort.by(Sort.Direction.DESC, "views")
+                : Sort.by(Sort.Direction.DESC, "createdAt");
 
-        return toDtoList(sortedRecipes, "https://image.server.com/list-default.jpg");
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sorting);
+        Page<Recipe> recipePage = recipeRepository.findAll(sortedPageable);
+
+        return recipePage.map(recipe -> {
+            List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
+            List<String> tagNames = recipeTags.stream()
+                    .map(rt -> rt.getTag().getTagName())
+                    .toList();
+
+            return toDto(recipe, tagNames, "https://image.server.com/list-default.jpg");
+        });
+    }
+
+    // ✅ 필터 검색 + 정렬 기준 포함
+    public List<RecipeResponseDto> searchByTags(String type, String situation, String ingredient, String method, String sort) {
+        List<Recipe> recipes = recipeRepository.findByAllTagConditions(type, situation, ingredient, method);
+
+        if ("popular".equalsIgnoreCase(sort)) {
+            recipes.sort((r1, r2) -> Integer.compare(r2.getViews(), r1.getViews()));
+        } else {
+            recipes.sort((r1, r2) -> r2.getCreatedAt().compareTo(r1.getCreatedAt()));
+        }
+
+        return toDtoList(recipes, "https://image.server.com/search-filtered.jpg");
     }
 
     // ✅ 키워드 검색
-     public List<RecipeResponseDto> searchByKeyword(String keyword, String sort) {
-            List<Recipe> recipes = "popular".equalsIgnoreCase(sort)
-                    ? recipeRepository.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByViewsDesc(keyword, keyword)
-                    : recipeRepository.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByCreatedAtDesc(keyword, keyword);
+    public List<RecipeResponseDto> searchByKeyword(String keyword, String sort) {
+        List<Recipe> recipes = "popular".equalsIgnoreCase(sort)
+                ? recipeRepository.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByViewsDesc(keyword, keyword)
+                : recipeRepository.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByCreatedAtDesc(keyword, keyword);
 
-            return toDtoList(recipes, "https://image.server.com/search-result.jpg");
-        }
-
-        public List<RecipeResponseDto> searchByTags(String type, String situation, String ingredient, String method, String sort) {
-            List<Recipe> recipes = recipeRepository.findByAllTagConditions(type, situation, ingredient, method);
-
-            if ("popular".equalsIgnoreCase(sort)) {
-                recipes.sort((r1, r2) -> Integer.compare(r2.getViews(), r1.getViews()));
-            } else {
-                recipes.sort((r1, r2) -> r2.getCreatedAt().compareTo(r1.getCreatedAt()));
-            }
-
-            return toDtoList(recipes, "https://image.server.com/search-filtered.jpg");
-        }
-
-        public List<RecipeResponseDto> searchByKeyword(String keyword) {
-            List<Recipe> recipes = recipeRepository.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(keyword, keyword);
-            return toDtoList(recipes, "https://image.server.com/search-result.jpg");
-        }
-
-        public List<RecipeResponseDto> searchByTags(String type, String situation, String ingredient, String method) {
-            List<Recipe> recipes = recipeRepository.findByAllTagConditions(type, situation, ingredient, method);
-            return toDtoList(recipes, "https://image.server.com/search-filtered.jpg");
-        }
-
-        private List<RecipeResponseDto> toDtoList(List<Recipe> recipes, String photoUrl) {
-            return recipes.stream().map(recipe -> {
-                List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
-                List<String> tagNames = recipeTags.stream()
-                        .map(rt -> rt.getTag().getTagName())
-                        .toList();
-                return toDto(recipe, tagNames, photoUrl);
-            }).toList();
-        }
-
-        private RecipeResponseDto toDto(Recipe recipe, List<String> tags, String photoUrl) {
-            RecipeResponseDto dto = new RecipeResponseDto();
-            dto.setRecipeId(recipe.getRecipeId());
-            dto.setTitle(recipe.getTitle());
-            dto.setContent(recipe.getContent());
-            dto.setCookingTime(recipe.getCookingTime());
-            dto.setSubscribed(recipe.getIsSubscribed());
-            dto.setCreatedAt(recipe.getCreatedAt());
-            dto.setViews(recipe.getViews());
-            dto.setLikes(recipe.getLikes());
-            dto.setStatus(recipe.getStatus().getLabel());
-            dto.setReportCount(recipe.getReportCount());
-            dto.setTags(tags);
-            dto.setPhotoUrls(List.of(photoUrl));
-
-//            // 작성자 정보
-//            dto.setChefName(recipe.getUser().getName());
-//            dto.setUsername("@" + recipe.getUser().getUsername());
-//
-//            // 기본값: 로그인 유저 비교 로직 없이 false 처리
-//            dto.setIsMyRecipe(false);
-//            dto.setIsLiked(false);
-
-            return dto;
-        }
+        return toDtoList(recipes, "https://image.server.com/search-result.jpg");
     }
+
+    public List<RecipeResponseDto> searchByKeyword(String keyword) {
+        List<Recipe> recipes = recipeRepository.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(keyword, keyword);
+        return toDtoList(recipes, "https://image.server.com/search-result.jpg");
+    }
+
+    public List<RecipeResponseDto> searchByTags(String type, String situation, String ingredient, String method) {
+        List<Recipe> recipes = recipeRepository.findByAllTagConditions(type, situation, ingredient, method);
+        return toDtoList(recipes, "https://image.server.com/search-filtered.jpg");
+    }
+
+    // ✅ DTO 변환 헬퍼
+    private List<RecipeResponseDto> toDtoList(List<Recipe> recipes, String photoUrl) {
+        return recipes.stream().map(recipe -> {
+            List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
+            List<String> tagNames = recipeTags.stream().map(rt -> rt.getTag().getTagName()).toList();
+            return toDto(recipe, tagNames, photoUrl);
+        }).toList();
+    }
+
+    private RecipeResponseDto toDto(Recipe recipe, List<String> tags, String photoUrl) {
+        RecipeResponseDto dto = new RecipeResponseDto();
+        dto.setRecipeId(recipe.getRecipeId());
+        dto.setTitle(recipe.getTitle());
+        dto.setContent(recipe.getContent());
+        dto.setCookingTime(recipe.getCookingTime());
+        dto.setSubscribed(recipe.getIsSubscribed());
+        dto.setCreatedAt(recipe.getCreatedAt());
+        dto.setViews(recipe.getViews());
+        dto.setLikes(recipe.getLikes());
+        dto.setStatus(recipe.getStatus().getLabel());
+        dto.setReportCount(recipe.getReportCount());
+        dto.setTags(tags);
+        dto.setPhotoUrls(List.of(photoUrl));
+        return dto;
+    }
+}
