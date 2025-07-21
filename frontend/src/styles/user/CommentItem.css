@@ -63,20 +63,55 @@
   margin-top: 8px;
 }
 
-.comment-action-button {
-  background-color: #f4f6fa;
-  border: 1px solid #d0d7e2;
-  color: #0077cc;
+/* 기능별 버튼 공통 스타일 */
+.comment-button {
   padding: 4px 10px;
   border-radius: 6px;
   font-size: 0.85rem;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid transparent;
+  background-color: white;
 }
 
-.comment-action-button:hover {
-  background-color: #e2ecf8;
-  color: #0056a3;
+/* ✏️ 수정 */
+.comment-button.edit {
+  color: #555;
+  border-color: #ccc;
+}
+
+.comment-button.edit:hover {
+  background-color: #f2f2f2;
+}
+
+/* 🗑️ 삭제 */
+.comment-button.delete {
+  color: #d9534f;
+  border-color: #d9534f;
+}
+
+.comment-button.delete:hover {
+  background-color: #fae1e0;
+}
+
+/* 🚩 신고 */
+.comment-button.report {
+  color: #f0ad4e;
+  border-color: #f0ad4e;
+}
+
+.comment-button.report:hover {
+  background-color: #fff2dc;
+}
+
+/* 💬 답글 */
+.comment-button.reply {
+  color: #555;
+  border: #66b2ff;
+}
+
+.comment-button.reply:hover {
+  background-color: #66b2ff;
 }
 
 .comment-like {
@@ -103,4 +138,3 @@
   margin-top: 2px;
   display: inline-block;
 }
-
