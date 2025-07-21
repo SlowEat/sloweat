@@ -2,16 +2,19 @@ import React, { useEffect, useState } from 'react';
 import '../../styles/user/Profile.css';
 import { FollowModal } from '../follow_modal/FollowModal';
 import { getMyProfile } from '../../api/user/profile';
+import {DEFAULT_PROFILE_IMAGE, PROFILE_FILE_PATH} from "../../constants/Profile";
 
 function Profile(){
   const [profile, setProfile] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false);     // 모달 열기
   const [activeTab, setActiveTab] = useState('followers');   // 탭 선택
+  const [profileImage, setProfileImage] = useState();
 
   const getProfile = async()=>{
     try{
       const res = await getMyProfile();
       setProfile(res.data);
+      setProfileImage(PROFILE_FILE_PATH + res.data.profileImgPath);
     }catch(err){
       console.error('프로필 불러오기 실패',err);
     }
@@ -33,7 +36,7 @@ function Profile(){
         <div className="mypage-profile-layout">
           <img
             className="mypage-profile-image"
-            src="https://i.namu.wiki/i/M0j6sykCciGaZJ8yW0CMumUigNAFS8Z-dJA9h_GKYSmqqYSQyqJq8D8xSg3qAz2htlsPQfyHZZMmAbPV-Ml9UA.webp"
+            src={profileImage ? profileImage : DEFAULT_PROFILE_IMAGE}
             alt="사용자 프로필 사진"
           />
 
