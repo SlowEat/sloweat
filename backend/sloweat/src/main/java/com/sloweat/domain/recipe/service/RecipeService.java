@@ -200,7 +200,9 @@ public class RecipeService {
 
         return recipePage.map(recipe -> {
             List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
-            return toDto(recipe, recipeTags, "https://image.server.com/list-default.jpg");
+            User user = userRepository.findById(recipe.getUser().getUserId())
+                    .orElseThrow(() -> new EntityNotFoundException("유저가 존재하지 않습니다."));
+            return ViewHomeDto(user ,recipe, recipeTags, "https://image.server.com/list-default.jpg");
         });
     }
 
@@ -240,7 +242,7 @@ public class RecipeService {
             User user = userRepository.findById(recipe.getUser().getUserId())
                     .orElseThrow(() -> new EntityNotFoundException("유저가 존재하지 않습니다."));
             List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
-            return toFollowDto(user, recipe, recipeTags, "https://image.server.com/follow.jpg");
+            return ViewHomeDto(user, recipe, recipeTags, "https://image.server.com/follow.jpg");
         });
     }
 
@@ -280,7 +282,7 @@ public class RecipeService {
         return dto;
     }
 
-    private RecipeResponseDto toFollowDto(User user, Recipe recipe, List<RecipeTag> tags, String photoUrl) {
+    private RecipeResponseDto ViewHomeDto(User user, Recipe recipe, List<RecipeTag> tags, String photoUrl) {
         RecipeResponseDto dto = toDto(recipe, tags, photoUrl);
         dto.setChefName(user.getNickname());
         dto.setUsername(user.getLocalEmail() != null ? user.getLocalEmail() : user.getKakaoEmail());
