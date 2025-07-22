@@ -18,7 +18,7 @@ export const FollowModal = ({ isOpen, onClose, initialTab = "followers",reloadPr
       const response = await api.get('api/followers');
       setUserList(response.data);
     } catch (error) {
-      console.error('북마크 컬렉션 불러오기 실패:', error);
+      console.error('팔로워 목록 조회 실패:', error);
     }
   };
 
@@ -27,7 +27,7 @@ export const FollowModal = ({ isOpen, onClose, initialTab = "followers",reloadPr
       const response = await api.get('api/followings');
       setUserList(response.data);
     } catch (error) {
-      console.error('북마크 컬렉션 불러오기 실패:', error);
+      console.error('팔로잉 목록 조회 실패:', error);
     }
   };
 

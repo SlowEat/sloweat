@@ -31,6 +31,14 @@ export const FollowCard = ({
         <div className="user-id">@{email}</div>
         <div className="follower-count-label">팔로워</div>
         <div className="follower-count">{followerCount}</div>
+        <div className="follow-button-wrapper">
+          <div
+              className={`follow-button ${isFollowed ? "following" : "not-following"}`}
+              onClick={handleFollowToggle}
+          >
+            {isFollowed ? "팔로잉" : "팔로우"}
+          </div>
+        </div>
       </div>
     </div>
   );
