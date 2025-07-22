@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 public class MyPageCommentResponseDto {
 
+    private Integer commentId;
     private Integer userId;
     private Integer recipeId;
     private String nickname;
@@ -21,5 +22,6 @@ public class MyPageCommentResponseDto {
     private String content;
     private LocalDateTime createdAt;
     private Boolean isLiked;
+    private Boolean isMyComment;
 
 }

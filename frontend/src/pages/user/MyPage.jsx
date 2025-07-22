@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react'
+import { useSearchParams } from 'react-router-dom';
 import '../../layouts/user/MainLayout.css'
 import MyProfile from '../../components/user/MyProfile'
 import MyPageTabNavigation from '../../components/user/MyPageTabNavigation'
@@ -13,6 +14,24 @@ export default function MyPage() {
   const [myRecipes, setMyRecipes] = useState([]);
   const [myComments, setMyComments] = useState([]);
   const [selectedRecipeId, setSelectedRecipeId] = useState();
+
+  //댓글 수정 직후에는 댓글 탭 유지
+  const [searchParams] = useSearchParams();
+
+    useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam === 'comments' || tabParam === 'posts') {
+      setActiveTab(tabParam);
+    }
+    }, [searchParams]);
+
+    useEffect(() => {
+        if (activeTab === 'posts') {
+            fetchMyRecipes();
+        }else if (activeTab === 'comments'){
+            fetchMyComments();
+        }
+    }, [activeTab]);
 
     // 게시물 탭 조회
    const fetchMyRecipes = async () => {
@@ -42,13 +61,6 @@ export default function MyPage() {
         setMyComments(comments);
     };
 
-    useEffect(() => {
-        if (activeTab === 'posts') {
-            fetchMyRecipes();
-        }else{
-            fetchMyComments();
-        }
-    }, [activeTab]);
 
     //북마크 추가 모달
     const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
