@@ -127,12 +127,15 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
           <div className="recipe-card-content" onClick={handleRecipeClick} style={{cursor: 'pointer'}}>
             {/* 프로필 헤더 */}
             <div className="recipe-card-profile-header">
-              <img
-                onClick={handleProfileClick}
-                className="recipe-card-profile-image"
-                src={recipe.profileImgPath ? PROFILE_FILE_PATH + recipe.profileImgPath : DEFAULT_PROFILE_IMAGE}
-                alt="프로필 이미지"
-              />
+             <img
+               onClick={handleProfileClick}
+               className="recipe-card-profile-image"
+               src={recipe.profileImgPath ? PROFILE_FILE_PATH + recipe.profileImgPath : DEFAULT_PROFILE_IMAGE}
+               alt="프로필 이미지"
+               onError={(e) => {
+                 e.currentTarget.src = DEFAULT_PROFILE_IMAGE;
+               }}
+             />
               <div className="recipe-card-profile-info">
                 <div className="recipe-card-chef-name-row">
                   <h1 className="recipe-card-chef-name">{recipe?.chefName || '익명 셰프'}</h1>

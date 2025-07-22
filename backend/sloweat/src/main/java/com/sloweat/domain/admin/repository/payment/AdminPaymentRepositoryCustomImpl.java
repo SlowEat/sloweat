@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sloweat.domain.admin.dto.payment.AdminPaymentRequest;
 import com.sloweat.domain.admin.dto.payment.AdminPaymentResponse;
 import com.sloweat.domain.payment.entity.Payment;
+import com.sloweat.domain.payment.entity.Payment.RefundStatus;
 import com.sloweat.domain.payment.entity.QPayment;
 import com.sloweat.domain.subscription.entity.QSubscription;
 import com.sloweat.domain.subscription.entity.Subscription.Status;
@@ -100,7 +101,7 @@ public class AdminPaymentRepositoryCustomImpl implements AdminPaymentRepositoryC
           Integer uid = entry.getKey();
 
           Payment.RefundStatus refundStatus = t.get(payment.refundStatus);
-          String status = (refundStatus != null) ? refundStatus.name() : "PAID";
+          String status = (refundStatus == null || refundStatus == Payment.RefundStatus.NONE) ? "PAID" : refundStatus.name();
 
           return new AdminPaymentResponse(
               t.get(subscription.subscriptionId),
