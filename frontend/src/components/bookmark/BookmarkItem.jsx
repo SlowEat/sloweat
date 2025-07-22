@@ -7,9 +7,8 @@ import useFollow from "../../utils/useFollow";
 import {DEFAULT_PROFILE_IMAGE, PROFILE_FILE_PATH} from "../../constants/Profile";
 
 function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipeId}) {
-  console.log(recipe);
   const [liked, setLiked] = useState(recipe.isLiked);
-  const [bookmarked, setBookmarked] = useState(recipe.isBookmarked); //isBookmarked 여부가 작성자,recipeId를 모두 포함한 결과인지 봐야 함
+  const [bookmarked, setBookmarked] = useState(recipe.isBookmarked); 
   const [isFollowing, setIsFollowing] = useState(recipe.isFollowing);
   const [isMyPost, setIsMyPost] = useState(recipe.isMyPost);
   const [likeCount, setLikeCount] = useState(recipe?.likes || 0);
