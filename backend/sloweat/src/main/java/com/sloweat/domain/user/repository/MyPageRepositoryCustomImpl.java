@@ -109,8 +109,12 @@ public class MyPageRepositoryCustomImpl implements MyPageRepositoryCustom {
                 )
                 .exists();
 
+        // 내가 쓴 댓글 여부
+        Expression<Boolean> isMyComment = c.user.userId.eq(loginUserId);
+
         return queryFactory
                 .select(Projections.constructor(MyPageCommentResponseDto.class,
+                        c.commentId,
                         e.userId,
                         c.recipe.recipeId,
                         e.nickname,
@@ -118,7 +122,8 @@ public class MyPageRepositoryCustomImpl implements MyPageRepositoryCustom {
                         e.kakaoEmail,
                         c.content,
                         c.createdAt,
-                        isLiked
+                        isLiked,
+                        isMyComment
                 ))
                 .from(c)
                 .join(e).on(c.user.userId.eq(e.userId))

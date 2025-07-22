@@ -23,6 +23,8 @@ const useFollow = (initialFollowed, targetUserId, onSuccess, setIsFollowing) => 
                 onSuccess(); // 프로필 창 갱신
             }
 
+            window.location.reload();
+
         } catch (error) {
             console.error(isFollowed ? '언팔로우 실패:' : '팔로우 실패:', error);
         }
