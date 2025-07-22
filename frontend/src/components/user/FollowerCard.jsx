@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/user/FollowerCard.css"; // 위 CSS 저장된 파일
 import axiosInstance from "../../api/axiosInstance";
+import {
+  DEFAULT_PROFILE_IMAGE,
+  PROFILE_FILE_PATH,
+} from "../../constants/Profile";
 
 function FollowerCard() {
   const [followers, setFollowers] = useState([]);
@@ -35,8 +39,9 @@ function FollowerCard() {
               <FollowerCardItem
                 key={follower.userId}
                 userId={follower.userId}
+                localEmail={follower.localEmail}
                 name={follower.nickname}
-                username={`@user${follower.userId}`}
+                username={`@${follower.localEmail}`}
                 followers={follower.followerCount}
                 image={follower.profileImgPath}
                 isFollowing={follower.isFollowing}
@@ -72,6 +77,8 @@ function FollowerCardItem({
         await axiosInstance.post("/api/follow", { toUserId: userId });
         onFollowStateChange(userId, true);
       }
+      // 새로고침
+      window.location.reload();
     } catch (error) {
       console.error("팔로우/언팔로우 실패:", error);
       alert("요청을 처리할 수 없습니다.");
@@ -84,9 +91,15 @@ function FollowerCardItem({
     <li className="follower-card-item">
       <img
         className="follower-card-profile-image"
-        src={image}
+        // 서버에서 받은 이미지(상대경로)에 PROFILE_FILE_PATH를 붙여서 절대경로로 만들고, 없으면 DEFAULT_PROFILE_IMAGE 사용
+        src={image ? PROFILE_FILE_PATH + image : DEFAULT_PROFILE_IMAGE}
         alt={`${name} 프로필 이미지`}
+        // 이미지 로딩 실패 시 fallback 처리
+        onError={(e) => {
+          e.target.src = DEFAULT_PROFILE_IMAGE;
+        }}
       />
+
       <div className="follower-card-info">
         <h2 className="follower-card-name">{name}</h2>
         <p className="follower-card-username">{username}</p>
