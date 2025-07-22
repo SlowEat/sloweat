@@ -7,11 +7,10 @@ import useFollow from "../../utils/useFollow";
 import { DEFAULT_PROFILE_IMAGE, PROFILE_FILE_PATH } from '../../constants/Profile';
 
 function Recipe({ isDetail = false, isMyPost = false, data, refreshRecipe, openBookmarkModal, setSelectedRecipeId }) {
-  console.log('[검색결과]',data);
-  const [liked, setLiked] = useState(data?.isLiked ?? false);
-  const [likeCount, setLikeCount] = useState(data?.likes ?? 0);
-  const [bookmarked, setBookmarked] = useState(data?.isBookmarked ?? false);
-  const [isFollowing, setIsFollowing] = useState(data?.isFollowing ?? false);
+  const [liked, setLiked] = useState(data?.isLiked);
+  const [likeCount, setLikeCount] = useState(data?.likes);
+  const [bookmarked, setBookmarked] = useState(data?.isBookmarked);
+  const [isFollowing, setIsFollowing] = useState(data?.isFollowing);
   const [isReportOpen, setIsReportOpen] = useState(false);
 
   const navigate = useNavigate();
