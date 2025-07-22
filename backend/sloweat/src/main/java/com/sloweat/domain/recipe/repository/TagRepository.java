@@ -23,4 +23,7 @@ public interface TagRepository extends JpaRepository<Tag, Integer> {
      * ✅ 특정 타입의 태그 목록 조회 (프론트 필터용)
      */
     List<Tag> findByTagType(TagType tagType);
+
+    // 태그 가져오기
+    List<Tag> findAllByOrderByTagTypeAscTagNameAsc();
 }
