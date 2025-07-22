@@ -122,7 +122,10 @@ public class MyPageRepositoryCustomImpl implements MyPageRepositoryCustom {
                 ))
                 .from(c)
                 .join(e).on(c.user.userId.eq(e.userId))
-                .where(c.user.userId.eq(loginUserId))
+                .where(
+                        c.user.userId.eq(loginUserId),
+                        c.isDeleted.isFalse()
+                )
                 .orderBy(c.createdAt.desc())
                 .fetch();
     }
