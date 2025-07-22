@@ -29,7 +29,8 @@ public interface FollowRepository extends JpaRepository<Follow, Integer> {
 
     // 팔로워 많은 3명 뽑기 (자신이 팔로우 하고 있는 사람 제외)
     @Query(value = """
-            SELECT u.local_email AS localEmail,
+            SELECT u.user_id AS userId,
+                   u.local_email AS localEmail,
                    u.nickname,
                    u.profile_img_path AS profileImgPath,
                    CAST(COUNT(f.follower_id) AS SIGNED) AS followerCount
@@ -41,7 +42,7 @@ public interface FollowRepository extends JpaRepository<Follow, Integer> {
                   FROM follow f2
                   WHERE f2.follower_id = :loginUserId
               )
-            GROUP BY u.local_email, u.nickname, u.profile_img_path
+            GROUP BY u.user_id, u.local_email, u.nickname, u.profile_img_path
             ORDER BY followerCount DESC
             LIMIT 3
         """, nativeQuery = true)
