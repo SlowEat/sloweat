@@ -34,7 +34,7 @@ const AppRouter = () => (
         <Route path="/membership" element={<Membership />} />
         <Route path="/postdetail/:id" element={<PostDetail />} />
         <Route path="/mypage" element={<MyPage />} />
-        <Route path="/userpage" element={<UserPage />} />
+        <Route path="/mypage/:userId" element={<UserPage />} />
         <Route path="/postform" element={<PostForm />} />
         <Route path="/bookmark" element={<Bookmark />} />
         <Route path="/bookmark/list/:collectionId/:collectionName" element={<BookmarkList />} /> {/*컬렉션에서 북마크 목록 조회*/}

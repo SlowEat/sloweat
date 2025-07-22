@@ -25,6 +25,15 @@ public class ProfileController {
        MyProfileResponseDTO dto = profileService.getMyProfile(customUserDetails);
        return ResponseEntity.ok(dto);
     }
+
+    //남의 프로필 불러오기
+    @GetMapping("{userId}/profile")
+    public ResponseEntity<MyProfileResponseDTO> getUserProfile(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Integer userId) {
+        MyProfileResponseDTO dto = profileService.getUserProfile(userId,customUserDetails);
+        return ResponseEntity.ok(dto);
+    }
     
     //프로필 수정
     @PatchMapping("/profile")

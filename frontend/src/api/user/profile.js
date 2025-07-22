@@ -7,6 +7,12 @@ export const getMyProfile = async () => {
   return axiosInstance.get('api/users/me/profile');
 };
 
+//남 프로필 가져오기
+//GET api/users/{userId}/profile
+export const getUserProfile = async (userId) => {
+  return axiosInstance.get(`/api/users/me/${userId}/profile`);
+};
+
 //개인정보 변경
 //POST api/users/me/profile
 export const editMyProfile = async (requestDTO) => {

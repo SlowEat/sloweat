@@ -42,4 +42,24 @@ public class MyPageController {
         return ResponseEntity.ok(myComments);
     }
 
+    // 남이 쓴 게시글 조회
+    @GetMapping("{userId}/recipes")
+    public ResponseEntity<List<MyPageRecipeResponseDto>> getUserRecipes(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Integer userId) {
+        Integer loginUserId = userDetails.getUserId();
+        List<MyPageRecipeResponseDto> myRecipes = myPageService.getUserRecipes(loginUserId, userId);
+        return ResponseEntity.ok(myRecipes);
+    }
+
+    // 남이 쓴 댓글 조회
+    @GetMapping("{userId}/comments")
+    public ResponseEntity<List<MyPageCommentResponseDto>> getUserComments(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Integer userId) {
+        Integer loginUserId = userDetails.getUserId();
+        List<MyPageCommentResponseDto> myComments = myPageService.getUserComments(loginUserId, userId);
+        return ResponseEntity.ok(myComments);
+    }
+
 }

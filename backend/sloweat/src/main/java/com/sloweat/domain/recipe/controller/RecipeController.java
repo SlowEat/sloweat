@@ -74,6 +74,7 @@ public class RecipeController {
         return ResponseEntity.ok(new ApiResponse<>(true, "전체 조회 성공", recipePage));
     }
 
+
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<RecipeResponseDto>>> searchRecipes(
             @RequestParam String type,
