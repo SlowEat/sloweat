@@ -66,7 +66,7 @@ public class FollowService {
         //followRepository.deleteById(followId);
     }
 
-    // 팔로워 목록 조회
+    //나의 팔로워 목록 조회
     @Transactional(readOnly = true)
     public List<FollowResponseDto> getFollowers(Integer userId) {
         User user = userRepository.findById(userId)
@@ -78,13 +78,36 @@ public class FollowService {
 
     }
 
-    // 팔로잉 목록 조회
+    //나의 팔로잉 목록 조회
     @Transactional(readOnly = true)
     public List<FollowResponseDto> getFollowings(Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("사용자 없음"));
 
         List<FollowResponseDto> followings = followRepositoryCumstom.getFollowings(userId);
+
+        return followings;
+    }
+
+    //남의 팔로워 목록 조회
+    @Transactional(readOnly = true)
+    public List<FollowResponseDto> getUserFollowers(Integer loginUserId, Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("사용자 없음"));
+
+        List<FollowResponseDto> followers = followRepositoryCumstom.getUserFollowers(loginUserId,userId);
+
+        return followers;
+
+    }
+
+    //남의 팔로잉 목록 조회
+    @Transactional(readOnly = true)
+    public List<FollowResponseDto> getUserFollowings(Integer loginUserId, Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("사용자 없음"));
+
+        List<FollowResponseDto> followings = followRepositoryCumstom.getUserFollowings(loginUserId,userId);
 
         return followings;
     }

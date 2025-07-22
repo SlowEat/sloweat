@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import '../../styles/user/Profile.css';
 import { FollowModal } from '../follow_modal/FollowModal';
-import { getMyProfile } from '../../api/user/profile';
+import { getMyProfile, getUserProfile } from '../../api/user/profile';
 import {DEFAULT_PROFILE_IMAGE, PROFILE_FILE_PATH} from "../../constants/Profile";
 
-function Profile(){
+function Profile({userId}){
   const [profile, setProfile] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false);     // 모달 열기
   const [activeTab, setActiveTab] = useState('followers');   // 탭 선택
@@ -12,7 +12,10 @@ function Profile(){
 
   const getProfile = async()=>{
     try{
-      const res = await getMyProfile();
+      const res = userId //파라미터로 넘겨 온 userId가 있다면
+        ? await getUserProfile(userId) //타인 프로필 조회
+        : await getMyProfile();       // 내 프로필 조회
+
       setProfile(res.data);
 
       if(res.data.profileImgPath){
@@ -93,6 +96,7 @@ function Profile(){
         onClose={() => setIsModalOpen(false)}
         initialTab={activeTab}
         reloadProfile = {getProfile}
+        userId={userId}
       />
     </div>
   );

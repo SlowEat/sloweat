@@ -8,6 +8,7 @@ import useFollow from "../../utils/useFollow";
 import {DEFAULT_PROFILE_IMAGE, PROFILE_FILE_PATH} from "../../constants/Profile";
 
 function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipeId,refreshRecipe}) {
+  console.log('레시피 확인 : ',recipe);
   const [liked, setLiked] = useState(recipe.isLiked);
   const [bookmarked, setBookmarked] = useState(recipe.isBookmarked); 
   const [isFollowing, setIsFollowing] = useState(recipe.isFollowing);
@@ -60,6 +61,7 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
     }
   };
 
+  //신고
   const handleReport = (e) => {
       e.stopPropagation();
       setIsReportOpen(true);
@@ -79,18 +81,25 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
 
   // Follow / UnFollow
   const { isFollowed, handleFollowToggle } = useFollow(isFollowing, recipe.userId, null, setIsFollowing);
-
+  
+  //프로필 이동
   const handleProfileClick = (e) => {
     e.stopPropagation();
-    navigate('/userpage');
+    if(recipe.isMyPost){ //내 포스트라면 마이페이지로 이동
+      navigate('/mypage');
+    }else{
+      navigate(`/mypage/${recipe.userId}`); //내 포스트가 아니라면 해당 userpage로 이동
+    }
   };
 
+  //편집
   const handleEdit = (e) => {
     e.stopPropagation();
     alert('수정 페이지로 이동합니다.');
     navigate(`/posts/edit/${recipe.recipeId}`);
   };
 
+  //삭제
   const handleDelete = async (e) => {
     e.stopPropagation();
     const confirm = window.confirm('이 게시글을 정말 삭제하시겠어요?');
@@ -106,6 +115,7 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
     }
   };
 
+  //상세페이지 이동
   const handleRecipeClick = () => {
     navigate(`/postdetail/${recipe.recipeId}`);
   };

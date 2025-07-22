@@ -113,4 +113,28 @@ public class ProfileService {
             throw new RuntimeException("이미지 저장 실패", e);
         }
     }
+
+    public MyProfileResponseDTO getUserProfile(Integer userId, CustomUserDetails customUserDetails) {
+        Integer loginUserId = customUserDetails.getUserId();
+        User user = userRepository.findById(userId) //사용자 찾기
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 사용자입니다."));
+
+        String id =  user.getLocalEmail(); 
+
+        long follower_cnt = followRepository.countByFollowing(user);
+        long following_cnt = followRepository.countByFollower(user);
+
+        long post_cnt = recipeRepository.countByUser(user);
+
+        return  MyProfileResponseDTO.builder()
+                .nickname(user.getNickname())
+                .id(id)
+                .profileImgPath(user.getProfileImgPath())
+                .introduce(user.getIntroduce())
+                .subscribed(subscriptionRepository.existsByUserUserIdAndStatus(userId, Subscription.Status.ACTIVE))
+                .followerCnt(follower_cnt)
+                .followingCnt(following_cnt)
+                .postCnt(post_cnt)
+                .build();
+    }
 }

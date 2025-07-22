@@ -102,4 +102,83 @@ public class FollowRepositoryCustomImpl implements FollowRepositoryCumstom{
                 .where(a.follower.userId.eq(targetUserId))
                 .fetch();
     }
+    
+    //남의 팔로워 목록
+    @Override
+    public List<FollowResponseDto> getUserFollowers(Integer loginUserId, Integer targetUserId) {
+        QFollow a = QFollow.follow;
+        QUser b = QUser.user;
+        QFollow c = new QFollow("c"); // for follower count
+        QFollow d = new QFollow("d"); // for is_following check
+
+        return queryFactory
+                .select(Projections.constructor(FollowResponseDto.class,
+                        a.followId,
+                        b.userId,
+                        b.nickname,
+                        b.profileImgPath,
+                        b.localEmail,
+                        b.kakaoEmail,
+
+                        // follower count (서브쿼리)
+                        JPAExpressions
+                                .select(c.count())
+                                .from(c)
+                                .where(c.following.userId.eq(b.userId)),
+
+                        // is_following (내가 그 사람을 팔로우 중인지 여부)
+                        JPAExpressions
+                                .select(Wildcard.count)
+                                .from(d)
+                                .where(
+                                        d.follower.userId.eq(loginUserId)
+                                                .and(d.following.userId.eq(b.userId))
+                                )
+                                .gt(0L) // count > 0 → true
+                ))
+                .from(a)
+                .join(b).on(a.follower.userId.eq(b.userId))
+                .where(a.following.userId.eq(targetUserId))
+                .fetch();
+    }
+    
+    //남의 팔로잉 목록
+    @Override
+    public List<FollowResponseDto> getUserFollowings(Integer loginUserId, Integer targetUserId) {
+
+        QFollow a = QFollow.follow;
+        QUser b = QUser.user;
+        QFollow c = new QFollow("c"); // for follower count
+        QFollow d = new QFollow("d"); // for is_following check
+
+        return queryFactory
+                .select(Projections.constructor(FollowResponseDto.class,
+                        a.followId,
+                        b.userId,
+                        b.nickname,
+                        b.profileImgPath,
+                        b.localEmail,
+                        b.kakaoEmail,
+
+                        // follower count (서브쿼리)
+                        JPAExpressions
+                                .select(c.count())
+                                .from(c)
+                                .where(c.following.userId.eq(b.userId)),
+
+                        // is_following (내가 그 사람을 팔로우 중인지 여부)
+                        JPAExpressions
+                                .select(Wildcard.count)
+                                .from(d)
+                                .where(
+                                        d.follower.userId.eq(loginUserId)
+                                                .and(d.following.userId.eq(b.userId))
+                                )
+                                .gt(0L) // count > 0 → true
+                ))
+                .from(a)
+                .join(b).on(a.following.userId.eq(b.userId))
+                .where(a.follower.userId.eq(targetUserId))
+                .fetch();
+    }
 }
