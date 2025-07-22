@@ -226,22 +226,49 @@ public class RecipeService {
         });
     }
 
-    public List<RecipeResponseDto> searchByTags(String type, String situation, String ingredient, String method, String sort) {
+    public List<RecipeResponseDto> searchByTags(String type, String situation, String ingredient, String method, String sort, Integer loginUserId) {
         List<Recipe> recipes = recipeRepository.findByAllTagConditions(type, situation, ingredient, method);
+
+        // 정렬
         if ("popular".equalsIgnoreCase(sort)) {
             recipes.sort((r1, r2) -> Integer.compare(r2.getViews(), r1.getViews()));
         } else {
             recipes.sort((r1, r2) -> r2.getCreatedAt().compareTo(r1.getCreatedAt()));
         }
-        return toDtoList(recipes, "https://image.server.com/search-filtered.jpg");
+
+        return recipes.stream().map(recipe -> {
+            List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
+            User user = userRepository.findById(recipe.getUser().getUserId()).orElseThrow();
+            User loginUser = userRepository.findById(loginUserId).orElseThrow();
+
+            boolean isLiked = recipeLikeRepository.existsByRecipeAndUser(recipe, loginUser);
+            boolean isBookmarked = bookmarkRepository.existsByRecipeAndUser(recipe, loginUser);
+            boolean isMyPost = Objects.equals(recipe.getUser().getUserId(), loginUserId);
+            boolean isFollowing = followRepository.existsByFollowerAndFollowing(loginUser, recipe.getUser());
+            Bookmark bookmark = bookmarkRepository.findByRecipeAndUser(recipe, loginUser);
+
+            return toDto2(recipe, recipeTags, "https://image.server.com/search-filtered.jpg", isLiked, isBookmarked, isMyPost, isFollowing, bookmark != null ? bookmark.getBookmarkId() : null, user);
+        }).toList();
     }
 
-    public List<RecipeResponseDto> searchByKeyword(String keyword, String sort) {
+    public List<RecipeResponseDto> searchByKeyword(String keyword, String sort, Integer loginUserId) {
         List<Recipe> recipes = "popular".equalsIgnoreCase(sort)
                 ? recipeRepository.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByViewsDesc(keyword, keyword)
                 : recipeRepository.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByCreatedAtDesc(keyword, keyword);
 
-        return toDtoList(recipes, "https://image.server.com/search-result.jpg");
+        return recipes.stream().map(recipe -> {
+            List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
+            User user = userRepository.findById(recipe.getUser().getUserId()).orElseThrow();
+            User loginUser = userRepository.findById(loginUserId).orElseThrow();
+
+            boolean isLiked = recipeLikeRepository.existsByRecipeAndUser(recipe, loginUser);
+            boolean isBookmarked = bookmarkRepository.existsByRecipeAndUser(recipe, loginUser);
+            boolean isMyPost = Objects.equals(recipe.getUser().getUserId(), loginUserId);
+            boolean isFollowing = followRepository.existsByFollowerAndFollowing(loginUser, recipe.getUser());
+            Bookmark bookmark = bookmarkRepository.findByRecipeAndUser(recipe, loginUser);
+
+            return toDto2(recipe, recipeTags, "https://image.server.com/search-result.jpg", isLiked, isBookmarked, isMyPost, isFollowing, bookmark != null ? bookmark.getBookmarkId() : null, user);
+        }).toList();
     }
 
     @Transactional(readOnly = true)

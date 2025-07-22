@@ -81,18 +81,23 @@ public class RecipeController {
             @RequestParam String situation,
             @RequestParam String ingredient,
             @RequestParam String method,
-            @RequestParam(required = false, defaultValue = "latest") String sort
+            @RequestParam(required = false, defaultValue = "latest") String sort,
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        List<RecipeResponseDto> results = recipeService.searchByTags(type, situation, ingredient, method, sort);
+        Integer loginUserId = userDetails.getUserId(); // 로그인 유저 ID 추출
+        List<RecipeResponseDto> results = recipeService.searchByTags(type, situation, ingredient, method, sort, loginUserId);
         return ResponseEntity.ok(new ApiResponse<>(true, "필터 검색 성공", results));
     }
+
 
     @GetMapping("/search-keyword")
     public ResponseEntity<ApiResponse<List<RecipeResponseDto>>> searchByKeyword(
             @RequestParam String keyword,
-            @RequestParam(required = false, defaultValue = "latest") String sort
+            @RequestParam(required = false, defaultValue = "latest") String sort,
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        List<RecipeResponseDto> results = recipeService.searchByKeyword(keyword, sort);
+        Integer loginUserId = userDetails.getUserId(); // 로그인 유저 ID 추출
+        List<RecipeResponseDto> results = recipeService.searchByKeyword(keyword, sort, loginUserId);
         return ResponseEntity.ok(new ApiResponse<>(true, "검색어 기반 검색 성공", results));
     }
 
