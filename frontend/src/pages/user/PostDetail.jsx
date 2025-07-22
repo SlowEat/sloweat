@@ -28,33 +28,44 @@ export default function PostDetail() {
   };
 
   const refreshRecipe = async () => {
-    setError(false);
-    setLoading(true);
-    try {
-      const response = await axiosInstance.get(`/api/recipes/${id}`);
-      const data = response.data.data;
+      setError(false);
+      setLoading(true);
+      try {
+        const response = await axiosInstance.get(`/api/recipes/${id}`);
+        const data = response.data.data;
 
-      console.log('✅ 게시글 상세 API 응답:', data);
+        console.log('✅ 게시글 상세 API 응답:', data);
 
-      // BookmarkItem에서 요구하는 형태로 데이터 변환
-      const enhancedData = {
-        ...data,
-        isBookmarked: data.bookmarked,
-        isLiked: data.liked,
-        isFollowing: data.following,
-        isMyPost: data.myPost,
-        // userId가 null인 경우를 대비해 임시 처리
-        userId: data.userId || data.authorId || 'unknown'
-      };
+        // ✅ Home 컴포넌트와 동일하게 데이터 변환 (필드명 통일)
+        const enhancedData = {
+          ...data,
+          // 백엔드에서 오는 필드명을 React 컴포넌트가 기대하는 필드명으로 변환
+          isBookmarked: data.bookmarked || data.isBookmarked || false,
+          isLiked: data.liked || data.isLiked || false,
+          isFollowing: data.following || data.isFollowing || false,
+          isMyPost: data.myPost || data.isMyPost || false,
 
-      setRecipeData(enhancedData);
-    } catch (err) {
-      console.error('상세 조회 실패:', err);
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
-  };
+          // userId가 null인 경우를 대비해 임시 처리
+          userId: data.userId || data.authorId || 'unknown',
+
+          // 프로필 이미지 관련
+          chefName: data.chefName || '익명 셰프',
+          username: data.username || 'unknown',
+          profileImgPath: data.profileImgPath || null,
+
+          // 좋아요 수 확실히 설정
+          likes: data.likes || 0
+        };
+
+        setRecipeData(enhancedData);
+      } catch (err) {
+        console.error('상세 조회 실패:', err);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
 
   useEffect(() => {
     refreshRecipe();
