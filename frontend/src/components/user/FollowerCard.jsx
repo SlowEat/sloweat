@@ -1,30 +1,29 @@
-import React, { useState } from 'react';
-import '../../styles/user/FollowerCard.css'; // 위 CSS 저장된 파일
+import React, { useState, useEffect } from "react";
+import "../../styles/user/FollowerCard.css"; // 위 CSS 저장된 파일
+import axiosInstance from "../../api/axiosInstance";
 
 function FollowerCard() {
-  const dummyFollowers = [
-    {
-      id: 1,
-      name: '베이킹퀸',
-      username: '@baking_queen',
-      followers: '12.5K',
-      image: 'https://c.animaapp.com/nGuwZSJg/img/----2@2x.png'
-    },
-    {
-      id: 2,
-      name: '요리왕',
-      username: '@cooking_master',
-      followers: '8.3K',
-      image: 'https://c.animaapp.com/nGuwZSJg/img/----2@2x.png'
-    },
-    {
-      id: 3,
-      name: '디저트러버',
-      username: '@dessert_lover',
-      followers: '5.7K',
-      image: 'https://c.animaapp.com/nGuwZSJg/img/----2@2x.png'
-    }
-  ];
+  const [followers, setFollowers] = useState([]);
+
+  useEffect(() => {
+    const fetchRecommendedFollowers = async () => {
+      try {
+        const response = await axiosInstance.get("api/follow/recommend");
+        setFollowers(response.data);
+      } catch (error) {
+        console.error("팔로워 추천 가져오기 실패:", error);
+      }
+    };
+
+    fetchRecommendedFollowers();
+  }, []);
+
+  // 팔로우/언팔로우 상태 업데이트 함수
+  const updateFollowState = (userId, isFollowing) => {
+    setFollowers((prev) =>
+      prev.map((f) => (f.userId === userId ? { ...f, isFollowing } : f))
+    );
+  };
 
   return (
     <div className="follower-card-box">
@@ -32,13 +31,16 @@ function FollowerCard() {
         <div className="follower-card-overlap">
           <h1 className="follower-card-title">추천 팔로워</h1>
           <ul className="follower-card-list">
-            {dummyFollowers.map((follower) => (
+            {followers.map((follower) => (
               <FollowerCardItem
-                key={follower.id}
-                name={follower.name}
-                username={follower.username}
-                followers={follower.followers}
-                image={follower.image}
+                key={follower.userId}
+                userId={follower.userId}
+                name={follower.nickname}
+                username={`@user${follower.userId}`}
+                followers={follower.followerCount}
+                image={follower.profileImgPath}
+                isFollowing={follower.isFollowing}
+                onFollowStateChange={updateFollowState}
               />
             ))}
           </ul>
@@ -48,11 +50,34 @@ function FollowerCard() {
   );
 }
 
-function FollowerCardItem({ name, username, followers, image }) {
-  const [isFollowing, setIsFollowing] = useState(false);
+function FollowerCardItem({
+  userId,
+  name,
+  username,
+  followers,
+  image,
+  isFollowing,
+  onFollowStateChange,
+}) {
+  const [loading, setLoading] = useState(false);
 
-  const handleFollowClick = () => {
-    setIsFollowing(!isFollowing);
+  const handleFollowClick = async () => {
+    try {
+      setLoading(true);
+
+      if (isFollowing) {
+        await axiosInstance.delete(`/api/follow/${userId}`);
+        onFollowStateChange(userId, false);
+      } else {
+        await axiosInstance.post("/api/follow", { toUserId: userId });
+        onFollowStateChange(userId, true);
+      }
+    } catch (error) {
+      console.error("팔로우/언팔로우 실패:", error);
+      alert("요청을 처리할 수 없습니다.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -71,11 +96,12 @@ function FollowerCardItem({ name, username, followers, image }) {
         </p>
       </div>
       <button
-        className={`follower-card-button ${isFollowing ? 'following' : ''}`}
+        className={`follower-card-button ${isFollowing ? "following" : ""}`}
         onClick={handleFollowClick}
+        disabled={loading}
       >
         <span className="follower-card-button-text">
-          {isFollowing ? '팔로잉' : '팔로우'}
+          {loading ? "처리 중..." : isFollowing ? "팔로잉" : "팔로우"}
         </span>
       </button>
     </li>
