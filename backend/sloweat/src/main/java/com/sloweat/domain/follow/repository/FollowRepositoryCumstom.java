@@ -11,4 +11,10 @@ public interface FollowRepositoryCumstom {
 
     //팔로잉 목록 조회
     List<FollowResponseDto> getFollowings(Integer userId);
+    
+    //남의 팔로워 목록 조회
+    List<FollowResponseDto> getUserFollowers(Integer loginUserId, Integer userId);
+
+    //남의 팔로잉 목록 조회
+    List<FollowResponseDto> getUserFollowings(Integer loginUserId, Integer userId);
 }

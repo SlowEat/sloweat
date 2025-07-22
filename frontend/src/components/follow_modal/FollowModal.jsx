@@ -4,7 +4,7 @@ import { FollowCard } from "./FollowCard";
 import "./FollowModal.css";
 import api from "../../api/axiosInstance";
 
-export const FollowModal = ({ isOpen, onClose, initialTab = "followers",reloadProfile }) => {
+export const FollowModal = ({ isOpen, onClose, initialTab = "followers",reloadProfile, userId }) => {
   const [activeTab, setActiveTab] = useState(initialTab);
 
   //목록 데이터
@@ -15,7 +15,9 @@ export const FollowModal = ({ isOpen, onClose, initialTab = "followers",reloadPr
 
   const fetchFollowers = async () => {
     try {
-      const response = await api.get('api/followers');
+    const response = userId //userId가 있으면
+      ? await api.get(`/api/users/${userId}/followers`) //타인
+      : await api.get(`/api/followers`); // 본인
       setUserList(response.data);
     } catch (error) {
       console.error('북마크 컬렉션 불러오기 실패:', error);
@@ -24,7 +26,9 @@ export const FollowModal = ({ isOpen, onClose, initialTab = "followers",reloadPr
 
   const fetchFollowings = async () => {
     try {
-      const response = await api.get('api/followings');
+    const response = userId //userId가 있으면
+      ? await api.get(`/api/users/${userId}/followings`) //타인
+      : await api.get(`/api/followings`); //본인
       setUserList(response.data);
     } catch (error) {
       console.error('북마크 컬렉션 불러오기 실패:', error);

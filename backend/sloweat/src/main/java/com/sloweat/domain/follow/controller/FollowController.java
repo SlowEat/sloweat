@@ -45,7 +45,7 @@ public class FollowController {
     return ResponseEntity.ok().build();
   }
 
-  // 팔로워 목록
+  //내 팔로워 목록
   @GetMapping("/followers")
   public ResponseEntity<List<FollowResponseDto>> getFollowers(
       @AuthenticationPrincipal CustomUserDetails userDetails) {
@@ -54,13 +54,33 @@ public class FollowController {
     return ResponseEntity.ok(followService.getFollowers(userId));
   }
 
-  // 팔로잉 목록
+  //내 팔로잉 목록
   @GetMapping("/followings")
   public ResponseEntity<List<FollowResponseDto>> getFollowings(
       @AuthenticationPrincipal CustomUserDetails userDetails) {
 
     Integer userId = userDetails.getUserId();
     return ResponseEntity.ok(followService.getFollowings(userId));
+  }
+
+  //남의 팔로워 목록
+  @GetMapping("/users/{userId}/followers")
+  public ResponseEntity<List<FollowResponseDto>> getUserFollowers(
+          @AuthenticationPrincipal CustomUserDetails userDetails,
+          @PathVariable Integer userId) {
+
+    Integer loginUserId = userDetails.getUserId();
+    return ResponseEntity.ok(followService.getUserFollowers(loginUserId,userId));
+  }
+
+  //남의 팔로잉 목록
+  @GetMapping("/users/{userId}/followings")
+  public ResponseEntity<List<FollowResponseDto>> getUserFollowings(
+          @AuthenticationPrincipal CustomUserDetails userDetails,
+          @PathVariable Integer userId) {
+
+    Integer loginUserId = userDetails.getUserId();
+    return ResponseEntity.ok(followService.getUserFollowings(loginUserId,userId));
   }
 
   // 팔로우 추천 3명

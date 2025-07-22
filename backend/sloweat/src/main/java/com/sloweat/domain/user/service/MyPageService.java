@@ -25,4 +25,16 @@ public class MyPageService {
 
         return result;
     }
+
+    public List<MyPageRecipeResponseDto> getUserRecipes(Integer loginUserId, Integer userId) {
+        List<MyPageRecipeResponseDto> result = myPageRepositoryCustom.getUserRecipes(loginUserId, userId);
+
+        return result;
+    }
+
+    public List<MyPageCommentResponseDto> getUserComments(Integer loginUserId, Integer userId) {
+        List<MyPageCommentResponseDto> result = myPageRepositoryCustom.getUserComments(loginUserId, userId);
+
+        return result;
+    }
 }
