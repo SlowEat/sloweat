@@ -34,8 +34,10 @@ public class RecipeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<RecipeResponseDto>> getRecipeDetail(@PathVariable Integer id) {
-        RecipeResponseDto responseDto = recipeService.getRecipeDetailWithViewIncrease(id);
+    public ResponseEntity<ApiResponse<RecipeResponseDto>> getRecipeDetail(
+            @PathVariable Integer id,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        RecipeResponseDto responseDto = recipeService.getRecipeDetailWithViewIncrease(userDetails.getUserId() ,id);
         return ResponseEntity.ok(new ApiResponse<>(true, "조회 성공", responseDto));
     }
 

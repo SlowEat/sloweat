@@ -70,7 +70,7 @@ public class RecipeService {
     }
 
     @Transactional
-    public RecipeResponseDto getRecipeDetailWithViewIncrease(Integer id) {
+    public RecipeResponseDto getRecipeDetailWithViewIncrease(Integer loginUserId ,Integer id) {
         Recipe recipe = recipeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("레시피를 찾을 수 없습니다."));
 
@@ -78,7 +78,19 @@ public class RecipeService {
         recipeRepository.save(recipe);
 
         List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
-        return toDto(recipe, recipeTags, "https://image.server.com/photo1.jpg");
+        User user = userRepository.findById(recipe.getUser().getUserId()).orElseThrow();
+        Boolean isLiked = recipeLikeRepository.existsByRecipeAndUser(recipe, user);
+        Boolean isBookmarked = bookmarkRepository.existsByRecipeAndUser(recipe, user);
+        Boolean isMyPost = Objects.equals(recipe.getUser().getUserId(), loginUserId);
+        User loginUser = new User();
+        loginUser.setUserId(loginUserId);
+        Boolean isFollowing = followRepository.existsByFollowerAndFollowing(loginUser, recipe.getUser());
+        Bookmark bookmark = bookmarkRepository.findByRecipeAndUser(recipe, user);
+        Integer bookmarkId = null;
+        if(bookmark != null){
+            bookmarkId = bookmark.getBookmarkId();
+        }
+        return ViewHomeDto(user, recipe, recipeTags, "https://image.server.com/list-default.jpg", isLiked, isBookmarked, isMyPost, isFollowing, bookmarkId);
     }
 
     public RecipeResponseDto getRecipeDetail(Integer id) {
@@ -262,6 +274,7 @@ public class RecipeService {
     // ✅ 핵심 수정: 작성자 정보 포함
     private RecipeResponseDto toDto(Recipe recipe, List<RecipeTag> recipeTags, String photoUrl) {
         RecipeResponseDto dto = new RecipeResponseDto();
+        dto.setUserId(recipe.getUser().getUserId());
         dto.setRecipeId(recipe.getRecipeId());
         dto.setTitle(recipe.getTitle());
         dto.setContent(recipe.getContent());

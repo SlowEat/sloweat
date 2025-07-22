@@ -3,16 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../api/axiosInstance';
 import '../../styles/user/RecipeCard.css';
 import api from "../../api/axiosInstance";
+import ContentReportForm from '../user/ContentReportForm';
 import useFollow from "../../utils/useFollow";
 import {DEFAULT_PROFILE_IMAGE, PROFILE_FILE_PATH} from "../../constants/Profile";
 
-function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipeId}) {
+function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipeId,refreshRecipe}) {
   const [liked, setLiked] = useState(recipe.isLiked);
   const [bookmarked, setBookmarked] = useState(recipe.isBookmarked); 
   const [isFollowing, setIsFollowing] = useState(recipe.isFollowing);
   const [isMyPost, setIsMyPost] = useState(recipe.isMyPost);
   const [likeCount, setLikeCount] = useState(recipe?.likes || 0);
-
+  const [isReportOpen, setIsReportOpen] = useState(false);
   const navigate = useNavigate();
 
   //좋아요
@@ -60,11 +61,21 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
   };
 
   const handleReport = (e) => {
-    e.stopPropagation();
-    if (window.confirm('신고하시겠습니까?')) {
-      alert('신고가 접수되었습니다.');
-    }
-  };
+      e.stopPropagation();
+      setIsReportOpen(true);
+    };
+
+    const submitReport = async (reason) => {
+      try {
+        await axiosInstance.post(`/api/recipes/${recipe.recipeId}/report`, { reason });
+        alert('신고가 성공적으로 접수되었습니다.');
+        setIsReportOpen(false);
+        if (refreshRecipe) await refreshRecipe();
+      } catch (error) {
+        console.error('신고 실패:', error);
+        alert('신고 중 오류가 발생했습니다.');
+      }
+    };
 
   // Follow / UnFollow
   const { isFollowed, handleFollowToggle } = useFollow(isFollowing, recipe.userId, null, setIsFollowing);
@@ -199,6 +210,12 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
                        stroke="#10b981"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
                 </button>
               </div>
+               {/* 신고 모달 */}
+                    <ContentReportForm
+                      isOpen={isReportOpen}
+                      onClose={() => setIsReportOpen(false)}
+                      onSubmit={submitReport}
+                    />
             </div>
 
           </div>
