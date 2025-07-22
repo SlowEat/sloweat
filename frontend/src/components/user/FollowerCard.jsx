@@ -77,6 +77,8 @@ function FollowerCardItem({
         await axiosInstance.post("/api/follow", { toUserId: userId });
         onFollowStateChange(userId, true);
       }
+      // 새로고침
+      window.location.reload();
     } catch (error) {
       console.error("팔로우/언팔로우 실패:", error);
       alert("요청을 처리할 수 없습니다.");
