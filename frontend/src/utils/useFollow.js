@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import api from '../api/axiosInstance';
 
-const useFollow = (initialFollowed, targetUserId, reloadProfile) => {
+const useFollow = (initialFollowed, targetUserId, onSuccess, setIsFollowing) => {
     const [isFollowed, setIsFollowed] = useState(initialFollowed);
 
-    const handleFollowToggle = async () => {
+    const handleFollowToggle = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
         try {
             if (isFollowed) {
                 //unFollow
@@ -13,11 +16,11 @@ const useFollow = (initialFollowed, targetUserId, reloadProfile) => {
                 //Follow
                 await api.post(`api/follow`, { toUserId: targetUserId });
             }
-
             setIsFollowed((prev) => !prev);
+            setIsFollowing((prev) => !prev);
 
-            if(reloadProfile){
-                reloadProfile(); // 프로필 창 갱신
+            if(onSuccess){
+                onSuccess(); // 프로필 창 갱신
             }
 
         } catch (error) {

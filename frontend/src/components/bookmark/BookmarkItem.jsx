@@ -64,7 +64,7 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
   };
 
   // Follow / UnFollow
-  const { isFollowed, handleFollowToggle } = useFollow(isFollowing, recipe.userId);
+  const { isFollowed, handleFollowToggle } = useFollow(isFollowing, recipe.userId, null, setIsFollowing);
 
   const handleProfileClick = (e) => {
     e.stopPropagation();
@@ -117,7 +117,7 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
                   { !isMyPost &&
                     <button
                       className={`follower-card-button ${isFollowing ? 'following' : ''}`}
-                      onClick={handleFollowToggle}
+                      onClick={(e) => handleFollowToggle(e)}
                     >
                       {isFollowing ? '팔로잉' : '팔로우'}
                     </button>

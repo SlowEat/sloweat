@@ -31,13 +31,19 @@ public class BookmarkService {
 
     // 북마크 생성
     @Transactional
-    public void createBookmark(Integer userId, BookmarkRequestDto request) {
+    public void createBookmark(Integer userId, BookmarkRequestDto request) throws Exception {
         Bookmark bookmark = new Bookmark();
         User user = new User();
         user.setUserId(userId);
 
         Recipe recipe = new Recipe();
         recipe.setRecipeId(request.getRecipeId());
+
+        //중복 체크
+        boolean exists = bookmarkRepository.existsByRecipeAndUser(recipe, user);
+        if (exists) {
+            throw new Exception("중복된 북마크가 있습니다.");
+        }
 
         BookmarkCollection  bookmarkCollection = new BookmarkCollection();
         bookmarkCollection.setCollectionId(request.getCollectionId());

@@ -1,6 +1,8 @@
 package com.sloweat.domain.recipe.service;
 
-import com.sloweat.domain.follow.service.FollowService;
+import com.sloweat.domain.bookmark.entity.Bookmark;
+import com.sloweat.domain.bookmark.repository.BookmarkRepository;
+import com.sloweat.domain.follow.repository.FollowRepository;
 import com.sloweat.domain.recipe.dto.RecipeRequestDto;
 import com.sloweat.domain.recipe.dto.RecipeResponseDto;
 import com.sloweat.domain.recipe.entity.*;
@@ -8,7 +10,6 @@ import com.sloweat.domain.recipe.entity.Tag.TagType;
 import com.sloweat.domain.recipe.repository.*;
 import com.sloweat.domain.user.entity.User;
 import com.sloweat.domain.user.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +28,8 @@ public class RecipeService {
     private final RecipeTagRepository recipeTagRepository;
     private final RecipeLikeRepository recipeLikeRepository;
     private final UserRepository userRepository;
-    private final FollowService followService;
+    private final FollowRepository followRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     public int saveRecipe(Integer userId, RecipeRequestDto dto) {
         User user = userRepository.findById(userId)
@@ -172,7 +175,7 @@ public class RecipeService {
     }
 
     @Transactional(readOnly = true)
-    public Page<RecipeResponseDto> getAllRecipesWithPagination(String sort, Pageable pageable) {
+    public Page<RecipeResponseDto> getAllRecipesWithPagination(String sort, Pageable pageable, Integer loginUserId) {
         Sort sorting = "popular".equalsIgnoreCase(sort)
                 ? Sort.by(Sort.Direction.DESC, "views")
                 : Sort.by(Sort.Direction.DESC, "createdAt");
@@ -182,7 +185,22 @@ public class RecipeService {
         return recipePage.map(recipe -> {
             List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
             User user = userRepository.findById(recipe.getUser().getUserId()).orElseThrow();
-            return ViewHomeDto(user, recipe, recipeTags, "https://image.server.com/list-default.jpg");
+            Boolean isLiked = recipeLikeRepository.existsByRecipeAndUser(recipe, user);
+            Boolean isBookmarked = bookmarkRepository.existsByRecipeAndUser(recipe, user);
+            Boolean isMyPost = Objects.equals(recipe.getUser().getUserId(), loginUserId);
+
+            User loginUser = new User();
+            loginUser.setUserId(loginUserId);
+
+            Boolean isFollowing = followRepository.existsByFollowerAndFollowing(loginUser, recipe.getUser());
+            Bookmark bookmark = bookmarkRepository.findByRecipeAndUser(recipe, user);
+            Integer bookmarkId = null;
+
+            if(bookmark != null){
+                bookmarkId = bookmark.getBookmarkId();
+            }
+
+            return ViewHomeDto(user, recipe, recipeTags, "https://image.server.com/list-default.jpg", isLiked, isBookmarked, isMyPost, isFollowing, bookmarkId);
         });
     }
 
@@ -205,14 +223,31 @@ public class RecipeService {
     }
 
     @Transactional(readOnly = true)
-    public Page<RecipeResponseDto> getFollowingsRecipes(Integer userId, int page, int size) {
+    public Page<RecipeResponseDto> getFollowingsRecipes(Integer loginUserId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<Recipe> recipePage = recipeRepository.findFollowingUsersRecipes(userId, pageable);
+        Page<Recipe> recipePage = recipeRepository.findFollowingUsersRecipes(loginUserId, pageable);
 
         return recipePage.map(recipe -> {
             User user = userRepository.findById(recipe.getUser().getUserId()).orElseThrow();
             List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
-            return ViewHomeDto(user, recipe, recipeTags, "https://image.server.com/follow.jpg");
+            Boolean isLiked = recipeLikeRepository.existsByRecipeAndUser(recipe, user);
+            Boolean isBookmarked = bookmarkRepository.existsByRecipeAndUser(recipe, user);
+
+            Boolean isMyPost = Objects.equals(recipe.getUser().getUserId(), loginUserId);
+
+            User loginUser = new User();
+            loginUser.setUserId(loginUserId);
+
+            Boolean isFollowing = followRepository.existsByFollowerAndFollowing(loginUser, recipe.getUser());
+
+            Bookmark bookmark = bookmarkRepository.findByRecipeAndUser(recipe, user);
+            Integer bookmarkId = null;
+
+            if(bookmark != null){
+                bookmarkId = bookmark.getBookmarkId();
+            }
+
+            return ViewHomeDto(user, recipe, recipeTags, "https://image.server.com/follow.jpg", isLiked, isBookmarked, isMyPost, isFollowing, bookmarkId);
         });
     }
 
@@ -259,8 +294,59 @@ public class RecipeService {
         return dto;
     }
 
-    private RecipeResponseDto ViewHomeDto(User user, Recipe recipe, List<RecipeTag> tags, String photoUrl) {
-        RecipeResponseDto dto = toDto(recipe, tags, photoUrl);
+    // 북마크, 좋아요, 팔로우, 내가 쓴 글 여부 체크
+    private RecipeResponseDto toDto2(Recipe recipe, List<RecipeTag> recipeTags, String photoUrl, Boolean isLiked, Boolean isBookmarked, Boolean isMyPost, Boolean isFollowing, Integer bookmarkId, User userInfo) {
+        RecipeResponseDto dto = new RecipeResponseDto();
+        dto.setUserId(recipe.getUser().getUserId());
+        dto.setRecipeId(recipe.getRecipeId());
+        dto.setTitle(recipe.getTitle());
+        dto.setContent(recipe.getContent());
+        dto.setCookingTime(recipe.getCookingTime());
+        dto.setSubscribed(recipe.getIsSubscribed());
+        dto.setCreatedAt(recipe.getCreatedAt());
+        dto.setViews(recipe.getViews());
+        dto.setLikes(recipe.getLikes());
+        dto.setStatus(recipe.getStatus().getLabel());
+        dto.setReportCount(recipe.getReportCount());
+        dto.setTags(recipeTags.stream().map(rt -> rt.getTag().getTagName()).toList());
+        dto.setPhotoUrls(List.of(photoUrl));
+        dto.setIsLiked(isLiked);
+        dto.setIsMyPost(isMyPost);
+        dto.setIsBookmarked(isBookmarked);
+        dto.setIsFollowing(isFollowing);
+        dto.setBookmarkId(bookmarkId);
+        dto.setProfileImgPath(userInfo.getProfileImgPath());
+
+        for (RecipeTag rt : recipeTags) {
+            switch (rt.getTag().getTagType()) {
+                case TYPE -> dto.setType(rt.getTag().getTagName());
+                case SITUATION -> dto.setSituation(rt.getTag().getTagName());
+                case INGREDIENT -> dto.setIngredient(rt.getTag().getTagName());
+                case METHOD -> dto.setMethod(rt.getTag().getTagName());
+            }
+        }
+
+        // ✅ 작성자 정보 설정 추가
+        User user = recipe.getUser();
+        if (user != null) {
+            dto.setChefName(user.getNickname());
+            dto.setUsername(user.getLocalEmail() != null ? user.getLocalEmail() : user.getKakaoEmail());
+        }
+
+        return dto;
+    }
+
+
+    private RecipeResponseDto ViewHomeDto(User user,
+                                          Recipe recipe,
+                                          List<RecipeTag> tags,
+                                          String photoUrl,
+                                          Boolean isLiked,
+                                          Boolean isBookmarked,
+                                          Boolean isMyPost,
+                                          Boolean isFollowing,
+                                          Integer bookmarkId) {
+        RecipeResponseDto dto = toDto2(recipe, tags, photoUrl, isLiked, isBookmarked, isMyPost, isFollowing, bookmarkId, user);
         dto.setChefName(user.getNickname());
         dto.setUsername(user.getLocalEmail() != null ? user.getLocalEmail() : user.getKakaoEmail());
         return dto;
