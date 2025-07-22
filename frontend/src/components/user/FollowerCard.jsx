@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/user/FollowerCard.css"; // 위 CSS 저장된 파일
 import axiosInstance from "../../api/axiosInstance";
+import {
+  DEFAULT_PROFILE_IMAGE,
+  PROFILE_FILE_PATH,
+} from "../../constants/Profile";
 
 function FollowerCard() {
   const [followers, setFollowers] = useState([]);
@@ -19,9 +23,9 @@ function FollowerCard() {
   }, []);
 
   // 팔로우/언팔로우 상태 업데이트 함수
-  const updateFollowState = (userId, isFollowing) => {
+  const updateFollowState = (localEmail, isFollowing) => {
     setFollowers((prev) =>
-      prev.map((f) => (f.userId === userId ? { ...f, isFollowing } : f))
+      prev.map((f) => (f.localEmail === localEmail ? { ...f, isFollowing } : f))
     );
   };
 
@@ -33,10 +37,10 @@ function FollowerCard() {
           <ul className="follower-card-list">
             {followers.map((follower) => (
               <FollowerCardItem
-                key={follower.userId}
-                userId={follower.userId}
+                key={follower.localEmail}
+                localEmail={follower.localEmail}
                 name={follower.nickname}
-                username={`@user${follower.userId}`}
+                username={`@${follower.localEmail}`}
                 followers={follower.followerCount}
                 image={follower.profileImgPath}
                 isFollowing={follower.isFollowing}
@@ -51,7 +55,7 @@ function FollowerCard() {
 }
 
 function FollowerCardItem({
-  userId,
+  localEmail,
   name,
   username,
   followers,
@@ -66,11 +70,11 @@ function FollowerCardItem({
       setLoading(true);
 
       if (isFollowing) {
-        await axiosInstance.delete(`/api/follow/${userId}`);
-        onFollowStateChange(userId, false);
+        await axiosInstance.delete(`/api/follow/${localEmail}`);
+        onFollowStateChange(localEmail, false);
       } else {
-        await axiosInstance.post("/api/follow", { toUserId: userId });
-        onFollowStateChange(userId, true);
+        await axiosInstance.post("/api/follow", { toUserEmail: localEmail });
+        onFollowStateChange(localEmail, true);
       }
     } catch (error) {
       console.error("팔로우/언팔로우 실패:", error);
@@ -84,8 +88,13 @@ function FollowerCardItem({
     <li className="follower-card-item">
       <img
         className="follower-card-profile-image"
-        src={image}
+        // 서버에서 받은 이미지(상대경로)에 PROFILE_FILE_PATH를 붙여서 절대경로로 만들고, 없으면 DEFAULT_PROFILE_IMAGE 사용
+        src={image ? PROFILE_FILE_PATH + image : DEFAULT_PROFILE_IMAGE}
         alt={`${name} 프로필 이미지`}
+        // 이미지 로딩 실패 시 fallback 처리
+        onError={(e) => {
+          e.target.src = DEFAULT_PROFILE_IMAGE;
+        }}
       />
       <div className="follower-card-info">
         <h2 className="follower-card-name">{name}</h2>
