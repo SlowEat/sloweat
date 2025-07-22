@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
 import "../../styles/user/RecipeForm.css";
@@ -22,16 +22,37 @@ const RecipeForm = () => {
     },
   });
 
+  const [tagOptions, setTagOptions] = useState({
+    TYPE: [],
+    SITUATION: [],
+    INGREDIENT: [],
+    METHOD: [],
+  });
+
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const res = await axiosInstance.get("api/recipe/tags");
+        setTagOptions(res.data.data);
+      } catch (err) {
+        console.error("태그 불러오기 실패:", err);
+        alert("태그를 불러오는 중 오류가 발생했습니다.");
+      }
+    };
+
+    fetchTags();
+  }, []);
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
   };
 
-  const handleFileChange = (e) => {
-    if (e.target.files.length > 0) {
-      setFormData({ ...formData, photo: e.target.files });
-    }
-  };
+  // const handleFileChange = (e) => {
+  //   if (e.target.files.length > 0) {
+  //     setFormData({ ...formData, photo: e.target.files });
+  //   }
+  // };
 
   const handleTagChange = (e, tagCategory) => {
     const value = e.target.value;
@@ -72,8 +93,8 @@ const RecipeForm = () => {
 
       const newRecipeId = response.data.data;
       navigate(`/postdetail/${newRecipeId}`, {
-        replace: true,              
-        state: location.state,  //이전 상태 유지
+        replace: true,
+        state: location.state, //이전 상태 유지
       });
     } catch (error) {
       console.error("작성 실패:", error);
@@ -110,15 +131,18 @@ const RecipeForm = () => {
         <div className="recipe-form-group">
           <label>태그 *</label>
           <div className="filter-group">
+            {/* 동적 렌더링으로 변경 */}
             <select
               className="select-box filter-select"
               value={formData.tags.type}
               onChange={(e) => handleTagChange(e, "type")}
             >
               <option value="">종류</option>
-              <option value="한식">한식</option>
-              <option value="양식">양식</option>
-              <option value="중식">중식</option>
+              {tagOptions.TYPE.map((tag) => (
+                <option key={tag} value={tag}>
+                  {tag}
+                </option>
+              ))}
             </select>
 
             <select
@@ -127,9 +151,11 @@ const RecipeForm = () => {
               onChange={(e) => handleTagChange(e, "situation")}
             >
               <option value="">상황</option>
-              <option value="혼밥">혼밥</option>
-              <option value="파티">파티</option>
-              <option value="야식">야식</option>
+              {tagOptions.SITUATION.map((tag) => (
+                <option key={tag} value={tag}>
+                  {tag}
+                </option>
+              ))}
             </select>
 
             <select
@@ -138,9 +164,11 @@ const RecipeForm = () => {
               onChange={(e) => handleTagChange(e, "ingredient")}
             >
               <option value="">재료</option>
-              <option value="파스타">파스타</option>
-              <option value="닭고기">닭고기</option>
-              <option value="계란">계란</option>
+              {tagOptions.INGREDIENT.map((tag) => (
+                <option key={tag} value={tag}>
+                  {tag}
+                </option>
+              ))}
             </select>
 
             <select
@@ -149,9 +177,11 @@ const RecipeForm = () => {
               onChange={(e) => handleTagChange(e, "method")}
             >
               <option value="">방법</option>
-              <option value="굽기">굽기</option>
-              <option value="끓이기">끓이기</option>
-              <option value="볶기">볶기</option>
+              {tagOptions.METHOD.map((tag) => (
+                <option key={tag} value={tag}>
+                  {tag}
+                </option>
+              ))}
             </select>
           </div>
         </div>
