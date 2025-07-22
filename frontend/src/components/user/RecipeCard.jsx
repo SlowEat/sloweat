@@ -67,47 +67,54 @@ function Recipe({ isDetail = false, isMyPost = false, data, refreshRecipe, openB
     }
   };
 
-    //신고
-   const handleReport = (e) => {
+  //신고
+  const handleReport = (e) => {
       e.stopPropagation();
       setIsReportOpen(true);
     };
 
-  const submitReport = async (reason) => {
-    try {
-      await axiosInstance.post(`/api/recipes/${data.recipeId}/report`, { reason });
-      alert('신고가 성공적으로 접수되었습니다.');
-      setIsReportOpen(false);
-      if (refreshRecipe) await refreshRecipe();
-    } catch (error) {
-      console.error('신고 실패:', error);
-      alert('신고 중 오류가 발생했습니다.');
-    }
-  };
+    const submitReport = async (reason) => {
+      try {
+        await axiosInstance.post(`/api/recipes/${data.recipeId}/report`, { reason });
+        alert('신고가 성공적으로 접수되었습니다.');
+        setIsReportOpen(false);
+        if (refreshRecipe) await refreshRecipe();
+      } catch (error) {
+        console.error('신고 실패:', error);
+        alert('신고 중 오류가 발생했습니다.');
+      }
+    };
 
   // Follow / UnFollow
   const { isFollowed, handleFollowToggle } = useFollow(isFollowing, data.userId, null, setIsFollowing);
 
+  //프로필 이동
   const handleProfileClick = (e) => {
     e.stopPropagation();
-    if (isMyPost) {
+    if(data.isMyPost){ //내 포스트라면 마이페이지로 이동
       navigate('/mypage');
-    } else {
-      navigate(`/mypage/${data?.userId}`);
+    }else{
+      navigate(`/mypage/${data.userId}`); //내 포스트가 아니라면 해당 userpage로 이동
     }
   };
 
+  //편집
   const handleEdit = (e) => {
     e.stopPropagation();
-    navigate(`/postform/${data?.recipeId}`);
+    alert('수정 페이지로 이동합니다.');
+    navigate(`/posts/edit/${data.recipeId}`);
   };
 
-  const handleDelete = async () => {
-    if (!window.confirm('삭제하시겠습니까?')) return;
+  //삭제
+  const handleDelete = async (e) => {
+    e.stopPropagation();
+    const confirm = window.confirm('이 게시글을 정말 삭제하시겠어요?');
+    if (!confirm) return;
+
     try {
       await axiosInstance.delete(`/api/recipes/${data.recipeId}`);
-      alert('삭제가 완료되었습니다!');
-      navigate('/mypage');
+      alert('게시글이 삭제되었습니다.');
+      window.location.reload('/mypage');
     } catch (error) {
       console.error('삭제 실패:', error);
       alert('삭제 중 오류가 발생했습니다.');
