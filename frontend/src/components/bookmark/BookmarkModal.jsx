@@ -31,8 +31,9 @@ const BookmarkModal = ({ isOpen, onClose, recipeId }) => {
         recipeId: recipeId,
         collectionId: selectedCollectionId,
       });
-      alert("북마크가 저장되었습니다.");
+      alert("북마크가 저장되었습니다."); //저장은 userId로 잘 됨
       onClose();
+      window.location.reload();
     } catch (e) {
       console.error("북마크 저장 실패:", e);
       alert("저장에 실패했습니다.");

@@ -30,13 +30,6 @@ const SideBar = ({ subscribed }) => {
       inactiveIcon: 'https://c.animaapp.com/aL9hxRy0/img/frame-1.svg',
     },
     {
-      id: 'notifications',
-      label: '알림',
-      path: '/notifications',
-      activeIcon: 'https://c.animaapp.com/aL9hxRy0/img/frame-2.svg',
-      inactiveIcon: 'https://c.animaapp.com/aL9hxRy0/img/frame-2.svg',
-    },
-    {
       id: 'bookmark',
       label: '북마크',
       path: '/bookmark',

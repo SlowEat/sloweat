@@ -184,16 +184,16 @@ public class RecipeService {
 
         return recipePage.map(recipe -> {
             List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
-            User user = userRepository.findById(recipe.getUser().getUserId()).orElseThrow();
-            Boolean isLiked = recipeLikeRepository.existsByRecipeAndUser(recipe, user);
-            Boolean isBookmarked = bookmarkRepository.existsByRecipeAndUser(recipe, user);
+            User user = userRepository.findById(recipe.getUser().getUserId()).orElseThrow(); //레시피 작성자
+            User loginUser =  userRepository.findById(loginUserId).orElseThrow(); //로그인 유저
+
+            //좋아요와 북마크, 내 포스트 판단 여부, 팔로잉 여부는 '로그인'한 사용자 기준으로 처리되어야 함
+            Boolean isLiked = recipeLikeRepository.existsByRecipeAndUser(recipe, loginUser);
+            Boolean isBookmarked = bookmarkRepository.existsByRecipeAndUser(recipe, loginUser);
             Boolean isMyPost = Objects.equals(recipe.getUser().getUserId(), loginUserId);
-
-            User loginUser = new User();
-            loginUser.setUserId(loginUserId);
-
             Boolean isFollowing = followRepository.existsByFollowerAndFollowing(loginUser, recipe.getUser());
-            Bookmark bookmark = bookmarkRepository.findByRecipeAndUser(recipe, user);
+
+            Bookmark bookmark = bookmarkRepository.findByRecipeAndUser(recipe, loginUser);
             Integer bookmarkId = null;
 
             if(bookmark != null){
