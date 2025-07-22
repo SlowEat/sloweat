@@ -70,7 +70,7 @@ public class RecipeService {
     }
 
     @Transactional
-    public RecipeResponseDto getRecipeDetailWithViewIncrease(Integer loginUserId ,Integer id) {
+    public RecipeResponseDto getRecipeDetailWithViewIncrease(Integer loginUserId, Integer id) {
         Recipe recipe = recipeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("레시피를 찾을 수 없습니다."));
 
@@ -78,19 +78,29 @@ public class RecipeService {
         recipeRepository.save(recipe);
 
         List<RecipeTag> recipeTags = recipeTagRepository.findByRecipe(recipe);
-        User user = userRepository.findById(recipe.getUser().getUserId()).orElseThrow();
-        Boolean isLiked = recipeLikeRepository.existsByRecipeAndUser(recipe, user);
-        Boolean isBookmarked = bookmarkRepository.existsByRecipeAndUser(recipe, user);
+
+        // 레시피 작성자 정보
+        User recipeAuthor = userRepository.findById(recipe.getUser().getUserId()).orElseThrow();
+
+        // 로그인 사용자 정보 (좋아요, 북마크, 팔로우 체크용)
+        User loginUser = userRepository.findById(loginUserId).orElseThrow();
+
+        // 로그인 사용자 기준으로 상태 체크
+        Boolean isLiked = recipeLikeRepository.existsByRecipeAndUser(recipe, loginUser);
+        Boolean isBookmarked = bookmarkRepository.existsByRecipeAndUser(recipe, loginUser);
         Boolean isMyPost = Objects.equals(recipe.getUser().getUserId(), loginUserId);
-        User loginUser = new User();
-        loginUser.setUserId(loginUserId);
         Boolean isFollowing = followRepository.existsByFollowerAndFollowing(loginUser, recipe.getUser());
-        Bookmark bookmark = bookmarkRepository.findByRecipeAndUser(recipe, user);
+
+        //  로그인 사용자의 북마크 ID 가져오기
+        Bookmark bookmark = bookmarkRepository.findByRecipeAndUser(recipe, loginUser);
         Integer bookmarkId = null;
         if(bookmark != null){
             bookmarkId = bookmark.getBookmarkId();
         }
-        return ViewHomeDto(user, recipe, recipeTags, "https://image.server.com/list-default.jpg", isLiked, isBookmarked, isMyPost, isFollowing, bookmarkId);
+
+        // 레시피 작성자 정보를 사용해서 DTO 생성
+        return ViewHomeDto(recipeAuthor, recipe, recipeTags, "https://image.server.com/list-default.jpg",
+                isLiked, isBookmarked, isMyPost, isFollowing, bookmarkId);
     }
 
     public RecipeResponseDto getRecipeDetail(Integer id) {
