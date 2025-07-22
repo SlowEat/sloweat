@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../api/axiosInstance';
 import ContentReportForm from './ContentReportForm'; // 모달 컴포넌트 import
 import '../../styles/user/RecipeCard.css';
+import { DEFAULT_PROFILE_IMAGE, PROFILE_FILE_PATH } from '../../constants/Profile';
 
 function Recipe({ isDetail = false, isMyPost = false, data, refreshRecipe }) {
   const [liked, setLiked] = useState(data?.isLiked ?? false);
@@ -95,14 +96,14 @@ function Recipe({ isDetail = false, isMyPost = false, data, refreshRecipe }) {
                 <img
                   onClick={handleProfileClick}
                   className="recipe-card-profile-image"
-                  src={data?.chefProfileUrl || 'https://img.freepik.com/free-photo/confident-asian-woman-face-portrait-smiling_53876-144815.jpg?semt=ais_hybrid&w=740'}
+                  src={data?.profileImgPath ? PROFILE_FILE_PATH + data.profileImgPath : DEFAULT_PROFILE_IMAGE}
                   alt="프로필 이미지"
                 />
                 <div className="recipe-card-profile-info">
                   <div className="recipe-card-chef-name-row">
                     <h1 className="recipe-card-chef-name">{data?.chefName || '익명 셰프'}</h1>
 
-                    {/* ✅ 수정된 부분: 본인 글이 아닐 때만 팔로우 버튼 보여줌 */}
+                    {/* 본인 글이 아닐 때만 팔로우 버튼 */}
                     {isDetail && !isMyPost && (
                       <button
                         className={`follower-card-button ${isFollowing ? 'following' : ''}`}

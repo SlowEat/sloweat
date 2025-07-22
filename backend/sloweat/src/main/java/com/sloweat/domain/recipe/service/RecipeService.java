@@ -289,6 +289,7 @@ public class RecipeService {
         if (user != null) {
             dto.setChefName(user.getNickname());
             dto.setUsername(user.getLocalEmail() != null ? user.getLocalEmail() : user.getKakaoEmail());
+            dto.setProfileImgPath(user.getProfileImgPath());
         }
 
         return dto;
