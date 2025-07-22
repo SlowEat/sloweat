@@ -154,58 +154,60 @@ const RecipeEditForm = () => {
         <div className="recipe-form-group">
           <label>태그</label>
           <div className="filter-group">
-            {/* ✅ 동적 렌더링으로 변경 */}
-            <select
-              className="select-box filter-select"
-              value={formData.tags.situation}
-              onChange={(e) => handleTagChange(e, "situation")}
-            >
-              <option value="">상황</option>
-              {tagOptions.SITUATION.map((tag) => (
-                <option key={tag} value={tag}>
-                  {tag}
-                </option>
-              ))}
-            </select>
+            <div className="filter-group">
+              {/* 동적 렌더링으로 변경 */}
+              <select
+                className="select-box filter-select"
+                value={formData.tags.type}
+                onChange={(e) => handleTagChange(e, "type")}
+              >
+                <option value="">종류</option>
+                {tagOptions.TYPE.map((tag) => (
+                  <option key={tag} value={tag}>
+                    {tag}
+                  </option>
+                ))}
+              </select>
 
-            <select
-              className="select-box filter-select"
-              value={formData.tags.type}
-              onChange={(e) => handleTagChange(e, "type")}
-            >
-              <option value="">종류</option>
-              {tagOptions.TYPE.map((tag) => (
-                <option key={tag} value={tag}>
-                  {tag}
-                </option>
-              ))}
-            </select>
+              <select
+                className="select-box filter-select"
+                value={formData.tags.situation}
+                onChange={(e) => handleTagChange(e, "situation")}
+              >
+                <option value="">상황</option>
+                {tagOptions.SITUATION.map((tag) => (
+                  <option key={tag} value={tag}>
+                    {tag}
+                  </option>
+                ))}
+              </select>
 
-            <select
-              className="select-box filter-select"
-              value={formData.tags.ingredient}
-              onChange={(e) => handleTagChange(e, "ingredient")}
-            >
-              <option value="">재료</option>
-              {tagOptions.INGREDIENT.map((tag) => (
-                <option key={tag} value={tag}>
-                  {tag}
-                </option>
-              ))}
-            </select>
+              <select
+                className="select-box filter-select"
+                value={formData.tags.ingredient}
+                onChange={(e) => handleTagChange(e, "ingredient")}
+              >
+                <option value="">재료</option>
+                {tagOptions.INGREDIENT.map((tag) => (
+                  <option key={tag} value={tag}>
+                    {tag}
+                  </option>
+                ))}
+              </select>
 
-            <select
-              className="select-box filter-select"
-              value={formData.tags.method}
-              onChange={(e) => handleTagChange(e, "method")}
-            >
-              <option value="">방법</option>
-              {tagOptions.METHOD.map((tag) => (
-                <option key={tag} value={tag}>
-                  {tag}
-                </option>
-              ))}
-            </select>
+              <select
+                className="select-box filter-select"
+                value={formData.tags.method}
+                onChange={(e) => handleTagChange(e, "method")}
+              >
+                <option value="">방법</option>
+                {tagOptions.METHOD.map((tag) => (
+                  <option key={tag} value={tag}>
+                    {tag}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
 
