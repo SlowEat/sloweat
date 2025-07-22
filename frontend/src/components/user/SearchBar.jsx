@@ -68,8 +68,8 @@ function SearchBar({ onSearch }) {
         style={{
           height: "40px",
           padding: "0 14px",
-          fontSize: "15px",
-          borderRadius: "6px",
+          fontSize: "14px",
+          borderRadius: "10px",
           border: "none",
           color: "white",
           cursor: "pointer",
