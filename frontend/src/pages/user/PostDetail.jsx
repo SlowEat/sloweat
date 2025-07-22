@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axiosInstance from '../../api/axiosInstance';
 import '../../layouts/user/MainLayout.css';
-import Recipe from '../../components/user/RecipeCard';
+import Recipe from '../../components/bookmark/BookmarkItem';
 import CommentSection from '../../components/user/CommentSection';
+import BookmarkModal from "../../components/bookmark/BookmarkModal";
 
 export default function PostDetail() {
   const { id } = useParams();
@@ -14,14 +15,39 @@ export default function PostDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  const userId = 1;
+  // 북마크 관련 상태
+  const [recipeId, setRecipeId] = useState();
+  const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
+
+  // 북마크 모달 관련 함수
+  const openBookmarkModal = () => setIsBookmarkModalOpen(true);
+  const closeBookmarkModal = () => {
+    setIsBookmarkModalOpen(false);
+    // 모달 닫힐 때 데이터 새로고침하여 북마크 상태 업데이트
+    refreshRecipe();
+  };
 
   const refreshRecipe = async () => {
     setError(false);
     setLoading(true);
     try {
       const response = await axiosInstance.get(`/api/recipes/${id}`);
-      setRecipeData(response.data.data);
+      const data = response.data.data;
+
+      console.log('✅ 게시글 상세 API 응답:', data);
+
+      // BookmarkItem에서 요구하는 형태로 데이터 변환
+      const enhancedData = {
+        ...data,
+        isBookmarked: data.bookmarked,
+        isLiked: data.liked,
+        isFollowing: data.following,
+        isMyPost: data.myPost,
+        // userId가 null인 경우를 대비해 임시 처리
+        userId: data.userId || data.authorId || 'unknown'
+      };
+
+      setRecipeData(enhancedData);
     } catch (err) {
       console.error('상세 조회 실패:', err);
       setError(true);
@@ -77,54 +103,50 @@ export default function PostDetail() {
     <div className="main-layout-content">
       {/* 상단 제목 영역 */}
       <div className="post-header">
-        <h1 className="tap-title">게시글</h1>
+        <h1 className="tap-title" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <button
+            onClick={handleBack}
+            style={{
+              background: 'none',
+              border: 'none',
+              fontSize: '18px',
+              color: '#555',
+              cursor: 'pointer',
+              padding: '2px 4px',
+              borderRadius: '4px',
+              transition: 'background 0.2s'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.background = '#f0f0f0'}
+            onMouseOut={(e) => e.currentTarget.style.background = 'none'}
+          >
+            ←
+          </button>
+          게시글
+        </h1>
 
-              {/* 상세 카드 */}
+
+      {/* BookmarkItem 컴포넌트를 사용한 상세 카드 */}
       <Recipe
-        isDetail={true}
-        data={recipeData}
-        userId={userId}
+        recipe={recipeData}
+        openBookmarkModal={openBookmarkModal}
+        setSelectedRecipeId={setRecipeId}
         refreshRecipe={refreshRecipe}
       />
 
-      {/* 수정/삭제/뒤로가기 버튼을 같은 줄에 배치 */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          gap: '10px',
-          marginTop: '20px'
-        }}
-      >
-        <button
-          style={{
-            padding: '6px 12px',
-            fontSize: '14px',
-            borderRadius: '4px',
-            backgroundColor: '#ddd',
-            border: 'none',
-            cursor: 'pointer'
-          }}
-          onClick={handleBack}
-        >
-          ← 뒤로가기
-        </button>
 
-        <button className="recipe-submit-btn" onClick={handleEdit}>수정하기</button>
-        <button
-          className="recipe-submit-btn"
-          style={{ backgroundColor: '#ff5252' }}
-          onClick={handleDelete}
-        >
-          삭제하기
-        </button>
-      </div>
 
       {/* 댓글 영역 */}
       <CommentSection recipeId={id} />
-      </div>
 
+      {/* 북마크 추가 모달 */}
+      {isBookmarkModalOpen && (
+        <BookmarkModal
+          isOpen={isBookmarkModalOpen}
+          onClose={closeBookmarkModal}
+          recipeId={recipeId}
+        />
+      )}
     </div>
+  </div>
   );
 }
