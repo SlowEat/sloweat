@@ -3,7 +3,7 @@ import '../../styles/user/ProfileCard.css';
 import {logout} from '../../api/user/auth';
 import {useEffect, useState} from "react";
 import {getMyProfile} from "../../api/user/profile";
-import {PROFILE_FILE_PATH} from "../../constants/Profile";
+import {DEFAULT_PROFILE_IMAGE, PROFILE_FILE_PATH} from "../../constants/Profile";
 
 export default function ProfileCard({ profile }) {
   const [profileImage, setProfileImage] = useState();
@@ -12,7 +12,10 @@ export default function ProfileCard({ profile }) {
    useEffect(() => {
      const getProfileImage = async () => {
        const res = await getMyProfile();
-       setProfileImage(PROFILE_FILE_PATH + res.data.profileImgPath);
+
+       if(res.data.profileImgPath){
+         setProfileImage(PROFILE_FILE_PATH + res.data.profileImgPath);
+       }
      }
 
      getProfileImage();
@@ -47,7 +50,7 @@ export default function ProfileCard({ profile }) {
         <div className="profilecard-content">
           <img
             className="profilecard-image"
-            src={profileImage}
+            src={profileImage || DEFAULT_PROFILE_IMAGE}
             alt="Profile picture of Kim Cook"
           />
           <div className="profilecard-info">

@@ -7,6 +7,7 @@ import TabNavigation from "../../components/user/TabNavigation";
 import NoMatch from "../../components/user/NoMatch";
 import Recipe from "../../components/bookmark/BookmarkItem";
 import PremiumContentOverlay from "../../components/user/PremiumContentOverlay";
+import BookmarkModal from "../../components/bookmark/BookmarkModal";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState(0);
@@ -135,6 +136,7 @@ export default function Home() {
             onSubscribe={handleSubscribe}
             userSubscribed={userSubscribed}
             subscriptionLoading={subscriptionLoading}
+            fetchAllPosts={fetchAllPosts}
           />
         )}
         {activeTab === 1 && (
@@ -153,7 +155,15 @@ export default function Home() {
 }
 
 // 전체 게시물 탭
-function AllTab({ posts, hasMore, onLoadMore, onSubscribe, userSubscribed, subscriptionLoading }) {
+function AllTab({ posts, hasMore, onLoadMore, onSubscribe, userSubscribed, subscriptionLoading}) {
+  // 북마크 관련 (북마크 설정/해제 시 북마크 상태 처리)
+  const [recipeId, setRecipeId] = useState();
+
+  //북마크 모달 관련
+  const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
+  const openBookmarkModal = () => setIsBookmarkModalOpen(true);
+  const closeBookmarkModal = () => setIsBookmarkModalOpen(false);
+
   if (subscriptionLoading) {
     return (
       <div style={{ textAlign: 'center', margin: '20px' }}>
@@ -178,13 +188,22 @@ function AllTab({ posts, hasMore, onLoadMore, onSubscribe, userSubscribed, subsc
         // 사용자가 구독하지 않았으면, post.subscribed가 false인 게시물만 블러 처리
         const shouldShowContent = userSubscribed || post.subscribed !== true;
 
+        // 서버에서 넘어오면서 이름이 달라진부분 변경
+        const enhancedPost = {
+          ...post,
+          isBookmarked: post.bookmarked,
+          isLiked: post.liked,
+          isFollowing: post.following,
+          isMyPost: post.myPost,
+        };
+
         return (
           <PremiumContentOverlay
             key={post.recipeId}
             isSubscribed={shouldShowContent}
             onSubscribe={onSubscribe}
           >
-            <Recipe recipe={post} />
+            <Recipe recipe={enhancedPost} openBookmarkModal={openBookmarkModal} setSelectedRecipeId={setRecipeId}/>
           </PremiumContentOverlay>
         );
       })}
@@ -200,12 +219,25 @@ function AllTab({ posts, hasMore, onLoadMore, onSubscribe, userSubscribed, subsc
           <p>모든 게시물을 다 불러왔습니다.</p>
         </div>
       )}
+
+      {/* 북마크 추가 모달 */}
+      { isBookmarkModalOpen &&
+          <BookmarkModal isOpen={isBookmarkModalOpen} onClose={closeBookmarkModal} recipeId={recipeId}/>
+      }
     </div>
   );
 }
 
 // 팔로잉 게시물 탭
 function FollowingTab({ posts, hasMore, onLoadMore, onSubscribe, userSubscribed, subscriptionLoading }) {
+  // 북마크 관련 (북마크 설정/해제 시 북마크 상태 처리)
+  const [recipeId, setRecipeId] = useState();
+
+  //북마크 모달 관련
+  const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
+  const openBookmarkModal = () => setIsBookmarkModalOpen(true);
+  const closeBookmarkModal = () => setIsBookmarkModalOpen(false);
+
   if (subscriptionLoading) {
     return (
       <div style={{ textAlign: 'center', margin: '20px' }}>
@@ -230,13 +262,22 @@ function FollowingTab({ posts, hasMore, onLoadMore, onSubscribe, userSubscribed,
         // 사용자가 구독하지 않았으면, post.subscribed가 false인 게시물만 블러 처리
         const shouldShowContent = userSubscribed || post.subscribed !== true;
 
+        // 서버에서 넘어오면서 이름이 달라진부분 변경
+        const enhancedPost = {
+          ...post,
+          isBookmarked: post.bookmarked,
+          isLiked: post.liked,
+          isFollowing: post.following,
+          isMyPost: post.myPost,
+        };
+
         return (
           <PremiumContentOverlay
             key={post.recipeId}
             isSubscribed={shouldShowContent}
             onSubscribe={onSubscribe}
           >
-            <Recipe recipe={post} />
+            <Recipe recipe={enhancedPost} openBookmarkModal={openBookmarkModal} setSelectedRecipeId={setRecipeId}/>
           </PremiumContentOverlay>
         );
       })}
@@ -252,6 +293,11 @@ function FollowingTab({ posts, hasMore, onLoadMore, onSubscribe, userSubscribed,
           <p>모든 팔로우 게시물을 다 불러왔습니다.</p>
         </div>
       )}
+
+      {/* 북마크 추가 모달 */}
+      { isBookmarkModalOpen &&
+          <BookmarkModal isOpen={isBookmarkModalOpen} onClose={closeBookmarkModal} recipeId={recipeId}/>
+      }
     </div>
   );
 }

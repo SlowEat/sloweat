@@ -1,6 +1,7 @@
 import { useNavigate  } from "react-router-dom";
 import "./FollowCard.css";
 import useFollow from "../../utils/useFollow";
+import {DEFAULT_PROFILE_IMAGE, PROFILE_FILE_PATH} from "../../constants/Profile";
 
 export const FollowCard = ({
   followId,
@@ -25,7 +26,7 @@ export const FollowCard = ({
     <div className="follower-card">
       <div className="card-content">
         <div className="card-divider" onClick={handleProfileClick}/>
-        <img className="profile-img" src={profileImg} alt="Profile" />
+        <img className="profile-img" src={profileImg ? PROFILE_FILE_PATH+profileImg : DEFAULT_PROFILE_IMAGE} alt="Profile" />
         <div className="username">{username}</div>
         <div className="user-id">@{email}</div>
         <div className="follower-count-label">팔로워</div>

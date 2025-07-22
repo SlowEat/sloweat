@@ -26,7 +26,7 @@ public class BookmarkController {
     @PostMapping
     public ResponseEntity<BookmarkResponseDto> createBookmark(
             @RequestBody BookmarkRequestDto request,
-            @AuthenticationPrincipal CustomUserDetails userDetails) {
+            @AuthenticationPrincipal CustomUserDetails userDetails) throws Exception {
 
         Integer userId =userDetails.getUserId();
 
