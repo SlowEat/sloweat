@@ -43,6 +43,7 @@ const ProfilePictureUploader = () => {
       alert('프로필 사진이 변경되었습니다.');
       const filename = response.data.filename;
       setProfileImage(PROFILE_FILE_PATH + filename);
+      window.location.href = '/settings?tab=account'; 
 
     } catch (error) {
       console.error('이미지 업로드 실패:', error);

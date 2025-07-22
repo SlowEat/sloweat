@@ -7,14 +7,16 @@ import useFollow from "../../utils/useFollow";
 import {DEFAULT_PROFILE_IMAGE, PROFILE_FILE_PATH} from "../../constants/Profile";
 
 function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipeId}) {
+  console.log(recipe);
   const [liked, setLiked] = useState(recipe.isLiked);
-  const [bookmarked, setBookmarked] = useState(recipe.isBookmarked);
+  const [bookmarked, setBookmarked] = useState(recipe.isBookmarked); //isBookmarked 여부가 작성자,recipeId를 모두 포함한 결과인지 봐야 함
   const [isFollowing, setIsFollowing] = useState(recipe.isFollowing);
   const [isMyPost, setIsMyPost] = useState(recipe.isMyPost);
   const [likeCount, setLikeCount] = useState(recipe?.likes || 0);
 
   const navigate = useNavigate();
 
+  //좋아요
   const handleLike = async (e) => {
     e.stopPropagation();
 
@@ -34,12 +36,13 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
     }
   };
 
-
+  //북마크 삭제
   const deleteBookmark = async (bookmarkId) => {
     await api.delete(`/api/bookmarks/${bookmarkId}`);
     setBookmarked((prev) => !prev);
   };
 
+  //북마크
   const handleBookmark = (e,bookmarked, bookmarkId, recipeId) => {
     e.stopPropagation();
 
@@ -48,6 +51,7 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
       if (confirmed) {
         //북마크 해제
         deleteBookmark(bookmarkId);
+        window.location.reload();
       }
     }else{
       // 북마크 설정 팝업 오픈
