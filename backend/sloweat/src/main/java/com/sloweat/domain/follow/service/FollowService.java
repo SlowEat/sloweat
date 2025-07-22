@@ -1,5 +1,6 @@
 package com.sloweat.domain.follow.service;
 
+import com.sloweat.domain.follow.dto.FollowRecommendDto;
 import com.sloweat.domain.follow.dto.FollowRequestDto;
 import com.sloweat.domain.follow.dto.FollowResponseDto;
 import com.sloweat.domain.follow.entity.Follow;
@@ -86,5 +87,12 @@ public class FollowService {
         List<FollowResponseDto> followings = followRepositoryCumstom.getFollowings(userId);
 
         return followings;
+    }
+
+    // 팔로워 수 많은 3명 조회
+    public List<FollowRecommendDto> getFollowRecommend(Integer loginUserId) {
+        User user = userRepository.findById(loginUserId)
+            .orElseThrow(() -> new EntityNotFoundException("사용자 없음"));
+        return followRepository.getFollowRecommend(loginUserId);
     }
 }
