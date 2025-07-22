@@ -23,9 +23,9 @@ function FollowerCard() {
   }, []);
 
   // 팔로우/언팔로우 상태 업데이트 함수
-  const updateFollowState = (localEmail, isFollowing) => {
+  const updateFollowState = (userId, isFollowing) => {
     setFollowers((prev) =>
-      prev.map((f) => (f.localEmail === localEmail ? { ...f, isFollowing } : f))
+      prev.map((f) => (f.userId === userId ? { ...f, isFollowing } : f))
     );
   };
 
@@ -37,7 +37,8 @@ function FollowerCard() {
           <ul className="follower-card-list">
             {followers.map((follower) => (
               <FollowerCardItem
-                key={follower.localEmail}
+                key={follower.userId}
+                userId={follower.userId}
                 localEmail={follower.localEmail}
                 name={follower.nickname}
                 username={`@${follower.localEmail}`}
@@ -55,7 +56,7 @@ function FollowerCard() {
 }
 
 function FollowerCardItem({
-  localEmail,
+  userId,
   name,
   username,
   followers,
@@ -70,11 +71,11 @@ function FollowerCardItem({
       setLoading(true);
 
       if (isFollowing) {
-        await axiosInstance.delete(`/api/follow/${localEmail}`);
-        onFollowStateChange(localEmail, false);
+        await axiosInstance.delete(`/api/follow/${userId}`);
+        onFollowStateChange(userId, false);
       } else {
-        await axiosInstance.post("/api/follow", { toUserEmail: localEmail });
-        onFollowStateChange(localEmail, true);
+        await axiosInstance.post("/api/follow", { toUserId: userId });
+        onFollowStateChange(userId, true);
       }
     } catch (error) {
       console.error("팔로우/언팔로우 실패:", error);
@@ -96,6 +97,7 @@ function FollowerCardItem({
           e.target.src = DEFAULT_PROFILE_IMAGE;
         }}
       />
+
       <div className="follower-card-info">
         <h2 className="follower-card-name">{name}</h2>
         <p className="follower-card-username">{username}</p>
