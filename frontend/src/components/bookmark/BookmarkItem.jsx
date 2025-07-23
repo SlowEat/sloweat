@@ -40,26 +40,26 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
   //북마크 삭제
   const deleteBookmark = async (bookmarkId) => {
     await api.delete(`/api/bookmarks/${bookmarkId}`);
-    setBookmarked((prev) => !prev);
+    setBookmarked(false);  
+    window.location.reload();
   };
 
   //북마크
-  const handleBookmark = (e,bookmarked, bookmarkId, recipeId) => {
-    e.stopPropagation();
+const handleBookmark = (e,bookmarked, bookmarkId, recipeId) => {
+  e.stopPropagation();
 
-    if(bookmarked){
-      const confirmed = window.confirm("북마크를 해제 하시겠습니까?");
-      if (confirmed) {
-        //북마크 해제
-        deleteBookmark(bookmarkId);
-        window.location.reload();
-      }
-    }else{
-      // 북마크 설정 팝업 오픈
-      setSelectedRecipeId(recipeId);
-      openBookmarkModal();
+  if(bookmarked){
+    const confirmed = window.confirm("북마크를 해제 하시겠습니까?");
+    if (confirmed) {
+      //북마크 해제
+      deleteBookmark(bookmarkId);
     }
-  };
+  } else {
+    // 북마크 설정 팝업 오픈
+    setSelectedRecipeId(recipeId);
+    openBookmarkModal();
+  }
+};
 
   //신고
   const handleReport = (e) => {
@@ -127,15 +127,12 @@ function Recipe({ isDetail = false, recipe, openBookmarkModal, setSelectedRecipe
           <div className="recipe-card-content" onClick={handleRecipeClick} style={{cursor: 'pointer'}}>
             {/* 프로필 헤더 */}
             <div className="recipe-card-profile-header">
-             <img
-               onClick={handleProfileClick}
-               className="recipe-card-profile-image"
-               src={recipe.profileImgPath ? PROFILE_FILE_PATH + recipe.profileImgPath : DEFAULT_PROFILE_IMAGE}
-               alt="프로필 이미지"
-               onError={(e) => {
-                 e.currentTarget.src = DEFAULT_PROFILE_IMAGE;
-               }}
-             />
+              <img
+                onClick={handleProfileClick}
+                className="recipe-card-profile-image"
+                src={recipe.profileImgPath ? PROFILE_FILE_PATH + recipe.profileImgPath : DEFAULT_PROFILE_IMAGE}
+                alt="프로필 이미지"
+              />
               <div className="recipe-card-profile-info">
                 <div className="recipe-card-chef-name-row">
                   <h1 className="recipe-card-chef-name">{recipe?.chefName || '익명 셰프'}</h1>
