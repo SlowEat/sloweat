@@ -2,7 +2,7 @@
 # Sloweat
 <blockquote>멋쟁이사자처럼 백엔드 부트캠프 15기 세미프로젝트</blockquote>
 <div>
-  <img width="700" height="492" alt="image" src="https://github.com/user-attachments/assets/3a7b8b32-5e76-434e-9c45-d9712ef53170" />
+  <img width="800" height="897" alt="image" src="https://github.com/user-attachments/assets/ef0621a4-9a30-4ed0-b35e-38abcbb9e7b8" />
 </div>
 <br>
 
@@ -151,7 +151,7 @@
 <br>
 
 ## 🎥 시연 영상 및 발표자료
-🔗 https://youtu.be/eCW4iJP33mM
+🔗 [[YOUTUBE] 시연영상](https://youtu.be/eCW4iJP33mM)<br>
 🔗 [Sloweat_발표자료](https://github.com/user-attachments/files/21379071/_SlowEat_ver2.0.pdf)
 <br>
 
