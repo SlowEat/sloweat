@@ -1,0 +1,49 @@
+.search-container {
+  max-width: 800px; /* 더 여유 있는 너비 */
+  margin: 0 auto;
+  padding-bottom: 20px;
+}
+
+.search-form {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+}
+
+.search-input {
+  flex: 1;
+  height: 50px;
+  padding: 0 16px;
+  background-color: #f3f4f6;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.search-input::placeholder {
+  color: #999;
+}
+
+.search-button {
+  height: 36px;
+  padding: 0 15px;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-button:hover {
+  background-color: #07a470;
+}
+
+.sort-select {
+  height: 50px;
+  padding: 0 12px;
+  font-size: 16px;
+  border-radius: 8px;
+}

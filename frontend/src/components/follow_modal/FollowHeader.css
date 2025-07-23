@@ -1,0 +1,77 @@
+.follow-header {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 503px;
+  height: 110px;
+}
+
+.header-container {
+  position: relative;
+  width: 497px;
+  height: 100px;
+}
+
+.title {
+  position: absolute;
+  top: 22px;
+  left: 23px;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: "Inter", Helvetica;
+  color: #1a1a1a;
+}
+
+.close-button {
+  position: absolute;
+  cursor: pointer;
+  top: 26px;
+  left: 449px;
+  width: 24px;
+  height: 24px;
+}
+
+.tab-container {
+  position: absolute;
+  top: 70px;
+  left: 24px;
+  width: 449px;
+  height: 37px;
+  display: flex;
+  justify-content: space-between;   /* 양 옆으로 정렬 */
+  align-items: center;
+  border-bottom: 1.33px solid #e0f2f1;
+  position: relative;
+}
+
+.tab {
+  font-size: 16px;
+  font-weight: 500;
+  font-family: "Inter", Helvetica;
+  line-height: 24px;
+  white-space: nowrap;
+  text-align: center;
+  color: #6b7280;
+  cursor: pointer;
+  flex: 1;
+  text-align: center;
+}
+
+.tab.active {
+  left: 90px;
+  color: #10b981;
+}
+
+.tab.inactive {
+  left: 314px;
+  color: #6b7280;
+}
+
+.tab-underline {
+  position: absolute;
+  top: 33px;
+  left: -1px;
+  width: 225px;
+  height: 2px;
+  background-color: #10b981;
+}

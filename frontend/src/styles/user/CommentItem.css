@@ -1,0 +1,140 @@
+.comment-item-wrapper {
+  margin-bottom: 16px;
+}
+
+.comment-item-wrapper.reply {
+  margin-left: 32px;
+  background-color: #f9f9f9;
+  border-left: 3px solid #ddd;
+  padding-left: 12px;
+  border-radius: 6px;
+}
+
+.comment-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.comment-user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.comment-username {
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.comment-user-meta {
+  font-size: 0.75rem;
+  color: #777;
+}
+
+.comment-author-badge {
+  background-color: #eef1ff;
+  color: #3366ff;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-left: 6px;
+}
+
+.comment-content {
+  font-size: 0.95rem;
+  color: #333;
+  margin-bottom: 10px;
+  word-wrap: break-word;
+}
+
+.comment-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  margin-top: 8px;
+}
+
+/* 기능별 버튼 공통 스타일 */
+.comment-button {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid transparent;
+  background-color: white;
+}
+
+/* ✏️ 수정 */
+.comment-button.edit {
+  color: #555;
+  border-color: #ccc;
+}
+
+.comment-button.edit:hover {
+  background-color: #f2f2f2;
+}
+
+/* 🗑️ 삭제 */
+.comment-button.delete {
+  color: #d9534f;
+  border-color: #d9534f;
+}
+
+.comment-button.delete:hover {
+  background-color: #fae1e0;
+}
+
+/* 🚩 신고 */
+.comment-button.report {
+  color: #f0ad4e;
+  border-color: #f0ad4e;
+}
+
+.comment-button.report:hover {
+  background-color: #fff2dc;
+}
+
+/* 💬 답글 */
+.comment-button.reply {
+  color: #555;
+  border: #66b2ff;
+}
+
+.comment-button.reply:hover {
+  background-color: #66b2ff;
+}
+
+.comment-like {
+  display: inline-block;
+  margin-right: 12px;
+  font-size: 0.95rem;
+  color: #e74c3c;
+  cursor: pointer;
+  user-select: none;
+}
+
+.comment-reply-form {
+  margin-top: 8px;
+}
+
+.comment-children {
+  margin-top: 12px;
+}
+
+.comment-edited-label {
+  font-size: 0.75rem;
+  color: #999;
+  margin-left: 6px;
+  margin-top: 2px;
+  display: inline-block;
+}

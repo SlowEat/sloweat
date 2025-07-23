@@ -1,0 +1,72 @@
+.subscribe-banner-box {
+  position: relative;
+  max-width: 242px;
+  min-height: 174px;
+  margin-top: 7px;
+  margin-bottom: 30px;
+}
+
+.subscribe-banner-view {
+  position: relative;
+  width: 242px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #138f84, #34d399);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.subscribe-banner-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.subscribe-banner-logo {
+  width: 20px;
+  height: 20px;
+}
+
+.subscribe-banner-title {
+  font-family: "Inter", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 21px;
+  color: #ffffff;
+}
+
+.subscribe-banner-description {
+  font-family: "Inter", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  max-width: 201px;
+  color: #ffffff;
+}
+
+.subscribe-banner-cta-container {
+  margin-top: 15px;
+}
+
+.subscribe-banner-cta-button {
+  width: 100%;
+  height: 37px;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.subscribe-banner-cta-button:hover {
+  background-color: #f0f0f0;
+}
+
+.subscribe-banner-cta-text {
+  font-family: "Inter", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 21px;
+  color: #10b981;
+}

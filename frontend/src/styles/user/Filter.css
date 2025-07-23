@@ -1,0 +1,67 @@
+.filter-container {
+  display: flex;
+  justify-content: space-between;
+  width: 668px;
+  position: relative;
+  align-items: center;
+}
+
+.filter-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Base select box styles */
+.select-box {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 0 18px;
+  padding-left: 15px;
+  padding-right: 36px;
+  font-family: "Inter", Helvetica;
+  font-weight: 500;
+  font-size: 13px;
+  border-radius: 500px;
+  border: 1px solid;
+  cursor: pointer;
+  width: 105px;
+  height: 36px;
+  text-align: left;
+  line-height: 36px;
+
+  /* 화살표 이미지 */
+  background-image: url("https://c.animaapp.com/xJ375taB/img/vector-4.svg");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 10px;
+}
+
+
+/* Filter select boxes */
+.filter-select {
+  background-color: #f0fdf4;
+  border-color: #e8f5f5;
+  color: #000000;
+  border-radius: 500px;
+}
+
+/* Sort select box */
+.sort-select {
+  background-color: #ffffff;
+  border-color: #10b981;
+  color: #10b981;
+  border-radius: 500px;
+}
+
+/* Remove default focus outline and add custom one */
+.select-box:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+/* Hover effect */
+.select-box:hover {
+  border-color: #10b981;
+}

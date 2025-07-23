@@ -1,0 +1,247 @@
+/* 전체 컨테이너: 페이지 내 공간 차지 및 여백 설정 */
+.comment-wrapper {
+  flex-grow: 1;
+  padding: 24px;
+}
+
+/* 콘텐츠 박스: 배경, 그림자, 테두리 라운드 처리 */
+.comment-content-box {
+  background-color: #ffffff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* 페이지 상단 제목 및 검색 영역 정렬 */
+.comment-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+/* 페이지 제목 텍스트 스타일 */
+.comment-page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* 검색 영역 전체 감싸는 박스 */
+.comment-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* 검색어 입력 필드 */
+.comment-search-input {
+  padding: 8px 12px;
+  padding-right: 32px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* 테이블 상단 '댓글 목록' 제목 스타일 */
+.comment-section-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* 테이블 전체 구조: 수직 정렬 */
+.comment-table {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 각 행을 격자 형태로 구성 */
+.comment-grid {
+  display: grid;
+  grid-template-columns: 0.5fr 3fr 1fr 1fr 1.2fr 0.8fr 1fr 0.8fr;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+/* 테이블 헤더: 배경색 및 글자 강조 */
+.comment-table-header {
+  font-weight: 600;
+  background-color: #f9fafb;
+  color: #374151;
+}
+
+/* 테이블 일반 행 배경색 */
+.comment-table-row {
+  background-color: #ffffff;
+}
+
+/* 제목 셀 내 텍스트 스타일 */
+.comment-table-row p {
+  margin: 0;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+/* 상태 뱃지 공통 스타일 */
+.comment-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* 신고 상태가 아닌 경우 뱃지 색상 (정상 상태) */
+.comment-badge.normal,
+.comment-badge.status-normal {
+  background-color: #d1fae5;
+  color: #10b981;
+}
+
+/* 신고된 경우 뱃지 색상 */
+.comment-badge.reported,
+.comment-badge.status-reported {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
+/* 삭제/반려 버튼을 감싸는 영역 - 가운데 정렬 */
+.comment-action-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-height: 36px; /* 버튼 높이 정렬용 */
+}
+
+/* 삭제 버튼 스타일 */
+.comment-delete-btn {
+  padding: 6px 12px;
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+/* 삭제 버튼 hover 시 강조 색상 */
+.comment-delete-btn:hover {
+  background-color: #fee2e2;
+  border-color: #ef4444;
+  color: #b91c1c;
+}
+
+/* 작업 없음 표시용 텍스트 스타일 */
+.comment-action-placeholder {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+/* 상태 필터와 제목 간의 간격 및 정렬 */
+.comment-filter-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+/* 상태 필터 셀렉트박스 스타일 */
+.comment-status-filter {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* 검색타입 셀렉트박스 스타일 */
+.comment-search-type {
+  padding: 8px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-right: 8px;
+}
+
+/* 검색 버튼 스타일 */
+.comment-search-button {
+  padding: 8px 12px;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* 검색 버튼 hover 시 강조 */
+.comment-search-button:hover {
+  background-color: #07a470;
+}
+
+/* 반려 버튼 스타일 */
+.comment-reject-btn {
+  padding: 6px 12px;
+  background-color: #fff7ed;
+  color: #d97706;
+  border: 1px solid #fdba74;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  margin-left: 8px;
+}
+
+/* 반려 버튼 hover 시 강조 */
+.comment-reject-btn:hover {
+  background-color: #fef3c7;
+  border-color: #f59e0b;
+  color: #b45309;
+}
+
+/* 페이징 영역 스타일 */
+.comment-pagination {
+  margin-top: 20px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+/* 각 페이지 버튼 공통 스타일 */
+.comment-page-btn {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: #333;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* 현재 페이지인 경우 강조 */
+.comment-page-btn.active {
+  background-color: #10b981;
+  color: white;
+  border: none;
+}
+
+/* 신고반려 상태 뱃지 색상 */
+.comment-badge.status-rejected {
+  background-color: #dbeafe;
+  color: #3b82f6;
+}
+
+/* 신고승인 상태 뱃지 색상 */
+.comment-badge.status-approved {
+  background-color: #fef3c7;
+  color: #f59e0b;
+}

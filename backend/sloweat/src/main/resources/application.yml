@@ -1,0 +1,31 @@
+# application.yml
+spring:
+  application:
+    name: sloweat
+  datasource:
+    url: jdbc:mysql://localhost:3306/sloweat?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: admin1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+jwt:
+  secret: SGxhZGRpbjpvcGVuIHNlc2FtZQBAAAAAASSSAAAAAAQQQAAAAAHHHAAAAAAAAAA=
+  access-token-validity: 300000 # 5분
+  refresh-token-validity: 604800000 # 7일
+
+# 아임포트 설정
+iamport:
+  api:
+    key: 0855764552444670
+    secret: CVgpZ99K9XzflxBTGsA0uwwRDUfQkwY5Qhd6vWma5cMQSd1h19A9Tu1xaEUwDPwnysFKAUYbPRgaWsm3
+    url: https://api.iamport.kr
+
+  jpa:
+    hibernate:
+      ddl-auto: validate # 실무에서는 'validate' 또는 'none' 권장
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    open-in-view: false # 성능 및 오류 방지 목적
