@@ -151,7 +151,7 @@
 <br>
 
 ## 🎥 시연 영상 및 발표자료
-🔗 https://youtu.be/eCW4iJP33mM
+🔗 [[YOUTUBE] 시연영상](https://youtu.be/eCW4iJP33mM)<br>
 🔗 [Sloweat_발표자료](https://github.com/user-attachments/files/21379071/_SlowEat_ver2.0.pdf)
 <br>
 
